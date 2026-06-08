@@ -21,7 +21,7 @@ if(oniguruma_SOURCE_DIR)
     include(oniguruma.cmake)
 endif()
 
-add_library(kr2android STATIC
+add_library(kr2android OBJECT
         src/kr2android.cpp
         src/utils/AndroidUtils.cpp
         src/utils/TickCount.cpp
@@ -63,14 +63,30 @@ add_library(kr2android STATIC
         src/tjs2/tjsUtils.cpp
         src/tjs2/tjsVariant.cpp
         src/tjs2/tjsVariantString.cpp
+        ${ONIGURUMA_SOURCES}
+)
+
+target_compile_options(kr2android PRIVATE
+        -Wno-tautological-constant-out-of-range-compare
+        -Wno-null-dereference
+        -Wno-writable-strings
+        -Wno-return-type
+        -Wno-macro-redefined
+        -Wno-pointer-to-int-cast
+        -Wno-null-conversion
+        -Wno-shift-count-overflow
+        -Wno-undefined-bool-conversion
+        -Wno-pointer-to-int-cast
+        -Wno-deprecated-non-prototype
 )
 
 target_include_directories(kr2android PUBLIC
         src
         src/tjs2
         src/utils
+        ${ONIGURUMA_INCLUDES}
 )
 
-target_link_libraries(kr2android PUBLIC
-        oniguruma
-)
+#target_link_libraries(kr2android PUBLIC
+#        oniguruma
+#)
