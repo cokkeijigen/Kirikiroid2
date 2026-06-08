@@ -20,9 +20,36 @@ namespace kr2android
         inline auto operator+(uniptr_t other) noexcept -> uniptr_t { return other.uintptr + this->uintptr; }
     };
 
+    template<is_pointer T = void*>
+    union unirawptr_t
+    {
+        T raw;
+        void* ptr;
+
+        inline unirawptr_t() noexcept : ptr{ nullptr } {}
+        inline unirawptr_t(void* _ptr) noexcept : ptr{ _ptr } {}
+        inline unirawptr_t(T _raw) noexcept requires (!std::is_same_v<T, void*>) : raw{ _raw }{ }
+        inline unirawptr_t(std::integral auto _ptr) noexcept
+        {
+            this->ptr = reinterpret_cast<void*>(static_cast<uintptr_t>(_ptr));
+        }
+    };
+
     extern auto get_base() noexcept -> uniptr_t;
     extern auto init(const uniptr_t libbase) noexcept -> bool;
     extern auto init() noexcept -> bool;
+
+    template<is_pointer T>
+    inline auto cast_ptr(const uintptr_t rva) noexcept -> T
+    {
+        unirawptr_t<T> result{};
+        const uniptr_t base{ get_base() };
+        if(base.ptr != nullptr)
+        {
+            result = base.uintptr + rva;
+        }
+        return result.raw;
+    }
 
     namespace tvp
     {
