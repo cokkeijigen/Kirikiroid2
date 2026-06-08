@@ -114,13 +114,8 @@ namespace kr2patch
             if(std::filesystem::exists(this->m_plugin_path, error) && !error)
             {
                 std::filesystem::remove_all(this->m_plugin_path, error);
-                if(error)
-                {
-                    logd("remove plugin path failed: %s\n", error.message().c_str());
-                }
             }
             std::filesystem::create_directories(this->m_plugin_path, error);
-
             return std::filesystem::exists(this->m_plugin_path, error) && !error;
         }
         catch (...) { }
