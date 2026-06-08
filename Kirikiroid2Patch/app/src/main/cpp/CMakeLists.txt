@@ -5,8 +5,12 @@ project("kr2patch" C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(FetchContent)
+add_compile_options(
+        -Wno-macro-redefined
+        -Wno-format-truncation
+)
 
+include(FetchContent)
 set(DOBBY_HOOK_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake_deps/DobbyHook" )
 set(KR2ANDROID_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake_deps/kr2android")
 
