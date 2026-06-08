@@ -64,8 +64,7 @@ namespace kr2android
         static TJS::ttstr* _ptr{};
         if(_ptr == nullptr && kr2android::modbase.ptr != nullptr)
         {
-            const auto ptr{ kr2android::modbase.uintptr + tvp::RVA_TVP_PROJECT_DIR };
-            _ptr = reinterpret_cast<TJS::ttstr*>(ptr);
+            _ptr = k2a::cast_ptr<TJS::ttstr*>(tvp::RVA_TVP_PROJECT_DIR);
         }
         return _ptr;
     }
