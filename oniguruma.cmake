@@ -78,13 +78,15 @@ set(ONIGURUMA_SOURCES
         "${oniguruma_SOURCE_DIR}/src/unicode_fold3_key.c"
 )
 
-add_library(oniguruma OBJECT ${ONIGURUMA_SOURCES})
+set(ONIGURUMA_INCLUDES "${oniguruma_SOURCE_DIR}/src/")
 
-target_include_directories(oniguruma PUBLIC
-        "${oniguruma_SOURCE_DIR}/src/"
-)
-
-target_compile_definitions(oniguruma PRIVATE
-        "_CRT_SECURE_NO_WARNINGS"
-        "ONIG_EXTERN=extern"
-)
+#add_library(oniguruma OBJECT ${ONIGURUMA_SOURCES})
+#target_include_directories(oniguruma PUBLIC
+#
+#       "${oniguruma_SOURCE_DIR}/src/"
+#)
+#
+#target_compile_definitions(oniguruma PRIVATE
+#        "_CRT_SECURE_NO_WARNINGS"
+#        "ONIG_EXTERN=extern"
+#)
