@@ -1,16 +1,16 @@
 #include <kr2android.hpp>
 #include <link.h>
 #include <string.h>
+
 namespace kr2android
 {
-    static ptr_t modbase{};
+    static uniptr_t modbase{};
 
-    auto init(const ptr_t libbase) noexcept -> bool
+    auto init() noexcept -> bool
     {
-        if(libbase.ptr != nullptr)
+        if(kr2android::modbase.ptr != nullptr)
         {
-            kr2android::modbase.ptr = libbase.ptr;
-            return true;
+            return false;
         }
 
         struct context
@@ -40,19 +40,34 @@ namespace kr2android
         return true;
     }
 
-    auto get_base() noexcept -> ptr_t
+    auto init(const uniptr_t libbase) noexcept -> bool
+    {
+        if(kr2android::modbase.ptr != nullptr)
+        {
+            return false;
+        }
+
+        if(libbase.ptr != nullptr)
+        {
+            kr2android::modbase.ptr = libbase.ptr;
+            return true;
+        }
+    }
+
+    auto get_base() noexcept -> uniptr_t
     {
         return kr2android::modbase;
     }
 
     auto tvp::project_dir::get() noexcept -> const TJS::ttstr*
     {
-        if(project_dir::_ptr == nullptr && kr2android::modbase.ptr != nullptr)
+        static TJS::ttstr* _ptr{};
+        if(_ptr == nullptr && kr2android::modbase.ptr != nullptr)
         {
             const auto ptr{ kr2android::modbase.uintptr + tvp::RVA_TVP_PROJECT_DIR };
-            project_dir::_ptr = reinterpret_cast<TJS::ttstr*>(ptr);
+            _ptr = reinterpret_cast<TJS::ttstr*>(ptr);
         }
-        return project_dir::_ptr;
+        return _ptr;
     }
 
     auto tvp::extract_storage_path(const TJS::ttstr& name) noexcept -> TJS::ttstr
