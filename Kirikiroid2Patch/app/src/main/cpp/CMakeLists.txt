@@ -40,11 +40,13 @@ endif()
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
         src/native-lib.cpp
-        src/plugin_manager.cpp
+        src/plugin/pulgin_function.cpp
+        src/plugin/plugin_manager.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
         src
+        src/plugin
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
