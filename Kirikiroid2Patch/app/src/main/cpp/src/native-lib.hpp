@@ -3,7 +3,6 @@
 #include <dobby.h>
 #include <android/log.h>
 #include <kr2android.hpp>
-
 #if defined(__aarch64__)
 #define armv8orv7(arm64v8a, armeabiv7a, ...) arm64v8a
 #define arm_only(...) __VA_ARGS__
