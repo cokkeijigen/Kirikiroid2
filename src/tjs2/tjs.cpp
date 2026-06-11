@@ -623,18 +623,18 @@ tTJSBinaryStream * TJSDefCreateBinaryStreamForWrite(const tTJSString &name,
 	const tTJSString &mode)
 { return NULL; }
 //---------------------------------------------------------------------------
-iTJSTextReadStream * (*TJSCreateTextStreamForRead)(const tTJSString &name,
-	const tTJSString &mode) =
-	TJSDefCreateTextStreamForRead;
-iTJSTextWriteStream * (*TJSCreateTextStreamForWrite)(const tTJSString &name,
-	const tTJSString &mode) =
-	TJSDefCreateTextStreamForWrite;
-tTJSBinaryStream * (*TJSCreateBinaryStreamForRead)(const tTJSString &name,
-	const tTJSString &mode) =
-	TJSDefCreateBinaryStreamForRead;
-tTJSBinaryStream * (*TJSCreateBinaryStreamForWrite)(const tTJSString &name,
-	const tTJSString &mode) =
-	TJSDefCreateBinaryStreamForWrite;
+//iTJSTextReadStream * (*TJSCreateTextStreamForRead)(const tTJSString &name,
+//	const tTJSString &mode) =
+//	TJSDefCreateTextStreamForRead;
+//iTJSTextWriteStream * (*TJSCreateTextStreamForWrite)(const tTJSString &name,
+//	const tTJSString &mode) =
+//	TJSDefCreateTextStreamForWrite;
+//tTJSBinaryStream * (*TJSCreateBinaryStreamForRead)(const tTJSString &name,
+//	const tTJSString &mode) =
+//	TJSDefCreateBinaryStreamForRead;
+//tTJSBinaryStream * (*TJSCreateBinaryStreamForWrite)(const tTJSString &name,
+//	const tTJSString &mode) =
+//	TJSDefCreateBinaryStreamForWrite;
 //---------------------------------------------------------------------------
 
 
