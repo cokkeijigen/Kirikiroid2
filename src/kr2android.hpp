@@ -1,6 +1,8 @@
 #pragma once
-#include <kr2base.hpp>
-#include <tjsString.h>
+#include <optional>
+#include <kr2rva.hpp>
+#include <kr2type.hpp>
+#define _kr2android
 
 namespace kr2android
 {
@@ -35,6 +37,19 @@ namespace kr2android
         }
     };
 
+    struct kr2android
+    {
+        void* base;
+        virtual auto query(const char* name) noexcept -> void* = 0;
+
+        template<is_pointer T>
+        inline auto query_cast(const char* name) noexcept -> T
+        {
+            unirawptr_t<T> result{ .ptr = this->query(name) };
+            return result.raw;
+        }
+    };
+
     extern auto get_base() noexcept -> uniptr_t;
     extern auto init(const uniptr_t libbase) noexcept -> bool;
     extern auto init() noexcept -> bool;
@@ -49,17 +64,6 @@ namespace kr2android
             result = base.uintptr + rva;
         }
         return result.raw;
-    }
-
-    namespace tvp
-    {
-        struct project_dir
-        {
-            static auto get() noexcept -> const TJS::ttstr*;
-        };
-
-        extern auto get_game_path() noexcept -> TJS::ttstr;
-        extern auto get_app_path () noexcept -> TJS::ttstr;
     }
 }
 
