@@ -22,9 +22,12 @@ if(oniguruma_SOURCE_DIR)
 endif()
 
 add_library(kr2android OBJECT
+        src/k2atvp.cpp
+        src/k2atjs.cpp
+        src/k2atvp_storage.cpp
+        src/k2atvp_graphic.cpp
         src/kr2android.cpp
         src/utils/AndroidUtils.cpp
-        src/utils/TickCount.cpp
         src/tjs2/tjs.cpp
         src/tjs2/tjs.tab.cpp
         src/tjs2/tjsArray.cpp
