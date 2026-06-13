@@ -87,25 +87,36 @@ namespace TVP
 
     using namespace Graphic;
 
+    namespace Script
+    {
+        extern auto   GetScriptEngine() noexcept -> tTJS*;
+        extern auto GetScriptDispatch() noexcept -> iTJSDispatch2*;
+
+        extern auto ExecuteScript(const ttstr& content, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteScript(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto ExecuteExpression(const ttstr& content, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteExpression(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
+        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto  ExecuteStorage(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
+        extern auto  ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
+        extern auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool;
+
+        void DumpScriptEngine();
+    }
+    using namespace Script;
 
 //    IStream * CreateIStream(const ttstr &,tjs_uint32);
 //    tTJSBinaryStream * CreateBinaryStreamAdapter(IStream *);
 
 
     // ========== 脚本执行 ==========
-    iTJSDispatch2* GetScriptDispatch();
-    void ExecuteScript(const ttstr &,tTJSVariant *);
-    void ExecuteScript(const ttstr &,iTJSDispatch2 *,tTJSVariant *);
-    void ExecuteExpression(const ttstr &,tTJSVariant *);
-    void ExecuteExpression(const ttstr &,iTJSDispatch2 *,tTJSVariant *);
-    void ExecuteScript(const ttstr &,const ttstr &,tjs_int,tTJSVariant *);
-    void ExecuteScript(const ttstr &,const ttstr &,tjs_int,iTJSDispatch2 *,tTJSVariant *);
-    void ExecuteExpression(const ttstr &,const ttstr &,tjs_int,tTJSVariant *);
-    void ExecuteExpression(const ttstr &,const ttstr &,tjs_int,iTJSDispatch2 *,tTJSVariant *);
-    void ExecuteStorage(const ttstr &,tTJSVariant *,bool,const tjs_char *);
-    void ExecuteStorage(const ttstr &,iTJSDispatch2 *,tTJSVariant *,bool,const tjs_char *);
-    void DumpScriptEngine();
-    void ExecuteBytecode(const tjs_uint8 *,size_t,iTJSDispatch2 *,tTJSVariant *,const tjs_char *);
+
+
 
     // ========== 事件系统 ==========
     void PostEvent(iTJSDispatch2 *,iTJSDispatch2 *,ttstr &,tjs_uint32,tjs_uint32,tjs_uint,tTJSVariant *);
