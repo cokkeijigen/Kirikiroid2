@@ -80,7 +80,11 @@ namespace kr2android::tvp::graphic
         SizeCallback                 sizecallback_;
         ScanLineCallback         scanlinecallback_;
         MetaInfoPushCallback metainfopushcallback_;
-        tTJSBinaryStream*                      src;
+        union
+        {
+            tTJSBinaryStream*                  src;
+            tTJSBinaryStream*               stream;
+        };
         tjs_int32                           keyidx;
         LoadMode                              mode;
 
@@ -102,25 +106,41 @@ namespace kr2android::tvp::graphic
 
     struct GraphicSaveContext
     {
-        void*        formatdata;
-        tTJSBinaryStream*   dst;
-        NativeBaseBitmap* image;
-        const ttstr&       mode;
-        iTJSDispatch2*     meta;
+        void*              formatdata;
+        union
+        {
+            tTJSBinaryStream*    dst;
+            tTJSBinaryStream* stream;
+        };
+        NativeBaseBitmap*      image;
+        const ttstr&            mode;
+        iTJSDispatch2*          meta;
     };
 
     struct GraphicHeaderLoadingContext
     {
-        void*      formatdata;
-        tTJSBinaryStream* src;
-        iTJSDispatch2**   dic;
+        void*               formatdata;
+        union
+        {
+            tTJSBinaryStream*     src;
+            tTJSBinaryStream*  stream;
+        };
+        union
+        {
+            iTJSDispatch2**      dic;
+            iTJSDispatch2** dispatch;
+        };
     };
 
     struct GraphicAcceptSaveContext
     {
-        void* formatdata;
-        const ttstr&   type;
-        iTJSDispatch2** dic;
+        void*             formatdata;
+        const ttstr&            type;
+        union
+        {
+            iTJSDispatch2**      dic;
+            iTJSDispatch2** dispatch;
+        };
     };
 
     using LoadingHandlerWrapperCallback = void(*)(const GraphicLoadingContext& context);
