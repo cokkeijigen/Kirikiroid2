@@ -7,6 +7,8 @@
 
 namespace kr2patch
 {
+    using pair = std::pair<std::string, void*>;
+
     class plugin_manager
     {
         std::vector<void*>     m_dl_handles{};
