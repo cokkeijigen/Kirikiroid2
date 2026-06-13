@@ -25,12 +25,12 @@ namespace TVP
 
     auto GetAppPath() noexcept -> std::optional<ttstr>
     {
-        return k2a::tvp::get_app_path();
+        return k2a::tvp::project::app_path();
     }
 
     auto GetGamePath() noexcept -> std::optional<ttstr>
     {
-        return k2a::tvp::get_game_path();
+        return k2a::tvp::project::game_path();
     }
 
     auto GetLocalName(ttstr& name) noexcept -> std::optional<ttstr>
