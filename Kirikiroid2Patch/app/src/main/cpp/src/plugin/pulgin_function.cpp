@@ -203,6 +203,74 @@ namespace TVP
         }
     }
 
+    namespace Script
+    {
+        auto GetScriptEngine() noexcept -> tTJS*
+        {
+            return k2a::tvp::script::get_engine();
+        }
+
+        auto GetScriptDispatch() noexcept -> iTJSDispatch2*
+        {
+            return k2a::tvp::script::get_dispatch();
+        }
+
+        auto ExecuteScript(const ttstr& content, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execute(content, result);
+        }
+
+        auto ExecuteScript(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execute(content, context, result);
+        }
+
+        auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execute(content, name, lineofs, result);
+        }
+
+        auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execute(content, name, lineofs, context, result);
+        }
+
+        auto ExecuteExpression(const ttstr& content, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execexpr(content, result);
+        }
+
+        auto ExecuteExpression(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execexpr(content, context, result);
+        }
+
+        auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execexpr(content, name, lineofs, result);
+        }
+
+        auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            return k2a::tvp::script::execexpr(content, name, lineofs, context, result);
+        }
+
+        auto ExecuteStorage(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
+        {
+            return k2a::tvp::script::load(name, result, isexpression, modestr);
+        }
+
+        auto ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
+        {
+            return k2a::tvp::script::load(name, context, result, isexpression, modestr);
+        }
+
+        auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool
+        {
+            return k2a::tvp::script::loadbytes(content, length, context, result, name);
+        }
+
+    }
 
     auto GetCommandLine(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
     {
