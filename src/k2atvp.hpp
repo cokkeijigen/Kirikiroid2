@@ -5,10 +5,12 @@
 
 namespace kr2android::tvp
 {
-    struct project_dir
+
+    namespace project
     {
-        static auto get() noexcept -> const TJS::ttstr*;
-    };
+        extern auto get_dir() noexcept -> const ttstr*;
+        extern auto get_native_dir() noexcept -> const ttstr*;
+    }
 
     namespace storage
     {
@@ -86,6 +88,28 @@ namespace kr2android::tvp
         extern auto create_binary_for_write(const ttstr& name, const ttstr& modestr) noexcept -> tTJSBinaryStream*;
     }
 
+    namespace script
+    {
+        extern auto   get_engine() noexcept -> tTJS*;
+        extern auto get_dispatch() noexcept -> iTJSDispatch2*;
+        extern auto  dump_engine() noexcept -> bool;
+
+        extern auto execute(const ttstr& content, tTJSVariant* result) noexcept -> bool;
+        extern auto execute(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+        extern auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
+        extern auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto execexpr(const ttstr& content, tTJSVariant* result) noexcept -> bool;
+        extern auto execexpr(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+        extern auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
+        extern auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto load(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
+        extern auto load(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
+        extern auto loadbytes(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool;
+
+    }
+
     namespace scripts
     {
         extern auto get_text_encoding() noexcept -> const tjs_char*;
@@ -94,6 +118,7 @@ namespace kr2android::tvp
 
     extern auto get_game_path() noexcept -> std::optional<ttstr>;
     extern auto get_app_path () noexcept -> std::optional<ttstr>;
+
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
