@@ -8,8 +8,11 @@ namespace kr2android::tvp
 
     namespace project
     {
-        extern auto get_dir() noexcept -> const ttstr*;
+        extern auto        get_dir() noexcept -> const ttstr*;
         extern auto get_native_dir() noexcept -> const ttstr*;
+
+        extern auto game_path() noexcept -> ttstr;
+        extern auto  app_path() noexcept -> ttstr;
     }
 
     namespace storage
@@ -115,10 +118,6 @@ namespace kr2android::tvp
         extern auto get_text_encoding() noexcept -> const tjs_char*;
         extern auto set_text_encoding(const ttstr& name) noexcept -> bool;
     }
-
-    extern auto get_game_path() noexcept -> std::optional<ttstr>;
-    extern auto get_app_path () noexcept -> std::optional<ttstr>;
-
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
