@@ -27,6 +27,7 @@ namespace kr2android::tvp
            return _ptr;
        }
 
+
         auto app_path() noexcept -> ttstr
         {
             const TJS::ttstr* dir { project::get_dir() };
