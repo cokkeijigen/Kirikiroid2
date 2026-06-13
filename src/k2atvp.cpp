@@ -27,6 +27,26 @@ namespace kr2android::tvp
            return _ptr;
        }
 
+        auto app_path() noexcept -> ttstr
+        {
+            const TJS::ttstr* dir { project::get_dir() };
+            if(dir != nullptr && !dir->IsEmpty())
+            {
+                return storage::extract_path(*dir);
+            }
+            return ttstr{};
+        }
+
+        auto game_path() noexcept -> ttstr
+        {
+            const TJS::ttstr* dir { project::get_native_dir() };
+            if(dir != nullptr && !dir->IsEmpty())
+            {
+                return storage::extract_path(*dir);
+            }
+            return ttstr{};
+        }
+
     }
 
     namespace storage
@@ -226,12 +246,6 @@ namespace kr2android::tvp
 
             size_t begin{}, length{};
             std::u16string_view str{ name.c_str(), static_cast<size_t>(name.length()) };
-
-            if(str.starts_with(u"file://."))
-            {
-                str = str.substr(8);
-                begin += 8;
-            }
 
             size_t offset{ str.find_last_of(u"\\/>") };
             if(offset != std::u16string_view::npos)
@@ -654,48 +668,6 @@ namespace kr2android::tvp
             }
             return bool{ _ptr ? (_ptr(name), true) : false };
         }
-    }
-
-    auto get_app_path() noexcept -> std::optional<ttstr>
-    {
-        const TJS::ttstr* dir { project::get_dir() };
-        if(dir != nullptr && !dir->IsEmpty())
-        {
-            return storage::extract_path(*dir);
-        }
-        return std::nullopt;
-    }
-
-    auto get_game_path() noexcept -> std::optional<ttstr>
-    {
-        const TJS::ttstr* dir { project::get_dir() };
-        if(dir != nullptr && !dir->IsEmpty())
-        {
-            size_t begin{}, length{};
-            std::u16string_view str{ dir->c_str(), static_cast<size_t>(dir->length()) };
-
-            if(str.starts_with(u"file://."))
-            {
-                str = str.substr(8);
-                begin += 8;
-            }
-
-            size_t offset{ str.find_last_of(u"\\/>") };
-            if(offset != std::u16string_view::npos)
-            {
-                str = str.substr(0, offset);
-            }
-
-            offset = str.find_last_of(u"/\\");
-            if(offset != std::u16string_view::npos)
-            {
-                str = str.substr(0, offset);
-            }
-
-            length = str.end() - str.begin();
-            return dir->SubString(begin, static_cast<int>(length) );
-        }
-        return std::nullopt;
     }
 
     auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
