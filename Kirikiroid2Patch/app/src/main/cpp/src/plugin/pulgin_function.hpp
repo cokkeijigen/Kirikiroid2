@@ -19,8 +19,6 @@ namespace TVP
     extern auto ExtractStoragePath(const ttstr& name) noexcept -> ttstr;
     extern auto     ChopStorageExt(const ttstr& name) noexcept -> ttstr;
 
-    extern auto                  RegisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
-    extern auto                UnregisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
     extern auto             IsExistentStorageNoSearch(const ttstr& name) noexcept -> std::optional<bool>;
     extern auto  IsExistentStorageNoSearchNoNormalize(const ttstr& name) noexcept -> std::optional<bool>;
 
@@ -36,17 +34,66 @@ namespace TVP
     extern auto GetDefaultReadEncoding() noexcept -> const tjs_char*;
     extern auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool;
 
-    void SetXP3ArchiveExtractionFilter(tTVPXP3ArchiveExtractionFilter);
+    namespace StorageMedia
+    {
+        using iTVPStorageLister = k2a::tvp::storage::iStorageLister;
+        using iTVPStorageMedia  = k2a::tvp::storage::iStorageMedia;
+        extern auto   RegisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
+        extern auto UnregisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
+    }
+    using namespace StorageMedia;
+
+    namespace XP3Archive
+    {
+        using tTVPXP3ExtractionFilterInfo    = k2a::tvp::xp3::ExtractionFilterInfo;
+        using tTVPXP3ArchiveExtractionFilter = k2a::tvp::xp3::ExtractionFilterType;
+        using tTVPXP3ArchiveContentFilter    = k2a::tvp::xp3::ContentFilterType;
+        extern auto GetXP3ArchiveExtractionFilter() noexcept -> tTVPXP3ArchiveExtractionFilter;
+        extern auto    GetXP3ArchiveContentFilter() noexcept -> tTVPXP3ArchiveContentFilter;
+        extern auto SetXP3ArchiveExtractionFilter(tTVPXP3ArchiveExtractionFilter filter) noexcept -> bool;
+        extern auto    SetXP3ArchiveContentFilter(tTVPXP3ArchiveContentFilter    filter) noexcept -> bool;
+    }
+    using namespace XP3Archive;
+
+    namespace Graphic
+    {
+        using tTVPGraphicLoadingHandler       = Graphic::LoadingHandler;
+        using tTVPGraphicHeaderLoadingHandler = Graphic::HeaderLoadingHandler;
+        using tTVPGraphicSaveHandler          = Graphic::SaveHandler;
+        using tTVPGraphicAcceptSaveHandler    = Graphic::AcceptSaveHandler;
+
+        extern auto RegisterGraphicLoadingHandler
+        (
+            const ttstr&                      name,
+            tTVPGraphicLoadingHandler      loading,
+            tTVPGraphicHeaderLoadingHandler header,
+            tTVPGraphicSaveHandler            save,
+            tTVPGraphicAcceptSaveHandler    accept,
+            void*                       formatdata
+        ) noexcept -> bool;
+
+        extern auto UnregisterGraphicLoadingHandler
+        (
+            const ttstr&                      name,
+            tTVPGraphicLoadingHandler      loading,
+            tTVPGraphicHeaderLoadingHandler header,
+            tTVPGraphicSaveHandler            save,
+            tTVPGraphicAcceptSaveHandler    accept,
+            void*                       formatdata
+        ) noexcept -> bool;
+
+        extern auto ClearGraphicCache() noexcept -> bool;
+    }
+
+    using namespace Graphic;
+
 
 //    IStream * CreateIStream(const ttstr &,tjs_uint32);
 //    tTJSBinaryStream * CreateBinaryStreamAdapter(IStream *);
 
-    bool CheckExistentLocalFolder(const ttstr &);
-    bool CheckExistentLocalFile(const ttstr &);
-    bool CreateFolders(const ttstr &);
 
     // ========== 脚本执行 ==========
-    iTJSDispatch2 * GetScriptDispatch();
+    iTJSDispatch2* GetScriptDispatch();
     void ExecuteScript(const ttstr &,tTJSVariant *);
     void ExecuteScript(const ttstr &,iTJSDispatch2 *,tTJSVariant *);
     void ExecuteExpression(const ttstr &,tTJSVariant *);
@@ -74,9 +121,9 @@ namespace TVP
     void RemoveCompactEventHook(tTVPCompactEventCallbackIntf *);
 
     // ========== 图形/图像加载 ==========
-    void RegisterGraphicLoadingHandler(const ttstr &,tTVPGraphicLoadingHandlerForPlugin,tTVPGraphicHeaderLoadingHandlerForPlugin,tTVPGraphicSaveHandlerForPlugin,tTVPGraphicAcceptSaveHandler,void *);
-    void UnregisterGraphicLoadingHandler(const ttstr &,tTVPGraphicLoadingHandlerForPlugin,tTVPGraphicHeaderLoadingHandlerForPlugin,tTVPGraphicSaveHandlerForPlugin,tTVPGraphicAcceptSaveHandler,void *);
-    void ClearGraphicCache();
+
+
+
     iTVPScanLineProvider * SLPLoadImage(const ttstr &,tjs_int,tjs_uint32,tjs_uint,tjs_uint);
     void AddTransHandlerProvider(iTVPTransHandlerProvider *);
     void RemoveTransHandlerProvider(iTVPTransHandlerProvider *);
