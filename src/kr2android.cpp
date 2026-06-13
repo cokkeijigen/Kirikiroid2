@@ -8,12 +8,12 @@ namespace kr2android
 
     auto get_base() noexcept -> uniptr_t
     {
-        return kr2android::modbase;
+        return modbase;
     }
 
     auto init(const uniptr_t libbase) noexcept -> bool
     {
-        if(kr2android::modbase.ptr != nullptr)
+        if(modbase.ptr != nullptr)
         {
             return false;
         }
@@ -26,7 +26,7 @@ namespace kr2android
 
     auto init() noexcept -> bool
     {
-        if(kr2android::modbase.ptr != nullptr)
+        if(modbase.ptr != nullptr)
         {
             return false;
         }
@@ -54,7 +54,7 @@ namespace kr2android
             return false;
         }
 
-        kr2android::modbase.uintptr = ctx.addr;
+        modbase.uintptr = ctx.addr;
         return true;
     }
 
