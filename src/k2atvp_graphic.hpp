@@ -75,14 +75,29 @@ namespace kr2android::tvp::graphic
 
     struct GraphicLoadingContext
     {
-        void*                          formatdata;
-        void*                        callbackdata;
-        SizeCallback                 sizecallback;
-        ScanLineCallback         scanlinecallback;
-        MetaInfoPushCallback metainfopushcallback;
-        tTJSBinaryStream*                     src;
-        tjs_int32                          keyidx;
-        LoadMode                             mode;
+        void*                           formatdata;
+        void*                         callbackdata;
+        SizeCallback                 sizecallback_;
+        ScanLineCallback         scanlinecallback_;
+        MetaInfoPushCallback metainfopushcallback_;
+        tTJSBinaryStream*                      src;
+        tjs_int32                           keyidx;
+        LoadMode                              mode;
+
+        inline auto sizecallback(tjs_uint w, tjs_uint h, PixelFormat fmt) const noexcept -> int
+        {
+            return this->sizecallback_(this->callbackdata, w, h, fmt);
+        }
+
+        inline auto scanlinecallback(tjs_int y) const noexcept -> void*
+        {
+            return this->scanlinecallback_(this->callbackdata, y);
+        }
+
+        inline auto metainfopushcallback(const ttstr& name, const ttstr& value) const noexcept -> void
+        {
+            this->metainfopushcallback_(this->callbackdata, name, value);
+        }
     };
 
     struct GraphicSaveContext
@@ -116,6 +131,7 @@ namespace kr2android::tvp::graphic
     template<LoadingHandlerWrapperCallback callback = nullptr>
     struct LoadingHandlerWrapper
     {
+        [[gnu::noinline]]
         static auto Call
         (
             void* formatdata, void* callbackdata, SizeCallback sizecallback, ScanLineCallback scanlinecallback,
@@ -127,14 +143,14 @@ namespace kr2android::tvp::graphic
                 const GraphicLoadingContext context
                 {
 
-                    .formatdata           = formatdata,
-                    .callbackdata         = callbackdata,
-                    .sizecallback         = sizecallback,
-                    .scanlinecallback     = scanlinecallback,
-                    .metainfopushcallback = metainfopushcallback,
-                    .src                  = src,
-                    .keyidx               = keyidx,
-                    .mode                 = mode,
+                    .formatdata            = formatdata,
+                    .callbackdata          = callbackdata,
+                    .sizecallback_         = sizecallback,
+                    .scanlinecallback_     = scanlinecallback,
+                    .metainfopushcallback_ = metainfopushcallback,
+                    .src                   = src,
+                    .keyidx                = keyidx,
+                    .mode                  = mode,
                 };
                 callback(context);
             }
@@ -144,6 +160,7 @@ namespace kr2android::tvp::graphic
     template<SaveHandlerWrapperCallback callback = nullptr>
     struct SaveHandlerWrapper
     {
+        [[gnu::noinline]]
         static auto Call(void* formatdata, tTJSBinaryStream* dst,  NativeBaseBitmap* image, const ttstr& mode,
                          iTJSDispatch2*  meta)  noexcept -> void
         {
@@ -165,6 +182,7 @@ namespace kr2android::tvp::graphic
     template<HeaderLoadingHandlerWrapperCallback callback = nullptr>
     struct HeaderLoadingHandlerWrapper
     {
+        [[gnu::noinline]]
         static auto Call(void* formatdata, tTJSBinaryStream* src, iTJSDispatch2** dic) noexcept -> void
         {
             if constexpr (callback != nullptr)
