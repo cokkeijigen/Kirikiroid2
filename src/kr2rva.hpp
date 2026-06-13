@@ -15,9 +15,15 @@ namespace kr2android::tvp::rva
         #endif
     }
 
+    namespace Script
+    {
+        static inline constexpr uintptr_t ScriptEngine{ TargetRVA(0x1ADFFD0, 0) };
+    }
+
     namespace TJSString
     {
-        static inline constexpr uintptr_t ProjectDir{ TargetRVA(0x1AF01A8, 0) };
+        static inline constexpr uintptr_t       ProjectDir{ TargetRVA(0x1AF01A8, 0) };
+        static inline constexpr uintptr_t NativeProjectDir{ TargetRVA(0x1AF1300, 0) };
     };
 
     namespace Graphic
