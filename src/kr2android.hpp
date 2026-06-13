@@ -1,8 +1,7 @@
 #pragma once
 #include <optional>
-#include <kr2rva.hpp>
-#include <kr2type.hpp>
-#define _kr2android
+#include <tjs.h>
+#include <k2atvp.hpp>
 
 namespace kr2android
 {
@@ -54,14 +53,17 @@ namespace kr2android
     extern auto init(const uniptr_t libbase) noexcept -> bool;
     extern auto init() noexcept -> bool;
 
-    template<is_pointer T>
+    template<is_pointer T = void*>
     inline auto cast_ptr(const uintptr_t rva) noexcept -> T
     {
         unirawptr_t<T> result{};
-        const uniptr_t base{ get_base() };
-        if(base.ptr != nullptr)
+        if(rva != 0)
         {
-            result = base.uintptr + rva;
+            const uniptr_t base{ get_base() };
+            if(base.ptr != nullptr)
+            {
+                result = base.uintptr + rva;
+            }
         }
         return result.raw;
     }
