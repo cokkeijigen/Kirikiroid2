@@ -16,13 +16,13 @@ namespace kr2patch
 
     static noinline auto TVPLoadPlugins() -> void
     {
-        const TJS::ttstr tjsstr_path{ k2a::tvp::get_game_path() };
-        if(tjsstr_path.IsEmpty())
+        std::optional<ttstr> tjsstr_path{ k2a::tvp::get_game_path() };
+        if(!tjsstr_path.has_value() || (*tjsstr_path).IsEmpty())
         {
             return;
         }
 
-        std::filesystem::path plugin_path{ tjsstr_path.c_str() };
+        std::filesystem::path plugin_path{ (*tjsstr_path).c_str() };
         plugin_path.append(u"plugin");
         logd("plugin_path: %s\n", plugin_path.string().c_str());
 
@@ -86,8 +86,16 @@ namespace kr2patch
         if(kr2android::init())
         {
             logd("kr2android init success!\n");
-            auto TVPExecuteStartupScript = k2a::get_base() + tvprva(0x8E5004, 0);
-            hooker::add<TVPExecuteStartupScript_Hook>(TVPExecuteStartupScript.ptr);
+            void* const TVPExecuteStartupScript = k2a::cast_ptr(tvprva(0x8E5004, 0));
+            if(TVPExecuteStartupScript != nullptr)
+            {
+                bool success = hooker::add<TVPExecuteStartupScript_Hook>(TVPExecuteStartupScript);
+                logd("Add TVPExecuteStartupScript Hook: %s", success ? "success": "failed");
+            }
+            else
+            {
+                logd("Get TVPExecuteStartupScript Address Failed!");
+            }
         }
         else
         {
