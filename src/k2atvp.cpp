@@ -4,14 +4,29 @@
 
 namespace kr2android::tvp
 {
-    auto project_dir::get() noexcept -> const TJS::ttstr*
+    namespace project
     {
-        static TJS::ttstr* _ptr{};
-        if(_ptr == nullptr)
-        {
-            _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::ProjectDir);
-        }
-        return _ptr;
+
+       auto get_dir() noexcept -> const ttstr*
+       {
+           static ttstr* _ptr{};
+           if(_ptr == nullptr)
+           {
+               _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::ProjectDir);
+           }
+           return _ptr;
+       }
+
+       auto get_native_dir() noexcept -> const ttstr*
+       {
+           static ttstr* _ptr{};
+           if(_ptr == nullptr)
+           {
+               _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::NativeProjectDir);
+           }
+           return _ptr;
+       }
+
     }
 
     namespace storage
@@ -383,6 +398,241 @@ namespace kr2android::tvp
         }
     }
 
+    namespace script
+    {
+        auto get_engine() noexcept -> tTJS*
+        {
+            static tTJS* _ptr{};
+            if(_ptr == nullptr)
+            {
+                _ptr = cast_ptr<tTJS*>(rva::Script::ScriptEngine);
+            }
+            return _ptr;
+        }
+
+        auto get_dispatch() noexcept -> iTJSDispatch2*
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                return engine->GetGlobal();
+            }
+            return nullptr;
+        }
+
+        auto dump_engine() noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+            }
+            return false;
+        }
+
+        auto execute(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                try
+                {
+                    engine->ExecScript(content, result, context);
+                    return true;
+                }
+                catch(...) {}
+            }
+            return false;
+        }
+
+        auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                try
+                {
+                    engine->ExecScript(content, result, context, &name, lineofs);
+                    return true;
+                }
+                catch(...) {}
+            }
+            return false;
+        }
+
+        auto execexpr(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                bool success{};
+                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
+                engine->SetConsoleOutput(nullptr); // once set TJS console to null
+                try
+                {
+                    engine->EvalExpression(content, result, context);
+                    success = true;
+                }
+                catch(...)
+                {
+                    success = false;
+                }
+                engine->SetConsoleOutput(output);
+                return success;
+            }
+            return false;
+        }
+
+        auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                bool success{};
+                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
+                engine->SetConsoleOutput(nullptr); // once set TJS console to null
+                try
+                {
+                    engine->EvalExpression(content, result, context, &name, lineofs);
+                    success = true;
+                }
+                catch(...)
+                {
+                    success = false;
+                }
+                engine->SetConsoleOutput(output);
+                return success;
+            }
+            return false;
+        }
+
+        auto load(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine == nullptr)
+            {
+                return false;
+            }
+
+            const std::optional<ttstr> place{ storage::get_placed_path(name) };
+            if(!place.has_value() || (*place).IsEmpty())
+            {
+                return false;
+            }
+
+            const std::optional<ttstr> shortname{ storage::extract_name(*place) };
+            if(!shortname.has_value() || shortname->IsEmpty())
+            {
+                return false;
+            }
+
+            tTJSBinaryStream* binary_stream{ stream::create_binary_for_read(*place, modestr) };
+            if(binary_stream != nullptr)
+            {
+                bool is_bytecode{}, success{};
+                try
+                {
+                    is_bytecode = engine->LoadByteCode(binary_stream, result, context, shortname->c_str());
+                    success = true;
+                }
+                catch(...)
+                {
+                    success = false;
+                }
+                delete binary_stream;
+
+                if(!success)
+                {
+                    return false;
+                }
+
+                if(is_bytecode)
+                {
+                    return true;
+                }
+            }
+
+            iTJSTextReadStream* text_stream{ stream::create_text_for_read(*place, modestr) };
+            if(text_stream != nullptr)
+            {
+                bool success{};
+                ttstr buffer{};
+                try
+                {
+                    text_stream->Read(buffer, 0);
+                    success = true;
+                }
+                catch(...)
+                {
+                    success = false;
+                }
+                text_stream->Destruct();
+                text_stream = nullptr;
+
+                if(!success)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    if(isexpression)
+                    {
+                        engine->EvalExpression(buffer, result, context, &(*shortname));
+                    }
+                    else
+                    {
+                        engine->ExecScript(buffer, result, context, &(*shortname));
+                    }
+                    return true;
+                }
+                catch(...){}
+            }
+
+            return false;
+        }
+
+        auto loadbytes(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool
+        {
+            tTJS* const engine{ get_engine() };
+            if(engine != nullptr)
+            {
+                try
+                {
+                    engine->LoadByteCode(content, length, result, context, name);
+                    return true;
+                }
+                catch(...){}
+            }
+            return false;
+        }
+
+        auto execute(const ttstr& content, tTJSVariant* result) noexcept -> bool
+        {
+            return script::execute(content, nullptr, result);
+        }
+
+        auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
+        {
+            return script::execute(content, name, lineofs, nullptr, result);
+        }
+
+        auto execexpr(const ttstr& content, tTJSVariant* result) noexcept -> bool
+        {
+            return script::execexpr(content, nullptr, result);
+        }
+
+        auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
+        {
+            return script::execexpr(content, name, lineofs, nullptr, result);
+        }
+
+        auto load(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
+        {
+            script::load(name, nullptr, result, isexpression, modestr);
+        }
+
+    }
+
     namespace scripts
     {
         auto get_text_encoding() noexcept -> const tjs_char*
@@ -408,7 +658,7 @@ namespace kr2android::tvp
 
     auto get_app_path() noexcept -> std::optional<ttstr>
     {
-        const TJS::ttstr* dir { project_dir::get() };
+        const TJS::ttstr* dir { project::get_dir() };
         if(dir != nullptr && !dir->IsEmpty())
         {
             return storage::extract_path(*dir);
@@ -418,8 +668,7 @@ namespace kr2android::tvp
 
     auto get_game_path() noexcept -> std::optional<ttstr>
     {
-
-        const TJS::ttstr* dir { project_dir::get() };
+        const TJS::ttstr* dir { project::get_dir() };
         if(dir != nullptr && !dir->IsEmpty())
         {
             size_t begin{}, length{};
