@@ -3,6 +3,8 @@
 #include <dobby.h>
 #include <android/log.h>
 #include <kr2android.hpp>
+#include <kr2rva.hpp>
+
 #if defined(__aarch64__)
 #define armv8orv7(arm64v8a, armeabiv7a, ...) arm64v8a
 #define arm_only(...) __VA_ARGS__
@@ -36,15 +38,15 @@ namespace kr2patch
         inline static decltype(fun) call;
 
         template<auto fun>
-        inline static auto add(void* target) -> int
+        inline static auto add(void* const target) noexcept -> bool
         {
             auto _out{ reinterpret_cast<void**>(&hooker::call<fun>) };
             auto _fun{ reinterpret_cast<void*>(fun) };
-            return ::DobbyHook(target, _fun, _out);
+            return ::DobbyHook(target, _fun, _out) == 0;
         }
 
         template<auto fun>
-        inline static auto add(decltype(fun) target) -> int
+        inline static auto add(const decltype(fun) target) noexcept -> bool
         {
             return hooker::add<fun>(reinterpret_cast<void*>(target));
         }
