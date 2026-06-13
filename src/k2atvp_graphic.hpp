@@ -221,6 +221,7 @@ namespace kr2android::tvp::graphic
     template<AcceptSaveHandlerWrapperCallback callback>
     struct AcceptSaveHandlerWrapper
     {
+        [[gnu::noinline]]
         static auto Call(void* formatdata, const ttstr& type, iTJSDispatch2** dic) noexcept -> void
         {
             if constexpr (callback != nullptr)
