@@ -20,6 +20,7 @@ namespace kr2android
 
         if(libbase.ptr != nullptr)
         {
+            modbase = libbase;
             return true;
         }
     }
