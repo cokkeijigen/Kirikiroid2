@@ -5,30 +5,27 @@
 
 namespace TVP
 {
-    using namespace kr2android::tvp::graphic;
-    using namespace kr2android::tvp::storage;
 
-    using iTVPStorageLister = iStorageLister;
-    using iTVPStorageMedia  = iStorageMedia;
+//    #pragma pack(push, 4)
+//    struct tTVPXP3ExtractionFilterInfo
+//    {
+//        const tjs_uint SizeOfSelf; // structure size of tTVPXP3ExtractionFilterInfo itself
+//        const tjs_uint64 Offset; // offset of the buffer data in uncompressed stream position
+//        void * Buffer; // target data buffer
+//        const tjs_uint BufferSize; // buffer size in bytes pointed by "Buffer"
+//        const tjs_uint32 FileHash; // hash value of the file (since inteface v2)
+//        const ttstr &FileName;
+//
+//        inline tTVPXP3ExtractionFilterInfo(tjs_uint64 offset, void *buffer, tjs_uint buffersize, tjs_uint32 filehash, const ttstr& filename)
+//        : Offset(offset), Buffer(buffer), BufferSize(buffersize), FileHash(filehash), FileName(filename), SizeOfSelf(sizeof(tTVPXP3ExtractionFilterInfo)) {;}
+//
+//    };
+//    #pragma pack(pop)
 
+//    typedef void (*tTVPXP3ArchiveExtractionFilter)(tTVPXP3ExtractionFilterInfo *info, tTJSVariant *ctx);
+//
+//    typedef tjs_int(*tTVPXP3ArchiveContentFilter)(const ttstr &filepath, const ttstr &archivename, tjs_uint64 filesize, tTJSVariant *ctx);
 
-    #pragma pack(push, 4)
-    struct tTVPXP3ExtractionFilterInfo
-    {
-        const tjs_uint SizeOfSelf; // structure size of tTVPXP3ExtractionFilterInfo itself
-        const tjs_uint64 Offset; // offset of the buffer data in uncompressed stream position
-        void * Buffer; // target data buffer
-        const tjs_uint BufferSize; // buffer size in bytes pointed by "Buffer"
-        const tjs_uint32 FileHash; // hash value of the file (since inteface v2)
-        const ttstr &FileName;
-
-        inline tTVPXP3ExtractionFilterInfo(tjs_uint64 offset, void *buffer, tjs_uint buffersize, tjs_uint32 filehash, const ttstr& filename)
-        : Offset(offset), Buffer(buffer), BufferSize(buffersize), FileHash(filehash), FileName(filename), SizeOfSelf(sizeof(tTVPXP3ExtractionFilterInfo)) {;}
-
-    };
-    #pragma pack(pop)
-
-    typedef void (*tTVPXP3ArchiveExtractionFilter)(tTVPXP3ExtractionFilterInfo *info, tTJSVariant *ctx);
 
     //---------------------------------------------------------------------------
     // Continuous Event related
