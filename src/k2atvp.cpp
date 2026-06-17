@@ -469,6 +469,7 @@ namespace kr2android::tvp
             tTJSScriptCache*       Cache;
             tTJSVariantArrayStack* VariantArrayStack;
 
+            [[gnu::noinline]]
             auto Dump(tjs_uint width = 0x50) const noexcept -> bool
             {
                 static decltype(&__tTJS::__dump) _ptr;
