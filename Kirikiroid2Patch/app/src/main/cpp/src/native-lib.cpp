@@ -16,6 +16,7 @@ namespace kr2patch
 
     static noinline auto TVPLoadPlugins() -> void
     {
+
         ttstr tjsstr_path{ k2a::tvp::sys::base_path() };
         if(tjsstr_path.IsEmpty())
         {
