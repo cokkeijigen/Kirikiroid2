@@ -6,14 +6,15 @@
 namespace kr2android::tvp
 {
 
-    namespace project
+    namespace system
     {
         extern auto        get_dir() noexcept -> const ttstr*;
         extern auto get_native_dir() noexcept -> const ttstr*;
 
-        extern auto game_path() noexcept -> ttstr;
+        extern auto base_path() noexcept -> ttstr;
         extern auto  app_path() noexcept -> ttstr;
     }
+    namespace sys = system;
 
     namespace storage
     {
@@ -93,8 +94,13 @@ namespace kr2android::tvp
 
     namespace script
     {
+
         extern auto   get_engine() noexcept -> tTJS*;
-        extern auto get_dispatch() noexcept -> iTJSDispatch2*;
+        extern auto get_dispatch(bool addref = false) noexcept -> iTJSDispatch2*;
+
+        extern auto  dump_engine(std::string_view name, bool global) noexcept -> bool;
+        extern auto  dump_engine(std::string_view name) noexcept -> bool;
+        extern auto  dump_engine(bool global) noexcept -> bool;
         extern auto  dump_engine() noexcept -> bool;
 
         extern auto execute(const ttstr& content, tTJSVariant* result) noexcept -> bool;
@@ -118,6 +124,8 @@ namespace kr2android::tvp
         extern auto get_text_encoding() noexcept -> const tjs_char*;
         extern auto set_text_encoding(const ttstr& name) noexcept -> bool;
     }
+
+    extern auto get_random_bits128(void* dest) noexcept -> bool;
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
