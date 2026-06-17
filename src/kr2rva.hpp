@@ -17,7 +17,9 @@ namespace kr2android::tvp::rva
 
     namespace Script
     {
-        static inline constexpr uintptr_t ScriptEngine{ TargetRVA(0x1ADFFD0, 0) };
+        static inline constexpr uintptr_t           ScriptEngine{ TargetRVA(0x1ADFFD0, 0) };
+        static inline constexpr uintptr_t      GetScriptDispatch{ TargetRVA(0x08E4000, 0) };
+        static inline constexpr uintptr_t ScriptEngine_tTJS_Dump{ TargetRVA(0x097DF60, 0) };
     }
 
     namespace TJSString
@@ -69,6 +71,8 @@ namespace kr2android::tvp::rva
 
     static inline constexpr uintptr_t               GetDefaultReadEncoding{ TargetRVA(0x08F72C4, 0) };
     static inline constexpr uintptr_t               SetDefaultReadEncoding{ TargetRVA(0x08F6EDC, 0) };
+
+    static inline constexpr uintptr_t                     GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
 
     static inline constexpr uintptr_t                       GetCommandLine{ TargetRVA(0x090DE30, 0) };
     static inline constexpr uintptr_t                       SetCommandLine{ TargetRVA(0x090FCA0, 0) };
