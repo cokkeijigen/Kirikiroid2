@@ -94,6 +94,7 @@ namespace kr2android::tvp::storage
         return nullptr;
     }
 
+    [[gnu::noinline]]
     auto StorageMediaManager::SetCurrentDirectory(const TJS::ttstr &directory) noexcept -> bool
     {
         struct Wrapper : StorageMediaManager
@@ -116,6 +117,7 @@ namespace kr2android::tvp::storage
         return false;
     }
 
+    [[gnu::noinline]]
     auto StorageMediaManager::NormalizeStorageName(const ttstr& name, ttstr* ret_media, ttstr *ret_domain, ttstr *ret_path) noexcept -> std::optional<ttstr>
     {
         struct Wrapper : StorageMediaManager
@@ -137,6 +139,7 @@ namespace kr2android::tvp::storage
         return std::nullopt;
     }
 
+    [[gnu::noinline]]
     auto StorageMediaManager::GetLocallyAccessibleName(const ttstr& name) noexcept -> std::optional<ttstr>
     {
         struct Wrapper : StorageMediaManager
