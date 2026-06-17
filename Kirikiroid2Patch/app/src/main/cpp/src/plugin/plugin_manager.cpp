@@ -178,22 +178,20 @@ namespace kr2patch
         return false;
     }
 
-    auto plugin_manager::unload_all() noexcept -> void
+    auto plugin_manager::_is_load(const std::filesystem::path& path) noexcept -> bool
     {
-        if(!this->m_dl_handles.empty())
+        const std::optional<uint64_t> hash{ path_hash(path) };
+        if (hash.has_value())
         {
             for (const auto& lib : this->m_dl_handles)
             {
-                this->_unload(lib.handle);
+                if(lib.hash == *hash)
+                {
+                    return true;
+                }
             }
-            this->m_dl_handles.clear();
         }
-
-        if(!this->m_plugin_path.empty())
-        {
-            std::error_code error{};
-            std::filesystem::remove_all(this->m_plugin_path, error);
-        }
+        return false;
     }
 
     auto plugin_manager::_load(const std::filesystem::path& path) noexcept -> bool
@@ -208,6 +206,16 @@ namespace kr2patch
         if(!hash.has_value())
         {
             return false;
+        }
+        else
+        {
+            for (const auto& lib : this->m_dl_handles)
+            {
+                if (lib.hash == *hash)
+                {
+                    return true;
+                }
+            }
         }
 
         const std::string hash_str{ to_string(*hash) };
@@ -294,6 +302,24 @@ namespace kr2patch
         }
     }
 
+    auto plugin_manager::unload_all() noexcept -> void
+    {
+        if(!this->m_dl_handles.empty())
+        {
+            for (const auto& lib : this->m_dl_handles)
+            {
+                this->_unload(lib.handle);
+            }
+            this->m_dl_handles.clear();
+        }
+
+        if(!this->m_plugin_path.empty())
+        {
+            std::error_code error{};
+            std::filesystem::remove_all(this->m_plugin_path, error);
+        }
+    }
+
     auto plugin_manager::unload(const std::filesystem::path& path) noexcept -> bool
     {
         if(this->m_dl_handles.empty())
@@ -329,5 +355,24 @@ namespace kr2patch
         }
         return this->_load(path);
     }
+
+    auto plugin_manager::is_load(const std::filesystem::path& path) noexcept -> bool
+    {
+        if(this->m_plugin_path.empty())
+        {
+            return false;
+        }
+        return this->_is_load(path);
+    }
+
+    auto plugin_manager::is_load(std::string_view path) noexcept -> bool
+    {
+        if(this->m_plugin_path.empty())
+        {
+            return false;
+        }
+        return this->_is_load(std::filesystem::path{ path });
+    }
+
 
 }
