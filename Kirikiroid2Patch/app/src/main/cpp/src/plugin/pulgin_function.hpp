@@ -5,14 +5,14 @@
 namespace TVP
 {
 
+    extern auto   GetAppPath() noexcept -> ttstr;
+    extern auto  GetBasePath() noexcept -> ttstr;
+    extern auto GetLocalName(ttstr& name) noexcept -> std::optional<ttstr>;
+
     extern auto       AddAutoPath(const ttstr& path) noexcept -> bool;
     extern auto    RemoveAutoPath(const ttstr& path) noexcept -> bool;
     extern auto     GetPlacedPath(const ttstr& path) noexcept -> std::optional<ttstr>;
     extern auto IsExistentStorage(const ttstr& path) noexcept -> std::optional<bool>;
-
-    extern auto   GetAppPath() noexcept -> std::optional<ttstr>;
-    extern auto  GetGamePath() noexcept -> std::optional<ttstr>;
-    extern auto GetLocalName(ttstr& name) noexcept -> std::optional<ttstr>;
 
     extern auto  ExtractStorageExt(const ttstr& name) noexcept -> ttstr;
     extern auto ExtractStorageName(const ttstr& name) noexcept -> ttstr;
@@ -106,7 +106,11 @@ namespace TVP
         extern auto  ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
         extern auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool;
 
-        void DumpScriptEngine();
+        extern auto DumpScriptEngine(std::string_view name, bool global) noexcept -> bool;
+        extern auto DumpScriptEngine(std::string_view name) noexcept -> bool;
+        extern auto DumpScriptEngine(bool global) noexcept -> bool;
+        extern auto DumpScriptEngine() noexcept -> bool;
+
     }
     using namespace Script;
 
