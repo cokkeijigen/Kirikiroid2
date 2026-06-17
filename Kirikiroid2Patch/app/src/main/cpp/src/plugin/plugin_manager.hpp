@@ -7,19 +7,31 @@
 
 namespace kr2patch
 {
-    using pair = std::pair<std::string, void*>;
 
     class plugin_manager
     {
-        std::vector<void*>     m_dl_handles{};
+        struct libpair_t
+        {
+            uint64_t hash;
+            void*  handle;
+        };
+
+        std::vector<libpair_t> m_dl_handles{};
         std::filesystem::path m_plugin_path{};
         JavaVM* m_jvm;
+
+        [[gnu::noinline]] auto   _load(const std::filesystem::path& path) noexcept -> bool;
+        [[gnu::noinline]] auto _unload(const std::filesystem::path& path) noexcept -> bool;
+        [[gnu::noinline]] auto _unload(void* handle) noexcept -> void;
 
     public:
         ~plugin_manager() noexcept;
         plugin_manager () noexcept {};
 
-        auto unload() noexcept -> void;
+        auto unload_all() noexcept -> void;
+        auto unload(const std::filesystem::path&     path) noexcept -> bool;
+        auto unload(std::string_view                 path) noexcept -> bool;
+
         auto load(const std::filesystem::path& path) noexcept -> bool;
         auto load(std::string_view             path) noexcept -> bool;
 
