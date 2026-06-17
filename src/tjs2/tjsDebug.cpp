@@ -757,12 +757,12 @@ public:
 
 class Debugger {
 public:
-	//! 1MB‚ğ’ÊM—Ìˆæ‚Æ‚µ‚ÄŠm•Û‚·‚éA‚ ‚ñ‚Ü‚è”ü‚µ‚­‚È‚¢‚¯‚Ç
-	//! –{—ˆ‚Å‚ ‚ê‚ÎAƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹“™‚©‚ç—Ìˆæ‚ğˆø‚Á’£‚Á‚Ä‚«‚½‚¢‚Æ‚±‚ë
+	//! 1MBã‚’é€šä¿¡é ˜åŸŸã¨ã—ã¦ç¢ºä¿ã™ã‚‹ã€ã‚ã‚“ã¾ã‚Šç¾ã—ããªã„ã‘ã©
+	//! æœ¬æ¥ã§ã‚ã‚Œã°ã€ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ç­‰ã‹ã‚‰é ˜åŸŸã‚’å¼•ã£å¼µã£ã¦ããŸã„ã¨ã“ã‚
 	static const int DEBUGGER_COMM_AREA_MAX = 1024 * 1024;
 
 private:
-	HWND			DebuggerHwnd;	//!< ƒfƒoƒbƒKƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	HWND			DebuggerHwnd;	//!< ãƒ‡ãƒãƒƒã‚¬ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	std::wstring	LastScriptFileName;
 	tjs_int			LastLineNo;
 
@@ -774,28 +774,28 @@ private:
 	int				StepNest;
 
 	int		TypeOfExec;
-	bool	IsInitialConnect;	//!< ‰Šú‰»Ú‘±Ï‚İ‚©‚Ç‚¤‚©
-	bool	IsHandleException;	//!< —áŠO”­¶‚É’â~‚µ‚ÄAƒfƒoƒbƒK‚©‚ç‚ÌÄÀs—v‹‚ğ‘Ò‚Â‚©‚Ç‚¤‚©
+	bool	IsInitialConnect;	//!< åˆæœŸåŒ–æ¥ç¶šæ¸ˆã¿ã‹ã©ã†ã‹
+	bool	IsHandleException;	//!< ä¾‹å¤–ç™ºç”Ÿæ™‚ã«åœæ­¢ã—ã¦ã€ãƒ‡ãƒãƒƒã‚¬ã‹ã‚‰ã®å†å®Ÿè¡Œè¦æ±‚ã‚’å¾…ã¤ã‹ã©ã†ã‹
 	int		StackTraceDepth;
 
 	NativeEventQueue<Debugger> DummyWindow;
 
-	// Œ»İ‚ÌÀsó‘Ô
+	// ç¾åœ¨ã®å®Ÿè¡ŒçŠ¶æ…‹
 	enum {
-		EXEC_STOP,	//!< Às‚³‚ê‚Ä‚¢‚È‚¢(braek)
-		EXEC_STEP,	//!< ƒXƒeƒbƒvÀs
-		EXEC_TRACE,	//!< ƒgƒŒ[ƒXÀs
-		EXEC_RETURN,//!< ƒŠƒ^[ƒ“Às
-		EXEC_RUN,	//!< ’ÊíÀs
+		EXEC_STOP,	//!< å®Ÿè¡Œã•ã‚Œã¦ã„ãªã„(braek)
+		EXEC_STEP,	//!< ã‚¹ãƒ†ãƒƒãƒ—å®Ÿè¡Œ
+		EXEC_TRACE,	//!< ãƒˆãƒ¬ãƒ¼ã‚¹å®Ÿè¡Œ
+		EXEC_RETURN,//!< ãƒªã‚¿ãƒ¼ãƒ³å®Ÿè¡Œ
+		EXEC_RUN,	//!< é€šå¸¸å®Ÿè¡Œ
 	};
 
 	char DubuggerCommArea[DEBUGGER_COMM_AREA_MAX];
-	// ˆÈ‰º‚Ì‚æ‚¤‚È\‘¢‚ÅAƒuƒŒ[ƒN‚©‚ç•œ‹AŒã‚ÉƒfƒoƒbƒK‚©‚çã‚Ì—Ìˆæ‚É‘‚«‚Ü‚ê‚éB
-	// —Ìˆæ‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é‚Ì‚ÍƒfƒoƒbƒK‚ÌÓ”C
+	// ä»¥ä¸‹ã®ã‚ˆã†ãªæ§‹é€ ã§ã€ãƒ–ãƒ¬ãƒ¼ã‚¯ã‹ã‚‰å¾©å¸°å¾Œã«ãƒ‡ãƒãƒƒã‚¬ã‹ã‚‰ä¸Šã®é ˜åŸŸã«æ›¸ãè¾¼ã¾ã‚Œã‚‹ã€‚
+	// é ˜åŸŸã‚’è¶…ãˆãªã„ã‚ˆã†ã«ã™ã‚‹ã®ã¯ãƒ‡ãƒãƒƒã‚¬ã®è²¬ä»»
 	struct DebuggerCommand {
 		int		Command;
-		int		NextOffset;	//!< ‚±‚ÌƒRƒ}ƒ“ƒh‚Ìæ“ª‚©‚çŸ‚Ìƒf[ƒ^‚Ü‚Å‚ÌƒIƒtƒZƒbƒg(ƒAƒ‰ƒCƒƒ“ƒg‚µ‚Ä‚¨‚­‚±‚Æ)
-		int		Size;			//!< data ‚ÌƒTƒCƒY
+		int		NextOffset;	//!< ã“ã®ã‚³ãƒãƒ³ãƒ‰ã®å…ˆé ­ã‹ã‚‰æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ã¾ã§ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ(ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã—ã¦ãŠãã“ã¨)
+		int		Size;			//!< data ã®ã‚µã‚¤ã‚º
 		char	Data[1];
 	};
 	struct DebuggerHeader {
@@ -820,7 +820,7 @@ public:
 		DummyWindow.Deallocate();
 	}
 	void Initialize() {
-		DebuggerHwnd = ::FindWindow(L"TScriptDebuggerForm",NULL);	//!< –¼‘OŒˆ‚ß‘Å‚¿
+		DebuggerHwnd = ::FindWindow(L"TScriptDebuggerForm",NULL);	//!< åå‰æ±ºã‚æ‰“ã¡
 		if( DebuggerHwnd == 0 ) {
 			DebuggerHwnd = INVALID_HANDLE_VALUE;
 		}
@@ -835,13 +835,13 @@ public:
 	void DebugHook( tjs_int evtype, const tjs_char *filename, tjs_int lineno, tTJSInterCodeContext* ctx ) {
 		if( evtype == DBGHOOK_PREV_EXCEPT ) {
 			StepNest = 0;
-			return;	// ‚Æ‚è‚ ‚¦‚¸—áŠO‚Í–³‹‚µ‚Ä‚¨‚­
+			return;	// ã¨ã‚Šã‚ãˆãšä¾‹å¤–ã¯ç„¡è¦–ã—ã¦ãŠã
 		}
 
 		if( filename == NULL ) return;
 		if( CheckDebuggerInit() == false ) return;
 
-		HandleBreakCommand();	// ƒuƒŒ[ƒN—v‹‚ª‘—‚ç‚ê‚Ä‚«‚Ä‚¢‚é‚©’²‚×‚é
+		HandleBreakCommand();	// ãƒ–ãƒ¬ãƒ¼ã‚¯è¦æ±‚ãŒé€ã‚‰ã‚Œã¦ãã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹
 
 		BreakScriptFileName = std::wstring(filename);
 		BreakLineNo = lineno;
@@ -850,30 +850,30 @@ public:
 		if( LastLineNo != lineno ) {
 			is_change_line = true;
 		} else if( LastScriptFileName != BreakScriptFileName ) {
-			// ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹–¼‚ª•Ï‚í‚Á‚½
+			// ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«åãŒå¤‰ã‚ã£ãŸ
 			is_change_line = true;
 		}
 		LastScriptFileName = BreakScriptFileName;
 		LastLineNo = BreakLineNo;
 
 		if( evtype == DBGHOOK_PREV_BREAK ) {
-			WaitExec(ctx);	// ƒuƒŒƒCƒN‚Å~‚ß‚é
+			WaitExec(ctx);	// ãƒ–ãƒ¬ã‚¤ã‚¯ã§æ­¢ã‚ã‚‹
 		} else {
 			switch( TypeOfExec ) {
 				case EXEC_RUN:
 					if( is_change_line && IsBreakPoint( filename, lineno ) ) {
-						WaitExec(ctx);	// ƒuƒŒƒCƒN‚Å~‚ß‚é
+						WaitExec(ctx);	// ãƒ–ãƒ¬ã‚¤ã‚¯ã§æ­¢ã‚ã‚‹
 					}
-					// ƒuƒŒƒCƒNƒ|ƒCƒ“ƒg‚Å‚È‚¢‚Í–³‹
+					// ãƒ–ãƒ¬ã‚¤ã‚¯ãƒã‚¤ãƒ³ãƒˆã§ãªã„æ™‚ã¯ç„¡è¦–
 					break;
 				case EXEC_TRACE:
 					if( is_change_line ) {;
-						WaitExec(ctx);	// ƒuƒŒƒCƒN‚Å~‚ß‚é
+						WaitExec(ctx);	// ãƒ–ãƒ¬ã‚¤ã‚¯ã§æ­¢ã‚ã‚‹
 					}
 					break;
 				case EXEC_RETURN:
 					if( evtype == DBGHOOK_PREV_RETURN ) {
-						// Ÿ‚ÌƒXƒeƒbƒv‚Å~‚ß‚é
+						// æ¬¡ã®ã‚¹ãƒ†ãƒƒãƒ—ã§æ­¢ã‚ã‚‹
 						TypeOfExec = EXEC_STEP;
 						StepNest = 0;
 					}
@@ -883,12 +883,12 @@ public:
 					else if( evtype == DBGHOOK_PREV_RETURN ) StepNest--;
 					else if( evtype == DBGHOOK_PREV_EXE_LINE ) {
 						if( StepNest <= 0 ) {;
-							WaitExec(ctx);	// ƒuƒŒƒCƒN‚Å~‚ß‚é
+							WaitExec(ctx);	// ãƒ–ãƒ¬ã‚¤ã‚¯ã§æ­¢ã‚ã‚‹
 						}
 					}
 					break;
 				case EXEC_STOP:
-					WaitExec(ctx);	// ƒuƒŒƒCƒN‚Å~‚ß‚é
+					WaitExec(ctx);	// ãƒ–ãƒ¬ã‚¤ã‚¯ã§æ­¢ã‚ã‚‹
 					break;
 			}
 		}
@@ -896,13 +896,13 @@ public:
 
 	bool CheckDebuggerInit() {
 		if( IsInitialConnect == false ) {
-			// ƒfƒoƒbƒK‚ÉƒƒbƒZ[ƒW‘—‚Á‚Ä—áŠO’Ê’m—L–³AƒuƒŒ[ƒNƒ|ƒCƒ“ƒgî•ñ‚È‚Ç‚ğæ“¾‚·‚é
+			// ãƒ‡ãƒãƒƒã‚¬ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸é€ã£ã¦ä¾‹å¤–é€šçŸ¥æœ‰ç„¡ã€ãƒ–ãƒ¬ãƒ¼ã‚¯ãƒã‚¤ãƒ³ãƒˆæƒ…å ±ãªã©ã‚’å–å¾—ã™ã‚‹
 			InitializeConnection();
 		}
 		return IsInitialConnect;
 	}
 private:
-	//! ƒvƒŒ[ƒNƒ|ƒCƒ“ƒg‚Æ‚Æ‚µ‚Äİ’è‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©”»’è
+	//! ãƒ—ãƒ¬ãƒ¼ã‚¯ãƒã‚¤ãƒ³ãƒˆã¨ã¨ã—ã¦è¨­å®šã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹åˆ¤å®š
 	bool IsBreakPoint( const tjs_char *filename, tjs_int lineno ) {
 		return BreakPoints.IsBreakPoint( filename, lineno );
 	}
@@ -966,14 +966,14 @@ private:
 		return Application->GetHandle();
 	}
 	*/
-	//! ƒuƒŒ[ƒN”­¶
+	//! ãƒ–ãƒ¬ãƒ¼ã‚¯ç™ºç”Ÿ
 	void BreakOccur( tTJSInterCodeContext* ctx ) {
 		SendBreak();
 		SendStackTrace();
 		SendLocalValue( ctx );
 		SendClassValue( ctx );
 	}
-	// ‰Šúî•ñ‚ğ‘—‚Á‚Ä‚­‚ê‚é‚æ‚¤‚É—v‹‚·‚é‚Æ“¯‚É‘‚«‚İ‘ÎÛƒAƒhƒŒƒX‚ğ’Ê’m‚·‚é
+	// åˆæœŸæƒ…å ±ã‚’é€ã£ã¦ãã‚Œã‚‹ã‚ˆã†ã«è¦æ±‚ã™ã‚‹ã¨åŒæ™‚ã«æ›¸ãè¾¼ã¿å¯¾è±¡ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’é€šçŸ¥ã™ã‚‹
 	void RequestSetting() {
 		if( DebuggerHwnd != INVALID_HANDLE_VALUE ) {
 			HWND hwnd = DummyWindow.GetOwner();
@@ -1002,22 +1002,22 @@ private:
 		if( DebuggerHwnd == INVALID_HANDLE_VALUE ) return;
 		if( !::IsDebuggerPresent() ) return;
 
-		BreakOccur( ctx );	// ƒuƒŒ[ƒNˆÊ’u‚ÆƒXƒ^ƒbƒNƒgƒŒ[ƒX‚ğ‘—‚éBŒã‚Åƒ[ƒJƒ‹•Ï”‚à
+		BreakOccur( ctx );	// ãƒ–ãƒ¬ãƒ¼ã‚¯ä½ç½®ã¨ã‚¹ã‚¿ãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’é€ã‚‹ã€‚å¾Œã§ãƒ­ãƒ¼ã‚«ãƒ«å¤‰æ•°ã‚‚
 		while(true) {
 			ClearCommand();
 			::DebugBreak();	// Break!
 			if( HandleDebuggerMessage() ) {
-				// Šî–{“I‚É‚ÍA1‰ñ‚ÌƒuƒŒ[ƒN‚Å‘Sƒf[ƒ^‚ğ‚à‚ç‚¦‚é‚Ì‚ª‚¢‚¢‚¯‚ÇA
-				// 1MB‚É‚¨‚³‚Ü‚ç‚È‚¢‚Æ‚«‚Íd•û‚È‚¢B
+				// åŸºæœ¬çš„ã«ã¯ã€1å›ã®ãƒ–ãƒ¬ãƒ¼ã‚¯ã§å…¨ãƒ‡ãƒ¼ã‚¿ã‚’ã‚‚ã‚‰ãˆã‚‹ã®ãŒã„ã„ã‘ã©ã€
+				// 1MBã«ãŠã•ã¾ã‚‰ãªã„ã¨ãã¯ä»•æ–¹ãªã„ã€‚
 				break;
 			}
 		}
 		ClearCommand();
 		StepNest = 0;
 	}
-	//! @return ÀsŠJn‚·‚é‚©‚Ç‚¤‚©
-	//! @retval true : ƒRƒ}ƒ“ƒh“Ç‚İæ‚èŠ®—¹
-	//! @retval false : ‘±‚«‚ÌƒRƒ}ƒ“ƒh‚ª‚ ‚é‚Í‚¸‚È‚Ì‚ÅAÄ“xƒuƒŒ[ƒN‚µ‚ÄƒRƒ}ƒ“ƒh‚ğ“¾‚é
+	//! @return å®Ÿè¡Œé–‹å§‹ã™ã‚‹ã‹ã©ã†ã‹
+	//! @retval true : ã‚³ãƒãƒ³ãƒ‰èª­ã¿å–ã‚Šå®Œäº†
+	//! @retval false : ç¶šãã®ã‚³ãƒãƒ³ãƒ‰ãŒã‚ã‚‹ã¯ãšãªã®ã§ã€å†åº¦ãƒ–ãƒ¬ãƒ¼ã‚¯ã—ã¦ã‚³ãƒãƒ³ãƒ‰ã‚’å¾—ã‚‹
 	bool HandleDebuggerMessage() {
 		int count = GetNumOfCommands();
 		const DebuggerCommand* cmd = GetFirstCommand();
@@ -1042,20 +1042,20 @@ private:
 					break;
 				default:
 					assert(0);
-					// ‚±‚±‚É‚Í—ˆ‚È‚¢‚Í‚¸
+					// ã“ã“ã«ã¯æ¥ãªã„ã¯ãš
 					return true;
 			}
 			cmd = GetNextCommand(cmd);
 		}
 		return false;
 	}
-	// ’â~—v‹‚ª—ˆ‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
+	// åœæ­¢è¦æ±‚ãŒæ¥ã¦ã„ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 	void HandleBreakCommand() {
 		int count = GetNumOfCommands();
 		if( count ) {
 			const DebuggerCommand* cmd = GetFirstCommand();
 			if( GetCommand(cmd) == DBGEV_GER_BREAK ) {
-				// ƒuƒŒ[ƒN—v‹
+				// ãƒ–ãƒ¬ãƒ¼ã‚¯è¦æ±‚
 				TypeOfExec = EXEC_STOP;
 				ClearCommand();
 			}
@@ -1118,13 +1118,13 @@ private:
 
 };
 #endif
-// –¼‘OƒRƒŒƒNƒVƒ‡ƒ“
-// ƒtƒ@ƒCƒ‹–¼‚Æ‚©ƒNƒ‰ƒX–¼‚Æ‚©ŠÖ”–¼‚Æ‚©•Ï”–¼‚ğ“ü‚ê‚ÄAƒCƒ“ƒfƒbƒNƒX‚É•ÏŠ·‚µ‚ÄŠÇ—‚·‚é
+// åå‰ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
+// ãƒ•ã‚¡ã‚¤ãƒ«åã¨ã‹ã‚¯ãƒ©ã‚¹åã¨ã‹é–¢æ•°åã¨ã‹å¤‰æ•°åã‚’å…¥ã‚Œã¦ã€ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«å¤‰æ›ã—ã¦ç®¡ç†ã™ã‚‹
 class NameIndexCollection
 {
 protected:
-	std::map<std::wstring,int> NameWithID;	//!< –¼‘O‚ÆID‚ÌƒyƒA
-	std::vector<const std::wstring*> Names;	//!< w’èƒCƒ“ƒfƒbƒNƒX‚Ì–¼‘O
+	std::map<std::wstring,int> NameWithID;	//!< åå‰ã¨IDã®ãƒšã‚¢
+	std::vector<const std::wstring*> Names;	//!< æŒ‡å®šã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®åå‰
 
 public:
 	int GetID( const std::wstring& name ) {
@@ -1132,13 +1132,13 @@ public:
 		if( i != NameWithID.end() ) {
 			return i->second;
 		}
-		// Œ©•t‚©‚ç‚È‚¢‚Ì‚Å’Ç‰Á‚·‚é
-		int index = Names.size();	// ”z—ñ‚ÌÅŒã‚Ì—v‘f”Ô†‚ğ“¾‚é
+		// è¦‹ä»˜ã‹ã‚‰ãªã„ã®ã§è¿½åŠ ã™ã‚‹
+		int index = Names.size();	// é…åˆ—ã®æœ€å¾Œã®è¦ç´ ç•ªå·ã‚’å¾—ã‚‹
 		typedef std::pair<std::map<std::wstring,int>::iterator, bool> name_result_t;
-		name_result_t ret = NameWithID.insert( std::make_pair( name, index ) );	// —v‘f”Ô†‚Å‘}“ü
+		name_result_t ret = NameWithID.insert( std::make_pair( name, index ) );	// è¦ç´ ç•ªå·ã§æŒ¿å…¥
 		assert( ret.second );
-		const std::wstring* name_ref = &((*(ret.first)).first);	// ‘}“ü‚µ‚½–¼‘O‚Ìƒ|ƒCƒ“ƒg‚ğ“¾‚é
-		Names.push_back( name_ref );	// ‚»‚Ìƒ|ƒCƒ“ƒ^‚ğ”z—ñ‚É•Û‘¶‚·‚é
+		const std::wstring* name_ref = &((*(ret.first)).first);	// æŒ¿å…¥ã—ãŸåå‰ã®ãƒã‚¤ãƒ³ãƒˆã‚’å¾—ã‚‹
+		Names.push_back( name_ref );	// ãã®ãƒã‚¤ãƒ³ã‚¿ã‚’é…åˆ—ã«ä¿å­˜ã™ã‚‹
 		return index;
 	}
 	const std::wstring* GetName( int id ) const {
@@ -1167,8 +1167,8 @@ void TJSDebuggerGetScopeKey( ScopeKey& scope, const tjs_char* classname, const t
 
 
 struct LocalVariableKey {
-	int VarIndex;	//!< •Ï”–¼ƒCƒ“ƒfƒbƒNƒX
-	int RegAddr;	//!< ƒŒƒWƒXƒ^ƒAƒhƒŒƒX
+	int VarIndex;	//!< å¤‰æ•°åã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	int RegAddr;	//!< ãƒ¬ã‚¸ã‚¹ã‚¿ã‚¢ãƒ‰ãƒ¬ã‚¹
 
 	LocalVariableKey( int var, int reg )
 	: VarIndex(var), RegAddr(reg)
@@ -1217,13 +1217,13 @@ public:
 			i->second.push_back( ClassVariableKey( varindex, regaddr ) );
 			return;
 		}
-		// Œ©•t‚©‚ç‚È‚¢‚Ì‚Å’Ç‰Á‚·‚é
+		// è¦‹ä»˜ã‹ã‚‰ãªã„ã®ã§è¿½åŠ ã™ã‚‹
 		typedef std::pair<iterator, bool> result_t;
 		result_t ret = Variables.insert( std::make_pair( classindex, std::list<ClassVariableKey>() ) );
 		assert( ret.second );
 		ret.first->second.push_back( LocalVariableKey( varindex, regaddr ) );
 	}
-	// •Ï”–¼‚Æ’l‚ÌƒŠƒXƒg‚ğ“¾‚é
+	// å¤‰æ•°åã¨å€¤ã®ãƒªã‚¹ãƒˆã‚’å¾—ã‚‹
 	void GetVars( const tjs_char* classname, tTJSVariant* ra, tTJSVariant* da, std::list<std::wstring>& values ) {
 		values.clear();
 		if( ra == NULL || da == NULL ) return;
@@ -1282,11 +1282,11 @@ public:
 
 		iterator i = Variables.find( scope );
 		if( i != Variables.end() ) {
-			// Šù‚ÉƒL[‚ª‘¶İ‚·‚é‚Ì‚ÅA‚»‚±‚É’Ç‰Á‚·‚é
+			// æ—¢ã«ã‚­ãƒ¼ãŒå­˜åœ¨ã™ã‚‹ã®ã§ã€ãã“ã«è¿½åŠ ã™ã‚‹
 			i->second.push_back( LocalVariableKey(varindex,regaddr) );
 			return;
 		}
-		// Œ©•t‚©‚ç‚È‚¢‚Ì‚Å’Ç‰Á‚·‚é
+		// è¦‹ä»˜ã‹ã‚‰ãªã„ã®ã§è¿½åŠ ã™ã‚‹
 		typedef std::pair<iterator, bool> result_t;
 		result_t ret = Variables.insert( std::make_pair( scope, std::list<LocalVariableKey>() ) );
 		assert( ret.second );
@@ -1310,7 +1310,7 @@ public:
 		ClearVar( scope );
 	}
 
-	// •Ï”–¼‚Æ’l‚ÌƒŠƒXƒg‚ğ“¾‚é
+	// å¤‰æ•°åã¨å€¤ã®ãƒªã‚¹ãƒˆã‚’å¾—ã‚‹
 	void GetVars( const ScopeKey& scope, tTJSVariant* ra, std::list<std::wstring>& values ) {
 		values.clear();
 		if( ra == NULL ) return;
@@ -1332,7 +1332,7 @@ public:
 			}
 		}
 	}
-	// •Ï”–¼‚Æ’l‚ÌƒŠƒXƒg‚ğ“¾‚é
+	// å¤‰æ•°åã¨å€¤ã®ãƒªã‚¹ãƒˆã‚’å¾—ã‚‹
 	void GetVars( const tjs_char* classname, const tjs_char* funcname, const tjs_char* filename, int codeoffset, tTJSVariant* ra, std::list<std::wstring>& values ) {
 		ScopeKey scope;
 		TJSDebuggerGetScopeKey( scope, classname, funcname, filename, codeoffset );
@@ -1342,7 +1342,7 @@ public:
 static LocalVariableCollection LocalVariableCollectionData;
 static ClassVariableCollection ClassVariableCollectionData;
 
-// codeoffset ŠÖ”ƒR[ƒ‹‘O‚ÌƒR[ƒh‚ÌƒIƒtƒZƒbƒg
+// codeoffset é–¢æ•°ã‚³ãƒ¼ãƒ«å‰ã®ã‚³ãƒ¼ãƒ‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 void TJSDebuggerAddLocalVariable( const tjs_char* classname, const tjs_char* funcname, const tjs_char* filename, int codeoffset, const tjs_char* varname, int regaddr ) {
 	LocalVariableCollectionData.SetVar( classname, funcname, filename, codeoffset, varname, regaddr );
 }
@@ -1363,7 +1363,7 @@ void TJSDebuggerClearLocalVariable( const tjs_char* classname, const tjs_char* f
 	LocalVariableCollectionData.ClearVar( classname, funcname, filename, codeoffset );
 }
 
-// ƒNƒ‰ƒXƒƒ“ƒo•Ï”‚Ì‰Šú‰»
+// ã‚¯ãƒ©ã‚¹ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–
 void TJSDebuggerAddClassVariable( const tjs_char* classname, const tjs_char* varname, int regaddr ) {
 	ClassVariableCollectionData.SetVar( classname, varname, regaddr );
 }
@@ -1374,7 +1374,7 @@ void TJSDebuggerClearLocalVariable( const tjs_char* classname ) {
 	ClassVariableCollectionData.ClearVar( classname );
 }
 #if 0
-static Debugger DebuggerData;	//!< ƒXƒ^ƒeƒBƒbƒN‚É‚µ‚Ä‚¢‚é‚¯‚ÇAƒfƒoƒbƒK—LŒø‚È‚Æ‚«‚É“®“I‚ÉŠm•Û‚µ‚½•û‚ª‚¢‚¢B
+static Debugger DebuggerData;	//!< ã‚¹ã‚¿ãƒ†ã‚£ãƒƒã‚¯ã«ã—ã¦ã„ã‚‹ã‘ã©ã€ãƒ‡ãƒãƒƒã‚¬æœ‰åŠ¹ãªã¨ãã«å‹•çš„ã«ç¢ºä¿ã—ãŸæ–¹ãŒã„ã„ã€‚
 
 //---------------------------------------------------------------------------
 void TJSDebuggerHook( tjs_int evtype, const tjs_char *filename, tjs_int lineno, tTJSInterCodeContext* ctx )
