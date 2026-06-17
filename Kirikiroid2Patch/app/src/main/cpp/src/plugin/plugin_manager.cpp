@@ -2,9 +2,19 @@
 #include <native-lib.hpp>
 #include <kr2android.hpp>
 #include <optional>
+#include <concepts>
 
 namespace kr2patch
 {
+    template<std::invocable T>
+    struct scoped
+    {
+        T call;
+        ~scoped() { call(); }
+    };
+
+    template<class T> scoped(T) -> scoped<T>;
+
     static auto K2A_OnLoad(void* modbase, JavaVM* jvm) -> void
     {
     }
@@ -96,9 +106,7 @@ namespace kr2patch
             }
             is_attached = true;
         }
-
-        [[maybe_unused]] struct scoped { std::function<void()> call; ~scoped() { call(); } }
-        __auto_detach__{ [is_attached, jvm]() { if (is_attached){ jvm->DetachCurrentThread(); }} };
+        [[maybe_unused]] scoped __auto_detach__{ [is_attached, jvm]() { if (is_attached) { jvm->DetachCurrentThread(); }} };
 
         try
         {
