@@ -3,6 +3,22 @@
 
 namespace TVP
 {
+
+    auto GetAppPath() noexcept -> ttstr
+    {
+        return k2a::tvp::system::app_path();
+    }
+
+    auto GetBasePath() noexcept -> ttstr
+    {
+        return k2a::tvp::system::base_path();
+    }
+
+    auto GetLocalName(ttstr& name) noexcept -> std::optional<ttstr>
+    {
+        return k2a::tvp::storage::get_local_name(name);
+    }
+
     auto AddAutoPath(const ttstr& path) noexcept -> bool
     {
         return k2a::tvp::storage::add_auto_path(path);
@@ -21,21 +37,6 @@ namespace TVP
     auto IsExistentStorage(const ttstr& path) noexcept -> std::optional<bool>
     {
         return k2a::tvp::storage::is_existent(path);
-    }
-
-    auto GetAppPath() noexcept -> std::optional<ttstr>
-    {
-        return k2a::tvp::project::app_path();
-    }
-
-    auto GetGamePath() noexcept -> std::optional<ttstr>
-    {
-        return k2a::tvp::project::game_path();
-    }
-
-    auto GetLocalName(ttstr& name) noexcept -> std::optional<ttstr>
-    {
-        return k2a::tvp::storage::get_local_name(name);
     }
 
     auto ExtractStorageExt(const ttstr& name) noexcept -> ttstr
@@ -270,6 +271,25 @@ namespace TVP
             return k2a::tvp::script::loadbytes(content, length, context, result, name);
         }
 
+        auto DumpScriptEngine(std::string_view name, bool global) noexcept -> bool
+        {
+            return k2a::tvp::script::dump_engine(name, global);
+        }
+
+        auto DumpScriptEngine(std::string_view name) noexcept -> bool
+        {
+            return k2a::tvp::script::dump_engine(name);
+        }
+
+        auto DumpScriptEngine(bool global) noexcept -> bool
+        {
+            return k2a::tvp::script::dump_engine(global);
+        }
+
+        auto DumpScriptEngine() noexcept -> bool
+        {
+            return k2a::tvp::script::dump_engine();
+        }
     }
 
     auto GetCommandLine(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
