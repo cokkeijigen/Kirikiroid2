@@ -29,12 +29,13 @@ namespace kr2android::tvp::graphic
             void* __Unused[0x07];
             const void*(*GetScanLineForRead)(BaseBitmap *self, tjs_uint line);
         };
+
         struct BaseBitmap
         {
             BaseBitmapVtable* Vtable;
-            int  __Unused;
-            tjs_int  Width;
-            tjs_int Height;
+            int32_t __Unused;
+            tjs_int    Width;
+            tjs_int   Height;
         };
 
         void* __Unused[0x0B];
@@ -63,8 +64,8 @@ namespace kr2android::tvp::graphic
     using MetaInfoPushCallback = void (*)(void* callbackdata, const ttstr& name, const ttstr& value);
     using LoadingHandler       = void (*)
     (
-            void* formatdata, void* callbackdata, SizeCallback sizecallback, ScanLineCallback scanlinecallback,
-            MetaInfoPushCallback metainfopushcallback, tTJSBinaryStream* src, tjs_int32 keyidx, LoadMode mode
+        void* formatdata, void* callbackdata, SizeCallback sizecallback, ScanLineCallback scanlinecallback,
+        MetaInfoPushCallback metainfopushcallback, tTJSBinaryStream* src, tjs_int32 keyidx, LoadMode mode
     );
     using SaveHandler          = void (*)
     (
@@ -239,13 +240,13 @@ namespace kr2android::tvp::graphic
 
     struct HandlerType
     {
-        bool                 IsPlugin;
-        TJS::ttstr           Extension;
-        LoadingHandler       LoadHandler;
+        bool                      IsPlugin;
+        TJS::ttstr               Extension;
+        LoadingHandler         LoadHandler;
         HeaderLoadingHandler HeaderHandler;
-        SaveHandler          SaveHandler;
+        SaveHandler            SaveHandler;
         AcceptSaveHandler    AcceptHandler;
-        void*                FormatData;
+        void*                   FormatData;
         auto operator == (const HandlerType& ref) const noexcept -> bool;
     };
 
