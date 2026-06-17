@@ -72,13 +72,26 @@ android {
     tasks.register("compile_jni_debug") {
         group = "build"
 
-        val stripDebugTask = tasks.named("stripDebugDebugSymbols")
-        dependsOn(stripDebugTask)
+        val cmakeDebugTask = tasks.named("externalNativeBuildDebug")
+        dependsOn(cmakeDebugTask)
+
         doLast {
-            val stripOutDir = stripDebugTask.get().outputs.files.files.firstOrNull()
-            if (stripOutDir?.exists() == true) {
-                val targetDir = file("${project.layout.buildDirectory.get()}/outputs/libs/debug")
-                stripOutDir.resolve("lib").copyRecursively(targetDir, overwrite = true)
+            val targetDir = file("${project.layout.buildDirectory.get()}/outputs/libs/debug/arm64-v8a")
+            val cxxDebugDir = file("${project.layout.buildDirectory.get()}/intermediates/cxx/Debug")
+            if (cxxDebugDir.exists()) {
+                var found = false
+                cxxDebugDir.walkTopDown().forEach { file ->
+                    if (file.isDirectory && file.name == "arm64-v8a" && file.parentFile?.name == "obj") {
+                        file.listFiles()?.forEach { soFile ->
+                            if (soFile.isFile && soFile.extension == "so") {
+                                if (!targetDir.exists()) targetDir.mkdirs()
+                                val destFile = targetDir.resolve(soFile.name)
+                                soFile.copyTo(destFile, overwrite = true)
+                                found = true
+                            }
+                        }
+                    }
+                }
             }
         }
     }
