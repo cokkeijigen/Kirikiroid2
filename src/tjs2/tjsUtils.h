@@ -248,8 +248,8 @@ protected:
 	int lastIndex;
 	int firstIndex;
 
-	tVectorList(const tVectorList&);//���ɱ�����
-	tVectorList& operator=(const tVectorList&);//���ɱ���ֵ
+	tVectorList(const tVectorList&);//不可被复制
+	tVectorList& operator=(const tVectorList&);//不可被赋值
 
 	void _erase(unsigned int index) {
 		_tVectorList_Node &Node = PointerBuffPtr[index];
