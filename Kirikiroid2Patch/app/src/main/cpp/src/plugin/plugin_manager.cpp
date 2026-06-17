@@ -1,6 +1,7 @@
 #include <plugin_manager.hpp>
 #include <native-lib.hpp>
 #include <kr2android.hpp>
+#include <optional>
 
 namespace kr2patch
 {
@@ -8,9 +9,49 @@ namespace kr2patch
     {
     }
 
+    static auto K2A_UnLoad() -> void
+    {
+    }
+
+    static auto to_string(uint64_t hash) noexcept -> std::string
+    {
+        std::string result{};
+        result.resize(17);
+
+        std::snprintf(result.data(), result.size(), "%016llX", static_cast<unsigned long long>(hash));
+
+        result.resize(16);
+        return result;
+    }
+
+    static auto path_hash(const std::filesystem::path& path) noexcept -> std::optional<uint64_t>
+    {
+        std::string normal_str{ path.generic_string() };
+        if(normal_str.empty())
+        {
+            return std::nullopt;
+        }
+
+        constexpr uint64_t fnv1a_prime { 0x00000100000001B3 };
+        constexpr uint64_t fnv1a_offset{ 0xCBF29CE484222325 };
+        uint64_t hash{ fnv1a_offset };
+        for (char c : normal_str)
+        {
+            hash ^= static_cast<uint64_t>(c);
+            hash *= fnv1a_prime;
+        }
+        return hash;
+    }
+
+    static auto path_hashstr(const std::filesystem::path& path) noexcept -> std::string
+    {
+        const std::optional<uint64_t> hash{ path_hash(path) };
+        return hash.has_value() ? to_string(*hash) : std::string{};
+    }
+
     plugin_manager::~plugin_manager() noexcept
     {
-        this->unload();
+        this->unload_all();
         this->m_plugin_path.clear();
     }
 
@@ -55,6 +96,9 @@ namespace kr2patch
             }
             is_attached = true;
         }
+
+        [[maybe_unused]] struct scoped { std::function<void()> call; ~scoped() { call(); } }
+        __auto_detach__{ [is_attached, jvm]() { if (is_attached){ jvm->DetachCurrentThread(); }} };
 
         try
         {
@@ -108,36 +152,29 @@ namespace kr2patch
             std::string plugin_path{};
             plugin_path.reserve(target_length);
             plugin_path.append(path_cstr, target_length - 8);
-            plugin_path.append("/plugin/");
+            plugin_path.append("/plugins/");
 
             this->m_plugin_path = plugin_path;
             if(std::filesystem::exists(this->m_plugin_path, error) && !error)
             {
                 std::filesystem::remove_all(this->m_plugin_path, error);
             }
+
             std::filesystem::create_directories(this->m_plugin_path, error);
             return std::filesystem::exists(this->m_plugin_path, error) && !error;
         }
         catch (...) { }
 
-        if (is_attached)
-        {
-            jvm->DetachCurrentThread();
-        }
-
         return false;
     }
 
-    auto plugin_manager::unload() noexcept -> void
+    auto plugin_manager::unload_all() noexcept -> void
     {
         if(!this->m_dl_handles.empty())
         {
-            for (void* handle : this->m_dl_handles)
+            for (const auto& lib : this->m_dl_handles)
             {
-                if (handle != nullptr)
-                {
-                    ::dlclose(handle);
-                }
+                this->_unload(lib.handle);
             }
             this->m_dl_handles.clear();
         }
@@ -149,29 +186,38 @@ namespace kr2patch
         }
     }
 
-    auto plugin_manager::load(std::string_view path) noexcept -> bool
+    auto plugin_manager::_load(const std::filesystem::path& path) noexcept -> bool
     {
-        if(this->m_plugin_path.empty())
-        {
-            return false;
-        }
-        return this->load(std::filesystem::path{ path });
-    }
-
-    auto plugin_manager::load(const std::filesystem::path& path) noexcept -> bool
-    {
-        if(this->m_plugin_path.empty())
-        {
-            return false;
-        }
-
         std::error_code error{};
         if(!std::filesystem::exists(path, error)  && !error)
         {
             return false;
         }
 
-        std::filesystem::path redirect_path = this->m_plugin_path / path.filename();
+        const std::optional<uint64_t> hash{ path_hash(path) };
+        if(!hash.has_value())
+        {
+            return false;
+        }
+
+        const std::string hash_str{ to_string(*hash) };
+        std::filesystem::path redirect_dir = this->m_plugin_path / hash_str;
+
+        if(std::filesystem::exists(path, error)  && !error)
+        {
+            std::filesystem::remove_all(redirect_dir, error);
+            if(error)
+            {
+                return false;
+            }
+        }
+
+        if(!std::filesystem::create_directories(redirect_dir, error) || error)
+        {
+            return false;
+        }
+
+        std::filesystem::path redirect_path = redirect_dir / path.filename();
         std::filesystem::copy_file(path, redirect_path, std::filesystem::copy_options::overwrite_existing, error);
 
         if (error)
@@ -182,7 +228,7 @@ namespace kr2patch
         void* handle = ::dlopen(redirect_path.string().c_str(), RTLD_NOW | RTLD_GLOBAL);
         if(handle == nullptr)
         {
-            std::filesystem::remove(redirect_path, error);
+            std::filesystem::remove_all(redirect_path, error);
             return false;
         }
 
@@ -194,7 +240,84 @@ namespace kr2patch
             call(k2a::get_base().ptr, this->m_jvm);
         }
 
-        this->m_dl_handles.push_back(handle);
+        this->m_dl_handles.push_back(plugin_manager::libpair_t{ *hash, handle });
         return true;
     }
+
+    auto plugin_manager::_unload(const std::filesystem::path& path) noexcept -> bool
+    {
+        const std::optional<uint64_t> hash{ path_hash(path) };
+        if(!hash.has_value())
+        {
+            return false;
+        }
+
+        for (auto it = this->m_dl_handles.begin(); it != this->m_dl_handles.end(); ++it)
+        {
+            if (it->hash != *hash)
+            {
+                continue;
+            }
+            this->_unload(it->handle);
+
+            std::error_code error{};
+            const std::filesystem::path dir{ this->m_plugin_path / to_string(*hash) };
+            std::filesystem::remove_all(dir, error);
+
+            this->m_dl_handles.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+    auto plugin_manager::_unload(void* handle) noexcept -> void
+    {
+        if(handle != nullptr)
+        {
+            ::dlerror();
+            void* k2a_onload = ::dlsym(handle, "K2A_UnLoad");
+            if (::dlerror() == nullptr && k2a_onload != nullptr)
+            {
+                reinterpret_cast<decltype(&K2A_UnLoad)>(k2a_onload)();
+            }
+            ::dlclose(handle);
+        }
+    }
+
+    auto plugin_manager::unload(const std::filesystem::path& path) noexcept -> bool
+    {
+        if(this->m_dl_handles.empty())
+        {
+            return false;
+        }
+        return this->_unload(path);
+    }
+
+    auto plugin_manager::unload(std::string_view path) noexcept -> bool
+    {
+        if(this->m_dl_handles.empty())
+        {
+            return false;
+        }
+        return this->_unload(std::filesystem::path{ path });
+    }
+
+    auto plugin_manager::load(std::string_view path) noexcept -> bool
+    {
+        if(this->m_plugin_path.empty())
+        {
+            return false;
+        }
+        return this->_load(std::filesystem::path{ path });
+    }
+
+    auto plugin_manager::load(const std::filesystem::path& path) noexcept -> bool
+    {
+        if(this->m_plugin_path.empty())
+        {
+            return false;
+        }
+        return this->_load(path);
+    }
+
 }
