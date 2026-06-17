@@ -103,7 +103,7 @@ public:
 //---------------------------------------------------------------------------
 // tTJS
 //---------------------------------------------------------------------------
-tTJS::tTJS()
+tTJS::tTJS(tTJSCustomObject* global)
 {
 	// tTJS constructor
 	RefCount = 1;
@@ -130,7 +130,6 @@ tTJS::tTJS()
 	// create script cache object
 	Cache = new tTJSScriptCache(this);
 
-
 	try
 	{
 
@@ -138,8 +137,15 @@ tTJS::tTJS()
 		PPValues = new tTJSPPMap();
 		PPValues->Values.Add(ttstr(TJS_W("version")), TJSVersionHex);
 
-		// create the GLOBAL object
-		Global = new tTJSCustomObject(TJS_GLOBAL_HASH_BITS);
+        if(global != nullptr)
+        {
+            Global = global;
+        }
+        else
+        {
+		    // create the GLOBAL object
+    		Global = new tTJSCustomObject(TJS_GLOBAL_HASH_BITS);
+        }
 
 		if(TJSObjectHashMapEnabled())
 			TJSObjectHashSetType(Global, TJS_W("the global object"));
