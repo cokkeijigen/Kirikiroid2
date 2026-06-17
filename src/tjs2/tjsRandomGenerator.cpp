@@ -21,7 +21,7 @@
 namespace TJS
 {
 //---------------------------------------------------------------------------
-void (*TJSGetRandomBits128)(void *dest) = NULL;
+//void (*TJSGetRandomBits128)(void *dest) = NULL;
 	// retrives 128-bits (16bytes) random bits for random seed.
 	// this can be override application-specified routine, otherwise
 	// TJS2 uses current time as a random seed.
