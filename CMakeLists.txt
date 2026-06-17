@@ -28,6 +28,8 @@ add_library(kr2android OBJECT
         src/k2atvp_graphic.cpp
         src/kr2android.cpp
         src/utils/AndroidUtils.cpp
+        src/utils/TJSDumpFileOutput.cpp
+        src/utils/TickCount.cpp
         src/tjs2/tjs.cpp
         src/tjs2/tjs.tab.cpp
         src/tjs2/tjsArray.cpp
