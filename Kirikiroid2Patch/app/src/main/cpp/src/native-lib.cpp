@@ -16,13 +16,13 @@ namespace kr2patch
 
     static noinline auto TVPLoadPlugins() -> void
     {
-        std::optional<ttstr> tjsstr_path{ k2a::tvp::get_game_path() };
-        if(!tjsstr_path.has_value() || (*tjsstr_path).IsEmpty())
+        ttstr tjsstr_path{ k2a::tvp::sys::base_path() };
+        if(tjsstr_path.IsEmpty())
         {
             return;
         }
 
-        std::filesystem::path plugin_path{ (*tjsstr_path).c_str() };
+        std::filesystem::path plugin_path{ tjsstr_path.c_str() };
         plugin_path.append(u"plugin");
         logd("plugin_path: %s\n", plugin_path.string().c_str());
 
