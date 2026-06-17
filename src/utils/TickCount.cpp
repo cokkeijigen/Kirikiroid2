@@ -8,10 +8,10 @@
 //---------------------------------------------------------------------------
 // safe 64bit System Tick Count
 //---------------------------------------------------------------------------
-#include "../tjs2/tjsCommHead.h"
+#include "tjsCommHead.h"
 
-#include "../tjs2/tjsUtils.h"
-#include "../tjs2/TickCount.h"
+#include "tjsUtils.h"
+#include "TickCount.h"
 //#include "SysInitIntf.h"
 //#include "ThreadIntf.h"
 
