@@ -136,9 +136,6 @@ namespace TVP
     void RemoveCompactEventHook(tTVPCompactEventCallbackIntf *);
 
     // ========== 图形/图像加载 ==========
-
-
-
     iTVPScanLineProvider * SLPLoadImage(const ttstr &,tjs_int,tjs_uint32,tjs_uint,tjs_uint);
     void AddTransHandlerProvider(iTVPTransHandlerProvider *);
     void RemoveTransHandlerProvider(iTVPTransHandlerProvider *);
