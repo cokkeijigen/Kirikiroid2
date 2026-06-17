@@ -212,7 +212,7 @@ tTJS::tTJS(tTJSCustomObject* global)
 tTJS::~tTJS()
 {
 	// tTJS destructor
-	Cleanup();
+    Cleanup();
 }
 //---------------------------------------------------------------------------
 void tTJS::Cleanup()
@@ -223,8 +223,8 @@ void tTJS::Cleanup()
 
 	if(Global) Global->Release(), Global = NULL;
 
-	if(PPValues) delete PPValues;
-	if(Cache) delete Cache;
+	if(PPValues) delete PPValues, PPValues = NULL;
+	if(Cache) delete Cache, Cache = NULL;
 
 	TJSReservedWordsHashRelease();
 
