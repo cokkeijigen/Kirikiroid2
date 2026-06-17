@@ -953,13 +953,16 @@ void TJSReservedWordsHashAddRef()
 //---------------------------------------------------------------------------
 void TJSReservedWordsHashRelease()
 {
-	TJSReservedWordHashRefCount --;
+    if(TJSReservedWordHashRefCount > 0 && TJSReservedWordHash != NULL)
+    {
+        TJSReservedWordHashRefCount --;
 
-	if(TJSReservedWordHashRefCount == 0)
-	{
-		TJSReservedWordHash->Release();
-		TJSReservedWordHash = NULL;
-	}
+        if(TJSReservedWordHashRefCount == 0)
+        {
+            TJSReservedWordHash->Release();
+            TJSReservedWordHash = NULL;
+        }
+    }
 }
 //---------------------------------------------------------------------------
 static void TJSRegisterReservedWordsHash(const tjs_char *word, tjs_int num)
