@@ -151,15 +151,17 @@ namespace kr2patch
             {
                 return false;
             }
+
             if(path_cstr[target_length - 1] == '/')
             {
                 target_length--;
             }
-            target_length += 8;
+
+            target_length += 9;
 
             std::string plugin_path{};
             plugin_path.reserve(target_length);
-            plugin_path.append(path_cstr, target_length - 8);
+            plugin_path.append(path_cstr, target_length - 9);
             plugin_path.append("/plugins/");
 
             this->m_plugin_path = plugin_path;
