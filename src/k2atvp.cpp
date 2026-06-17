@@ -1,36 +1,41 @@
+#include <filesystem>
+#include <fstream>
 #include <kr2android.hpp>
 #include <kr2rva.hpp>
 #include <k2atvp.hpp>
-
+#include <TJSDumpFileOutput.hpp>
+#include <xstr.hpp>
 namespace kr2android::tvp
 {
-    namespace project
-    {
 
-       auto get_dir() noexcept -> const ttstr*
-       {
+    namespace system
+    {
+        [[gnu::noinline]]
+        auto get_dir() noexcept -> const ttstr*
+        {
            static ttstr* _ptr{};
            if(_ptr == nullptr)
            {
                _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::ProjectDir);
            }
            return _ptr;
-       }
+        }
 
-       auto get_native_dir() noexcept -> const ttstr*
-       {
-           static ttstr* _ptr{};
-           if(_ptr == nullptr)
-           {
-               _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::NativeProjectDir);
-           }
-           return _ptr;
-       }
+        [[gnu::noinline]]
+        auto get_native_dir() noexcept -> const ttstr*
+        {
+            static ttstr* _ptr{};
+            if(_ptr == nullptr)
+            {
+                _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::NativeProjectDir);
+            }
+            return _ptr;
+        }
 
-
+        [[gnu::noinline]]
         auto app_path() noexcept -> ttstr
         {
-            const TJS::ttstr* dir { project::get_dir() };
+            const TJS::ttstr* dir { system::get_dir() };
             if(dir != nullptr && !dir->IsEmpty())
             {
                 return storage::extract_path(*dir);
@@ -38,9 +43,10 @@ namespace kr2android::tvp
             return ttstr{};
         }
 
-        auto game_path() noexcept -> ttstr
+        [[gnu::noinline]]
+        auto base_path() noexcept -> ttstr
         {
-            const TJS::ttstr* dir { project::get_native_dir() };
+            const TJS::ttstr* dir { system::get_native_dir() };
             if(dir != nullptr && !dir->IsEmpty())
             {
                 return storage::extract_path(*dir);
@@ -52,6 +58,8 @@ namespace kr2android::tvp
 
     namespace storage
     {
+
+        [[gnu::noinline]]
         auto media_manager::get() noexcept -> storage::StorageMediaManager*
         {
             static storage::StorageMediaManager* _ptr{};
@@ -83,6 +91,7 @@ namespace kr2android::tvp
             return true;
         }
 
+        [[gnu::noinline]]
         auto clear_caches() noexcept -> bool
         {
             static void(*_ptr)(void){};
@@ -103,6 +112,7 @@ namespace kr2android::tvp
             return std::nullopt;
         }
 
+        [[gnu::noinline]]
         auto is_existent_no_search(const ttstr& name) noexcept -> std::optional<bool>
         {
             static bool(*_ptr)(const ttstr&){};
@@ -117,6 +127,7 @@ namespace kr2android::tvp
             return std::nullopt;
         }
 
+        [[gnu::noinline]]
         auto is_existent_no_search_no_normalize(const ttstr& name) noexcept -> std::optional<bool>
         {
             static bool(*_ptr)(const ttstr&){};
@@ -128,6 +139,7 @@ namespace kr2android::tvp
             return std::nullopt;
         }
 
+        [[gnu::noinline]]
         auto set_current_directory(const ttstr& directory) noexcept -> bool
         {
             static void(*_ptr)(const ttstr&){};
@@ -138,6 +150,7 @@ namespace kr2android::tvp
             return bool{ _ptr ? (_ptr(directory), true) : false  };
         }
 
+        [[gnu::noinline]]
         auto add_auto_path(const ttstr& path) noexcept -> bool
         {
             static void(*_ptr)(const ttstr&){};
@@ -148,6 +161,7 @@ namespace kr2android::tvp
             return bool{ _ptr ? (_ptr(path), true) : false };
         }
 
+        [[gnu::noinline]]
         auto remove_auto_path(const ttstr& path) noexcept -> bool
         {
             static void(*_ptr)(const ttstr&){};
@@ -158,6 +172,7 @@ namespace kr2android::tvp
             return bool{ _ptr ? (_ptr(path), true) : false };
         }
 
+        [[gnu::noinline]]
         auto get_placed_path(const ttstr& path) noexcept -> std::optional<ttstr>
         {
             static ttstr(*_ptr)(const ttstr&){};
@@ -174,6 +189,7 @@ namespace kr2android::tvp
             return std::nullopt;
         }
 
+        [[gnu::noinline]]
         auto is_existent(const ttstr& path) noexcept -> std::optional<bool>
         {
             std::optional<ttstr> _path{ get_placed_path(path) };
@@ -200,6 +216,7 @@ namespace kr2android::tvp
             return manager->GetLocallyAccessibleName(name);
         }
 
+        [[gnu::noinline]]
         auto extract_ext(const ttstr& name) noexcept -> ttstr
         {
             if(name.IsEmpty())
@@ -213,12 +230,13 @@ namespace kr2android::tvp
 
             if (dot_pos != std::u16string_view::npos && (sep_pos == std::u16string_view::npos || dot_pos > sep_pos))
             {
-                size_t ext_len = str.length() - dot_pos;
-                return ttstr{ name.c_str() + dot_pos, static_cast<tjs_int>(ext_len) };
+                const auto ext_len{ static_cast<tjs_int>(str.size() - dot_pos) };
+                return ttstr{ name.c_str() + dot_pos, ext_len };
             }
             return ttstr{};
         }
 
+        [[gnu::noinline]]
         auto extract_name(const ttstr& name) noexcept -> ttstr
         {
             if (name.IsEmpty())
@@ -238,6 +256,7 @@ namespace kr2android::tvp
             return ttstr{ name.c_str() + begin, static_cast<tjs_int>(length) };
         }
 
+        [[gnu::noinline]]
         auto extract_path(const ttstr& name) noexcept -> ttstr
         {
             if (name.IsEmpty())
@@ -258,6 +277,7 @@ namespace kr2android::tvp
             return ttstr{ name.c_str() + begin, static_cast<tjs_int>(length) };
         }
 
+        [[gnu::noinline]]
         auto chop_ext(const ttstr & name) noexcept -> ttstr
         {
             if (name.IsEmpty())
@@ -283,6 +303,7 @@ namespace kr2android::tvp
         static extraction_filter_t* extraction_filter{};
         static content_filter_t*       content_filter{};
 
+        [[gnu::noinline]]
         auto get_content_filter() noexcept -> content_filter_t
         {
             if(content_filter == nullptr)
@@ -292,6 +313,7 @@ namespace kr2android::tvp
             return content_filter_t{ content_filter ? (*content_filter) : nullptr  };
         }
 
+        [[gnu::noinline]]
         auto get_extraction_filter() noexcept -> extraction_filter_t
         {
             if(extraction_filter == nullptr)
@@ -301,6 +323,7 @@ namespace kr2android::tvp
             return extraction_filter_t{ extraction_filter ? (*extraction_filter) : nullptr  };
         }
 
+        [[gnu::noinline]]
         auto set_content_filter(content_filter_t filter) noexcept -> bool
         {
             if(get_content_filter() != nullptr)
@@ -311,6 +334,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto set_extraction_filter(extraction_filter_t filter) noexcept -> bool
         {
             if(get_extraction_filter() != nullptr)
@@ -325,6 +349,7 @@ namespace kr2android::tvp
     namespace stream
     {
 
+        [[gnu::noinline]]
         auto create_text_for_read(const ttstr& name, const ttstr& modestr) noexcept -> iTJSTextReadStream*
         {
             static decltype(&create_text_for_read) _ptr{};
@@ -335,6 +360,7 @@ namespace kr2android::tvp
             return (iTJSTextReadStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
 
+        [[gnu::noinline]]
         auto create_text_for_write(const ttstr& name, const ttstr& modestr) noexcept -> iTJSTextWriteStream*
         {
             static decltype(&create_text_for_write) _ptr{};
@@ -345,6 +371,7 @@ namespace kr2android::tvp
             return (iTJSTextWriteStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
 
+        [[gnu::noinline]]
         auto create_binary_for_read(const ttstr& name, const ttstr& modestr) noexcept -> tTJSBinaryStream*
         {
             static decltype(&create_binary_for_read) _ptr{};
@@ -355,6 +382,7 @@ namespace kr2android::tvp
             return (tTJSBinaryStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
 
+        [[gnu::noinline]]
         auto create_binary_for_write(const ttstr& name, const ttstr& modestr) noexcept -> tTJSBinaryStream*
         {
             static decltype(&create_binary_for_write) _ptr{};
@@ -368,6 +396,7 @@ namespace kr2android::tvp
 
     namespace graphic
     {
+        [[gnu::noinline]]
         auto type::get() noexcept -> graphic::GraphicType*
         {
             static graphic::GraphicType* _ptr{};
@@ -378,6 +407,7 @@ namespace kr2android::tvp
             return _ptr;
         }
 
+        [[gnu::noinline]]
         auto register_loading_handler(const HandlerType& handler) noexcept -> bool
         {
             graphic::GraphicType* graphic_type{ type::get() };
@@ -390,6 +420,7 @@ namespace kr2android::tvp
             return true;
         }
 
+        [[gnu::noinline]]
         auto unregister_loading_handler(const HandlerType& handler) noexcept -> bool
         {
             graphic::GraphicType* graphic_type{ type::get() };
@@ -402,6 +433,7 @@ namespace kr2android::tvp
             return true;
         }
 
+        [[gnu::noinline]]
         auto clear_cache() noexcept -> bool
         {
             static void(*_ptr)(void){};
@@ -415,35 +447,213 @@ namespace kr2android::tvp
 
     namespace script
     {
+
+        class __tTJS
+        {
+            void*            __vtable;
+            tjs_uint __unused_field00;
+            void*    __unused_field01;
+            void*    __unused_field02;
+            void*    __unused_field03;
+            void*    __unused_field04;
+            void*    __unused_field05;
+            void*    __unused_field06;
+            void*    __unused_field07;
+
+            static auto __dump(const __tTJS*, tjs_uint) noexcept -> void;
+
+        public:
+
+            iTJSConsoleOutput*     ConsoleOutput;
+            tTJSCustomObject*      Global;
+            tTJSScriptCache*       Cache;
+            tTJSVariantArrayStack* VariantArrayStack;
+
+            auto Dump(tjs_uint width = 0x50) const noexcept -> bool
+            {
+                static decltype(&__tTJS::__dump) _ptr;
+                if(_ptr == nullptr)
+                {
+                    _ptr = cast_ptr<decltype(_ptr)>(rva::Script::ScriptEngine_tTJS_Dump);
+                }
+                return bool{ _ptr != nullptr ? (_ptr(this, width), true) : false };
+            }
+        };
+
+        [[gnu::noinline]]
+        auto __get_engine() noexcept -> __tTJS*
+        {
+            static __tTJS** _pptr{};
+            if(_pptr == nullptr)
+            {
+                _pptr = cast_ptr<__tTJS**>(rva::Script::ScriptEngine);
+            }
+            return (__tTJS*){ _pptr != nullptr ? *_pptr : nullptr };
+        }
+
+        [[gnu::noinline]]
         auto get_engine() noexcept -> tTJS*
         {
-            static tTJS* _ptr{};
-            if(_ptr == nullptr)
+            static tTJS* tjs{};
+
+            __tTJS* const __tjs{ __get_engine() };
+            if(tjs == nullptr)
             {
-                _ptr = cast_ptr<tTJS*>(rva::Script::ScriptEngine);
+                const auto this_Global{ reinterpret_cast<iTJSDispatch2*>(__tjs->Global) };
+                this_Global->AddRef();
+
+                tjs = new tTJS{ __tjs ? __tjs->Global : nullptr };
             }
-            return _ptr;
+            else if(__tjs != nullptr && __tjs->Global != nullptr)
+            {
+                iTJSDispatch2* const this_Global{ tjs->GetGlobalNoAddRef() };
+                const auto that_Global{ reinterpret_cast<iTJSDispatch2*>(__tjs->Global) };
+                if(this_Global != that_Global)
+                {
+                    if(this_Global != nullptr)
+                    {
+                        this_Global->Release();
+                    }
+                    delete tjs;
+
+                    that_Global->AddRef();
+                    tjs = new tTJS{ __tjs->Global };
+                }
+            }
+            return tjs;
         }
 
-        auto get_dispatch() noexcept -> iTJSDispatch2*
+        [[gnu::noinline]]
+        auto get_dispatch(bool addref) noexcept -> iTJSDispatch2*
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            iTJSDispatch2* _global{};
+            __tTJS* const  _tjs{ script::__get_engine() };
+
+            if(_tjs != nullptr && _tjs->Global != nullptr)
             {
-                return engine->GetGlobal();
+                _global = reinterpret_cast<iTJSDispatch2*>( _tjs->Global);
             }
-            return nullptr;
+
+            if(addref)
+            {
+                if(_global == nullptr)
+                {
+                    const auto _call{ cast_ptr<iTJSDispatch2*(*)(void)>(rva::Script::GetScriptDispatch) };
+                    _global = (iTJSDispatch2*){ _call != nullptr ? _call() : nullptr };
+                }
+                else
+                {
+                    _global->AddRef();
+                }
+            }
+
+            return _global;
         }
 
-        auto dump_engine() noexcept -> bool
+        [[gnu::noinline]]
+        auto dump_engine(std::string_view name, bool global) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            union { void* _tjs_engine; __tTJS* _engine; tTJS* engine; };
+            if(global)
             {
+                _engine = __get_engine();
             }
-            return false;
+            else
+            {
+                engine = get_engine();
+            }
+
+            if(_tjs_engine == nullptr)
+            {
+                return false;
+            }
+
+            const ttstr base{ system::base_path() };
+            if(base.IsEmpty())
+            {
+                return false;
+            }
+
+            name = xstr::trim(name);
+            if(name.empty())
+            {
+                name = global ? "global.dump.txt" : "plugin.dump.txt";
+            }
+
+            std::filesystem::path outpu_file_path{ base.c_str() };
+            auto&& ref_outpu_file_path{ const_cast<std::string&>(outpu_file_path.native()) };
+            {
+                size_t dirofs{ ref_outpu_file_path.size() };
+                ref_outpu_file_path.reserve(name.size() + dirofs + 6);
+
+                if(ref_outpu_file_path.back() == '\\')
+                {
+                    ref_outpu_file_path[dirofs - 1] = '/';
+                }
+                else if(ref_outpu_file_path.back() != '/')
+                {
+                    ref_outpu_file_path.push_back('/');
+                }
+
+                ref_outpu_file_path.append(name);
+
+                if(name.size() <= 2 && (name == ".." || name == "."))
+                {
+                    ref_outpu_file_path.append(".txt");
+                }
+                else
+                {
+                    for(size_t i{ dirofs + 1 }; i < ref_outpu_file_path.size(); i++)
+                    {
+                        const char ch{ ref_outpu_file_path[i] };
+                        const bool is_not_valid
+                        {
+                            ch == '/' || ch == '\\' || ch == ':' || ch == '*' ||
+                            ch == '?' || ch == '"'  || ch == '<' || ch == '>' || ch == '|'
+                        };
+                        if(is_not_valid)
+                        {
+                            ref_outpu_file_path[i] = '_';
+                        }
+                    }
+                }
+            }
+
+            TJSDumpFileOutput dump_output{ outpu_file_path };
+            if(!dump_output.IsOpen())
+            {
+                return false;
+            }
+
+            bool success{};
+            if(!global)
+            {
+
+                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
+                try
+                {
+                    engine->SetConsoleOutput(&dump_output);
+                    engine->Dump();
+                    success = true;
+                }
+                catch(...)
+                {
+                    success = false;
+                }
+                engine->SetConsoleOutput(output);
+            }
+            else
+            {
+                iTJSConsoleOutput* const output{ _engine->ConsoleOutput };
+                _engine->ConsoleOutput = &dump_output;
+
+                success = _engine->Dump();
+                _engine->ConsoleOutput = output;
+            }
+            return success;
         }
 
+        [[gnu::noinline]]
         auto execute(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -459,6 +669,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -474,6 +685,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto execexpr(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -497,6 +709,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -520,6 +733,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto load(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -606,6 +820,7 @@ namespace kr2android::tvp
             return false;
         }
 
+        [[gnu::noinline]]
         auto loadbytes(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool
         {
             tTJS* const engine{ get_engine() };
@@ -619,6 +834,21 @@ namespace kr2android::tvp
                 catch(...){}
             }
             return false;
+        }
+
+        auto dump_engine(bool global) noexcept -> bool
+        {
+            return dump_engine({}, global);
+        }
+
+        auto dump_engine(std::string_view name) noexcept -> bool
+        {
+            return dump_engine(name, false);
+        }
+
+        auto dump_engine() noexcept -> bool
+        {
+            return dump_engine({}, false);
         }
 
         auto execute(const ttstr& content, tTJSVariant* result) noexcept -> bool
@@ -650,6 +880,7 @@ namespace kr2android::tvp
 
     namespace scripts
     {
+        [[gnu::noinline]]
         auto get_text_encoding() noexcept -> const tjs_char*
         {
             static decltype(&get_text_encoding) _ptr{};
@@ -660,6 +891,7 @@ namespace kr2android::tvp
             return (const tjs_char*){ _ptr ? _ptr() : nullptr };
         }
 
+        [[gnu::noinline]]
         auto set_text_encoding(const ttstr& name) noexcept -> bool
         {
             static decltype(&set_text_encoding) _ptr{};
@@ -671,6 +903,18 @@ namespace kr2android::tvp
         }
     }
 
+    [[gnu::noinline]]
+    auto get_random_bits128(void* dest) noexcept -> bool
+    {
+        static void(*_ptr)(void*){};
+        if(_ptr == nullptr)
+        {
+            _ptr = cast_ptr<decltype(_ptr)>(rva::GetRandomBits128);
+        }
+        return bool{ _ptr != nullptr ? (_ptr(dest), true) : false };
+    }
+
+    [[gnu::noinline]]
     auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
     {
         static bool(*_ptr)(const tjs_char*, tTJSVariant*){};
@@ -687,6 +931,7 @@ namespace kr2android::tvp
         return std::nullopt;
     }
 
+    [[gnu::noinline]]
     auto set_command_line(const tjs_char* name, const ttstr& value) -> bool
     {
         static void(*_ptr)(const tjs_char*, const ttstr&){};
@@ -704,6 +949,7 @@ namespace kr2android::tvp
         return false;
     }
 
+    [[gnu::noinline]]
     auto get_tick_count() noexcept -> std::optional<tjs_uint64>
     {
         static tjs_uint64(*_ptr)(void){};
