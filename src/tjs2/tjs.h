@@ -19,6 +19,15 @@
 #include "tjsString.h"
 #include "tjsMessage.h"
 
+namespace TJS
+{
+    class tTJS;
+}
+
+namespace kr2android::tvp::script
+{
+    extern auto get_engine() noexcept -> TJS::tTJS*;
+}
 
 namespace TJS
 {
@@ -88,6 +97,7 @@ class tTJSScriptBlock;
 class tTJSPPMap;
 class tTJSCustomObject;
 class tTJSScriptCache;
+
 class tTJS
 {
 	friend class tTJSScriptBlock;
@@ -95,9 +105,11 @@ private:
 	tjs_uint RefCount; // reference count
 
 public:
-	tTJS();
+	tTJS(tTJSCustomObject* global = nullptr);
 
 protected:
+
+    friend auto kr2android::tvp::script::get_engine() noexcept -> tTJS*;
 	virtual ~tTJS();
 
 public:
