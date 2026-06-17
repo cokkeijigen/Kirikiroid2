@@ -38,9 +38,9 @@ namespace kr2android::tvp::storage
 
     struct MediaRecord
     {
-        ttstr                        CurrentDomain;
-        ttstr                        CurrentPath;
-        tTJSRefHolder<iStorageMedia> MediaIntf;
+        ttstr                       CurrentDomain;
+        ttstr                         CurrentPath;
+        tTJSRefHolder<iStorageMedia>    MediaIntf;
         tjs_int                      MediaNameLen;
 
         MediaRecord(iStorageMedia *media) noexcept;
