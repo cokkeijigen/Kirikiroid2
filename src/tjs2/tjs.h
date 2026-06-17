@@ -105,6 +105,7 @@ private:
 	tjs_uint RefCount; // reference count
 
 public:
+
 	tTJS(tTJSCustomObject* global = nullptr);
 
 protected:
@@ -185,6 +186,30 @@ public:
 
 	void CompileScript( const tjs_char *script, class tTJSBinaryStream* output, bool isresultneeded = false, bool outputdebug = false, bool isexpression = false, const tjs_char *name = NULL, tjs_int lineofs = 0 );
 };
+
+class tTJSLocal: public tTJS
+{
+
+    void operator   delete(void* p) { ::operator delete(p); }
+    void operator delete[](void* p) { ::operator delete[](p); }
+
+    iTJSDispatch2* GetGlobalNoAddRef() const = delete;
+    void  AddRef() = delete;
+    void Release() = delete;
+
+public:
+
+    using tTJS::tTJS;
+    ~tTJSLocal() override = default;
+    void* operator new(size_t) = delete;
+    void* operator new[](size_t) = delete;
+
+    inline auto GetGlobal() const noexcept -> iTJSDispatch2*
+    {
+        return tTJS::GetGlobalNoAddRef();
+    }
+};
+
 //---------------------------------------------------------------------------
 
 
