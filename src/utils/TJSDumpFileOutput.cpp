@@ -21,7 +21,7 @@ namespace TJS
         auto ref_path{ const_cast<std::string&>(path.native()) };
         if(ref_path.empty())
         {
-            return;
+            return false;
         }
 
         const size_t split{ ref_path.find_last_of("\\/") };
@@ -33,14 +33,14 @@ namespace TJS
             const bool exists{ (::lstat(ref_path.c_str(), &path_stat) == 0) };
             if (!exists || !S_ISDIR(path_stat.st_mode))
             {
-                return;
+                return false;
             }
             else if(!exists)
             {
                 std::error_code error{};
                 if(!std::filesystem::create_directories(path, error) || error)
                 {
-                    return;
+                    return false;
                 }
             }
 
