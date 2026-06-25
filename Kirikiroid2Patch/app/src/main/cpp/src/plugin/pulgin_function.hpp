@@ -31,9 +31,6 @@ namespace TVP
     extern auto  CreateBinaryStreamForRead(const ttstr& name, const ttstr& modestr) noexcept -> tTJSBinaryStream*;
     extern auto CreateBinaryStreamForWrite(const ttstr& name, const ttstr& modestr) noexcept -> tTJSBinaryStream*;
 
-    extern auto GetDefaultReadEncoding() noexcept -> const tjs_char*;
-    extern auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool;
-
     namespace StorageMedia
     {
         using iTVPStorageLister = k2a::tvp::storage::iStorageLister;
@@ -87,53 +84,83 @@ namespace TVP
 
     using namespace Graphic;
 
-    namespace Script
+    namespace Scripts
     {
         extern auto   GetScriptEngine() noexcept -> tTJS*;
         extern auto GetScriptDispatch() noexcept -> iTJSDispatch2*;
 
         extern auto ExecuteScript(const ttstr& content, tTJSVariant* result) noexcept -> bool;
         extern auto ExecuteScript(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
-        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
-        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs,
+               tTJSVariant* result) noexcept -> bool;
+
+        extern auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs,
+               iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
 
         extern auto ExecuteExpression(const ttstr& content, tTJSVariant* result) noexcept -> bool;
-        extern auto ExecuteExpression(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
-        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool;
-        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
 
-        extern auto  ExecuteStorage(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
-        extern auto  ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
-        extern auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool;
+        extern auto ExecuteExpression(const ttstr& content, iTJSDispatch2* context,
+               tTJSVariant* result) noexcept -> bool;
+
+        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs,
+               tTJSVariant* result) noexcept -> bool;
+
+        extern auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs,
+               iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool;
+
+        extern auto  ExecuteStorage(const ttstr& name, tTJSVariant* result, bool isexpression,
+               const tjs_char* modestr) noexcept -> bool;
+
+        extern auto  ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result,
+               bool isexpression, const tjs_char* modestr) noexcept -> bool;
+
+        extern auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context,
+               tTJSVariant* result, const tjs_char* name) noexcept -> bool;
 
         extern auto DumpScriptEngine(std::string_view name, bool global) noexcept -> bool;
         extern auto DumpScriptEngine(std::string_view name) noexcept -> bool;
         extern auto DumpScriptEngine(bool global) noexcept -> bool;
         extern auto DumpScriptEngine() noexcept -> bool;
 
+        extern auto GetDefaultReadEncoding() noexcept -> std::optional<ttstr>;
+        extern auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool;
+
     }
-    using namespace Script;
+    using namespace Scripts;
 
-//    IStream * CreateIStream(const ttstr &,tjs_uint32);
-//    tTJSBinaryStream * CreateBinaryStreamAdapter(IStream *);
+    namespace Events
+    {
+        using Event = k2a::tvp::event::flag_t;
 
+        extern auto PostEvent(iTJSDispatch2*     source, iTJSDispatch2* target, const ttstr& eventname,
+               tjs_uint32 tag, tjs_uint32 flag, tjs_uint numargs, tTJSVariant* args) noexcept -> bool;
 
-    // ========== 脚本执行 ==========
+        extern auto CancelEvents(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+               tjs_uint32 tag) noexcept -> std::optional<tjs_int>;
 
+        extern auto AreEventsInQueue(iTJSDispatch2*   source, iTJSDispatch2* target, const ttstr& eventname,
+               tjs_uint32 tag) noexcept -> std::optional<bool>;
 
+        extern auto CountEventsInQueue(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+               tjs_uint32 tag) noexcept -> std::optional<tjs_int>;
 
-    // ========== 事件系统 ==========
-    void PostEvent(iTJSDispatch2 *,iTJSDispatch2 *,ttstr &,tjs_uint32,tjs_uint32,tjs_uint,tTJSVariant *);
-    tjs_int CancelEvents(iTJSDispatch2 *,iTJSDispatch2 *,const ttstr &,tjs_uint32);
-    bool AreEventsInQueue(iTJSDispatch2 *,iTJSDispatch2 *,const ttstr &,tjs_uint32);
-    tjs_int CountEventsInQueue(iTJSDispatch2 *,iTJSDispatch2 *,const ttstr &,tjs_uint32);
-    void CancelEventsByTag(iTJSDispatch2 *,iTJSDispatch2 *,tjs_uint32);
-    void CancelSourceEvents(iTJSDispatch2 *);
-    iTJSDispatch2 * CreateEventObject(const tjs_char *,iTJSDispatch2 *,iTJSDispatch2 *);
-    void AddContinuousEventHook(tTVPContinuousEventCallbackIntf *);
-    void RemoveContinuousEventHook(tTVPContinuousEventCallbackIntf *);
-    void AddCompactEventHook(tTVPCompactEventCallbackIntf *);
-    void RemoveCompactEventHook(tTVPCompactEventCallbackIntf *);
+        extern auto CancelEventsByTag(iTJSDispatch2*  source, iTJSDispatch2* target, tjs_uint32 tag)
+               noexcept -> std::optional<tjs_int>;
+
+        extern auto CancelSourceEvents(iTJSDispatch2* source) noexcept -> std::optional<tjs_int>;
+
+        extern auto CreateEventObject(const tjs_char* type, iTJSDispatch2* targthis, iTJSDispatch2* targ)
+               noexcept -> std::optional<iTJSDispatch2*>;
+
+        using ContinuousEventCallbackIntf = k2a::tvp::events::ContinuousCallback;
+        using CompactEventCallbackIntf    = k2a::tvp::events::CompactCallback;
+        extern auto    AddContinuousEventHook(const ContinuousEventCallbackIntf* hook) noexcept -> bool;
+        extern auto RemoveContinuousEventHook(const ContinuousEventCallbackIntf* hook) noexcept -> bool;
+        extern auto       AddCompactEventHook(const CompactEventCallbackIntf*    hook) noexcept -> bool;
+        extern auto    RemoveCompactEventHook(const CompactEventCallbackIntf*    hook) noexcept -> bool;
+    }
+    using namespace Events;
 
     // ========== 图形/图像加载 ==========
     iTVPScanLineProvider * SLPLoadImage(const ttstr &,tjs_int,tjs_uint32,tjs_uint,tjs_uint);
@@ -197,7 +224,7 @@ namespace TVP
 
     // ========== 随机数 ==========
     void PushEnvironNoise(const void *,tjs_int);
-    void GetRandomBits128(void *);
+    extern auto GetRandomBits128(void* dest) noexcept -> bool;
 
     // ========== 时间 ==========
     extern auto GetTickCount() -> std::optional<tjs_uint64>;
@@ -214,6 +241,5 @@ namespace TVP
     ttstr GetTemporaryName();
     void Breathe();
     bool GetBreathing();
-    void PostEvent(iTJSDispatch2 *,iTJSDispatch2 *,ttstr &,tjs_uint32,tjs_uint32,tjs_uint,tTJSVariant *);
 
 }
