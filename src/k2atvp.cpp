@@ -1,24 +1,26 @@
+#include <tjsObject.h>
+#include <TJSDumpFileOutput.hpp>
 #include <filesystem>
 #include <fstream>
 #include <kr2android.hpp>
-#include <kr2rva.hpp>
 #include <k2atvp.hpp>
-#include <TJSDumpFileOutput.hpp>
 #include <xstr.hpp>
+
 namespace kr2android::tvp
 {
+    using namespace kr2android::symbol_hash;
 
     namespace system
     {
         [[gnu::noinline]]
         auto get_dir() noexcept -> const ttstr*
         {
-           static ttstr* _ptr{};
-           if(_ptr == nullptr)
-           {
-               _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::ProjectDir);
-           }
-           return _ptr;
+            static ttstr* _ptr{};
+            if(_ptr == nullptr)
+            {
+                _ptr = k2a::plugin.query<TJS::ttstr*>("TJSString::ProjectDir"_hash);
+            }
+            return _ptr;
         }
 
         [[gnu::noinline]]
@@ -27,7 +29,7 @@ namespace kr2android::tvp
             static ttstr* _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = k2a::cast_ptr<TJS::ttstr*>(rva::TJSString::NativeProjectDir);
+                _ptr = k2a::plugin.query<TJS::ttstr*>("TJSString::NativeProjectDir"_hash);
             }
             return _ptr;
         }
@@ -40,6 +42,17 @@ namespace kr2android::tvp
             {
                 return storage::extract_path(*dir);
             }
+            else
+            {
+                const unirawptr_t<decltype(&system::app_path)> call
+                {
+                    k2a::plugin.query("system::app_path(void)->[ttstr]"_hash)
+                };
+                if(call.ptr != nullptr)
+                {
+                    return storage::extract_path(call.raw());
+                }
+            }
             return ttstr{};
         }
 
@@ -51,6 +64,17 @@ namespace kr2android::tvp
             {
                 return storage::extract_path(*dir);
             }
+            else
+            {
+                const unirawptr_t<decltype(&system::base_path)> call
+                {
+                    k2a::plugin.query("system::base_path(void)->[ttstr]"_hash)
+                };
+                if(call.ptr != nullptr)
+                {
+                    return storage::extract_path(call.raw());
+                }
+            }
             return ttstr{};
         }
 
@@ -58,162 +82,156 @@ namespace kr2android::tvp
 
     namespace storage
     {
-
         [[gnu::noinline]]
-        auto media_manager::get() noexcept -> storage::StorageMediaManager*
-        {
-            static storage::StorageMediaManager* _ptr{};
-            if(_ptr == nullptr)
-            {
-                _ptr = k2a::cast_ptr<decltype(_ptr)>(rva::StorageMediaManager::MediaManager);
-            }
-            return _ptr;
-        }
-
         auto register_media(storage::iStorageMedia* media) noexcept -> bool
         {
-            storage::StorageMediaManager* manager{ media_manager::get() };
-            if(manager == nullptr)
+            static decltype(&register_media) _ptr{};
+            if(_ptr == nullptr)
             {
-                return false;
+                const uint64_t hash{ "storage::register_media(iStorageMedia*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return manager->Register(media);
+            return bool{ _ptr != nullptr ? _ptr(media) : false };
         }
 
-        auto unregister_media(iStorageMedia* media) noexcept -> bool
+        [[gnu::noinline]]
+        auto unregister_media(storage::iStorageMedia* media) noexcept -> bool
         {
-            storage::StorageMediaManager* manager{ media_manager::get() };
-            if(manager == nullptr)
+            static decltype(&unregister_media) _ptr{};
+            if(_ptr == nullptr)
             {
-                return false;
+                const uint64_t hash{ "storage::unregister_media(iStorageMedia*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            manager->Unregister(media);
-            return true;
+            return bool{ _ptr != nullptr ? _ptr(media) : false };
         }
 
         [[gnu::noinline]]
         auto clear_caches() noexcept -> bool
         {
-            static void(*_ptr)(void){};
+            static decltype(&clear_caches) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = k2a::cast_ptr<decltype(_ptr)>(rva::ClearStorageCaches);
+                const uint64_t hash{ "storage::clear_caches(void)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return bool{ _ptr ? (_ptr(), true) : false };
+            return bool{ _ptr ? _ptr() : false };
         }
 
+        [[gnu::noinline]]
         auto normalize_name(const ttstr& name) noexcept -> std::optional<ttstr>
         {
-            StorageMediaManager* manager{ media_manager::get() };
-            if(manager != nullptr)
+            static decltype(&normalize_name) _ptr{};
+            if(_ptr == nullptr)
             {
-                return manager->NormalizeStorageName(name);
+                const uint64_t hash{ "storage::normalize_name(const ttstr&)->[std::optional<ttstr>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return std::nullopt;
+            return std::optional<ttstr>{ _ptr != nullptr ?  _ptr(name) : std::nullopt };
         }
 
         [[gnu::noinline]]
         auto is_existent_no_search(const ttstr& name) noexcept -> std::optional<bool>
         {
-            static bool(*_ptr)(const ttstr&){};
+            static decltype(&is_existent_no_search) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::IsExistentStorageNoSearch);
+                const uint64_t hash{ "storage::is_existent_no_search(const ttstr&)->[std::optional<bool>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            if(_ptr != nullptr)
-            {
-                return _ptr(name);
-            }
-            return std::nullopt;
+            return std::optional<bool>{ _ptr != nullptr ?  _ptr(name) : std::nullopt };
         }
 
         [[gnu::noinline]]
         auto is_existent_no_search_no_normalize(const ttstr& name) noexcept -> std::optional<bool>
         {
-            static bool(*_ptr)(const ttstr&){};
+            static decltype(&is_existent_no_search_no_normalize) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::IsExistentStorageNoSearchNoNormalize);
+                const uint64_t hash{ "storage::is_existent_no_search_no_normalize(const ttstr&)->[std::optional<bool>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            if(_ptr) return _ptr(name);
-            return std::nullopt;
+            return std::optional<bool>{ _ptr != nullptr ?  _ptr(name) : std::nullopt };
         }
 
         [[gnu::noinline]]
         auto set_current_directory(const ttstr& directory) noexcept -> bool
         {
-            static void(*_ptr)(const ttstr&){};
+            static decltype(&set_current_directory) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = k2a::cast_ptr<decltype(_ptr)>(rva::SetCurrentDirectory);
+                const uint64_t hash{ "storage::set_current_directory(const ttstr&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return bool{ _ptr ? (_ptr(directory), true) : false  };
+            return bool{ _ptr != nullptr ? _ptr(directory) : false };
         }
 
         [[gnu::noinline]]
         auto add_auto_path(const ttstr& path) noexcept -> bool
         {
-            static void(*_ptr)(const ttstr&){};
+            static decltype(&add_auto_path) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::AddAutoPath);
+                const uint64_t hash{ "storage::add_auto_path(const ttstr&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return bool{ _ptr ? (_ptr(path), true) : false };
+            return bool{ _ptr ? _ptr(path) : false };
         }
 
         [[gnu::noinline]]
         auto remove_auto_path(const ttstr& path) noexcept -> bool
         {
-            static void(*_ptr)(const ttstr&){};
+            static decltype(&remove_auto_path) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::RemoveAutoPath);
+                const uint64_t hash{ "storage::remove_auto_path(const ttstr&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return bool{ _ptr ? (_ptr(path), true) : false };
+            return bool{ _ptr ? _ptr(path) : false };
         }
 
         [[gnu::noinline]]
         auto get_placed_path(const ttstr& path) noexcept -> std::optional<ttstr>
         {
-            static ttstr(*_ptr)(const ttstr&){};
-            if(_ptr == nullptr)
-            {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::GetPlacedPath);
-            }
-
+            static decltype(&get_placed_path) _ptr{};
             if(_ptr != nullptr)
             {
-                return _ptr(path);
+                const uint64_t hash{ "storage::get_placed_path(const ttstr&)->[std::optional<ttstr>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-
-            return std::nullopt;
+            return std::optional<ttstr>{ _ptr != nullptr ? _ptr(path) : std::nullopt };
         }
 
         [[gnu::noinline]]
         auto is_existent(const ttstr& path) noexcept -> std::optional<bool>
         {
-            std::optional<ttstr> _path{ get_placed_path(path) };
+            std::optional<ttstr> _path{ storage::get_placed_path(path) };
+            if(!_path.has_value())
+            {
+                const uint64_t hash{ "storage::is_existent(const ttstr&)->[std::optional<bool>]"_hash };
+                const auto    call { k2a::plugin.query<decltype(&storage::is_existent)>(hash) };
+                if(call != nullptr)
+                {
+                    _path = call(path);
+                }
+            }
             if(_path.has_value())
             {
-                return !_path.value().IsEmpty();
+                return !_path->IsEmpty();
             }
             return std::nullopt;
         }
 
-        auto get_local_name(ttstr& name) noexcept -> std::optional<ttstr>
+        [[gnu::noinline]]
+        auto get_local_name(const ttstr& name) noexcept -> std::optional<ttstr>
         {
-            if(TJS_strchr(name.c_str(), u'>'))
+            static decltype(&get_local_name) _ptr{};
+            if(_ptr == nullptr)
             {
-                return std::nullopt;
+                const uint64_t hash{ "storage::get_local_name(const ttstr&)->[std::optional<ttstr>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-
-            storage::StorageMediaManager* manager = storage::media_manager::get();
-            if(manager == nullptr)
-            {
-                return std::nullopt;
-            }
-
-            return manager->GetLocallyAccessibleName(name);
+            return std::optional<ttstr>{ _ptr != nullptr ? _ptr(name) : std::nullopt };
         }
 
         [[gnu::noinline]]
@@ -278,7 +296,7 @@ namespace kr2android::tvp
         }
 
         [[gnu::noinline]]
-        auto chop_ext(const ttstr & name) noexcept -> ttstr
+        auto chop_ext(const ttstr& name) noexcept -> ttstr
         {
             if (name.IsEmpty())
             {
@@ -293,56 +311,150 @@ namespace kr2android::tvp
             {
                 return ttstr{ name.c_str(), static_cast<tjs_int>(dot_pos) };
             }
-
             return name;
         }
     }
 
     namespace xp3
     {
-        static extraction_filter_t* extraction_filter{};
-        static content_filter_t*       content_filter{};
 
         [[gnu::noinline]]
         auto get_content_filter() noexcept -> content_filter_t
         {
-            if(content_filter == nullptr)
+            static decltype(&get_content_filter) _ptr{};
+            if(_ptr == nullptr)
             {
-                content_filter = cast_ptr<content_filter_t*>(rva::XP3Archive::ContentFilter);
+                const uint64_t hash{ "xp3::get_content_filter(void)->[content_filter_t]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return content_filter_t{ content_filter ? (*content_filter) : nullptr  };
+            return content_filter_t{ _ptr != nullptr ? _ptr() : nullptr };
         }
 
         [[gnu::noinline]]
         auto get_extraction_filter() noexcept -> extraction_filter_t
         {
-            if(extraction_filter == nullptr)
+            static decltype(&get_extraction_filter) _ptr{};
+            if(_ptr == nullptr)
             {
-                extraction_filter = cast_ptr<extraction_filter_t*>(rva::XP3Archive::ExtractionFilter);
+                const uint64_t hash{ "xp3::get_extraction_filter(void)->[extraction_filter_t]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return extraction_filter_t{ extraction_filter ? (*extraction_filter) : nullptr  };
+            return extraction_filter_t{ _ptr != nullptr ? _ptr() : nullptr };
         }
 
         [[gnu::noinline]]
         auto set_content_filter(content_filter_t filter) noexcept -> bool
         {
-            if(get_content_filter() != nullptr)
+            static decltype(&set_content_filter) _ptr{};
+            if(_ptr == nullptr)
             {
-                *content_filter = filter;
-                return true;
+                const uint64_t hash{ "xp3::set_content_filter(content_filter_t)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(filter) : false };
         }
 
         [[gnu::noinline]]
         auto set_extraction_filter(extraction_filter_t filter) noexcept -> bool
         {
-            if(get_extraction_filter() != nullptr)
+            static decltype(&set_extraction_filter) _ptr{};
+            if(_ptr == nullptr)
             {
-                *extraction_filter = filter;
-                return true;
+                const uint64_t hash{ "xp3::set_extraction_filter(extraction_filter_t)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(filter) : false };
+        }
+    }
+
+    namespace graphic
+    {
+
+        [[gnu::noinline]]
+        auto NativeBaseBitmap::GetWidth() const noexcept -> tjs_uint
+        {
+            static decltype(&NativeBaseBitmap::GetWidth) _ptr{};
+            if(_ptr != nullptr)
+            {
+                const uint64_t hash{ "graphic::class[NativeBaseBitmap]::GetWidth(void)->[tjs_uint]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+
+            if(static_cast<const void*>(this) != nullptr && _ptr != nullptr)
+            {
+                return (this->*_ptr)();
+            }
+            return 0;
+        }
+
+        [[gnu::noinline]]
+        auto NativeBaseBitmap::GetHeight() const noexcept -> tjs_uint
+        {
+            static decltype(&NativeBaseBitmap::GetHeight) _ptr{};
+            if(_ptr != nullptr)
+            {
+                const uint64_t hash{ "graphic::class[NativeBaseBitmap]::GetHeight(void)->[tjs_uint]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+
+            if(static_cast<const void*>(this) != nullptr && _ptr != nullptr)
+            {
+                return (this->*_ptr)();
+            }
+            return 0;
+        }
+
+        [[gnu::noinline]]
+        auto NativeBaseBitmap::GetScanLine(tjs_uint line) const noexcept -> const void*
+        {
+            static decltype(&NativeBaseBitmap::GetScanLine) _ptr{};
+            if(_ptr != nullptr)
+            {
+                const uint64_t hash{ "graphic::class[NativeBaseBitmap]::GetScanLine(tjs_uint)->[tjs_uint]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+
+            if(static_cast<const void*>(this) != nullptr && _ptr != nullptr)
+            {
+                return (this->*_ptr)(line);
+            }
+            return nullptr;
+        }
+
+        [[gnu::noinline]]
+        auto register_loading_handler(const HandlerType& handler) noexcept -> bool
+        {
+            static decltype(&register_loading_handler) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "graphic::register_loading_handler(const HandlerType&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(handler) : false };
+        }
+
+        [[gnu::noinline]]
+        auto unregister_loading_handler(const HandlerType& handler) noexcept -> bool
+        {
+            static decltype(&unregister_loading_handler) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "graphic::unregister_loading_handler(const HandlerType&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(handler) : false };
+        }
+
+        [[gnu::noinline]]
+        auto clear_cache() noexcept -> bool
+        {
+            static decltype(&clear_cache) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "graphic::clear_cache(void)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr() : false };
         }
     }
 
@@ -355,7 +467,8 @@ namespace kr2android::tvp
             static decltype(&create_text_for_read) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::CreateTextStreamForRead);
+                const uint64_t hash{ "stream::create_text_for_read(const ttstr&,const ttstr&)->[iTJSTextReadStream*]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return (iTJSTextReadStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
@@ -366,7 +479,8 @@ namespace kr2android::tvp
             static decltype(&create_text_for_write) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::CreateTextStreamForWrite);
+                const uint64_t hash{ "stream::create_text_for_write(const ttstr&,const ttstr&)->[iTJSTextWriteStream*]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return (iTJSTextWriteStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
@@ -377,7 +491,8 @@ namespace kr2android::tvp
             static decltype(&create_binary_for_read) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::CreateBinaryStreamForRead);
+                const uint64_t hash{ "stream::create_binary_for_read(const ttstr&,const ttstr&)->[tTJSBinaryStream*]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return (tTJSBinaryStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
@@ -388,453 +503,110 @@ namespace kr2android::tvp
             static decltype(&create_binary_for_write) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::CreateBinaryStreamForWrite);
+                const uint64_t hash{ "stream::create_binary_for_write(const ttstr&,const ttstr&)->[tTJSBinaryStream*]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return (tTJSBinaryStream*){ _ptr ? _ptr(name, modestr) : nullptr };
         }
     }
 
-    namespace graphic
+    namespace scripts
     {
-        [[gnu::noinline]]
-        auto type::get() noexcept -> graphic::GraphicType*
-        {
-            static graphic::GraphicType* _ptr{};
-            if(_ptr == nullptr)
-            {
-                _ptr = k2a::cast_ptr<graphic::GraphicType*>(rva::Graphic::GraphicType);
-            }
-            return _ptr;
-        }
-
-        [[gnu::noinline]]
-        auto register_loading_handler(const HandlerType& handler) noexcept -> bool
-        {
-            graphic::GraphicType* graphic_type{ type::get() };
-            if(graphic_type == nullptr)
-            {
-                return false;
-            }
-
-            graphic_type->Register(handler);
-            return true;
-        }
-
-        [[gnu::noinline]]
-        auto unregister_loading_handler(const HandlerType& handler) noexcept -> bool
-        {
-            graphic::GraphicType* graphic_type{ type::get() };
-            if(graphic_type == nullptr)
-            {
-                return false;
-            }
-
-            graphic_type->Unregister(handler);
-            return true;
-        }
-
-        [[gnu::noinline]]
-        auto clear_cache() noexcept -> bool
-        {
-            static void(*_ptr)(void){};
-            if(_ptr == nullptr)
-            {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::Graphic::ClearGraphicCache);
-            }
-            return bool{ _ptr ? (_ptr(), true) : false };
-        }
-    }
-
-    namespace script
-    {
-
-        class __tTJS
-        {
-            void*            __vtable;
-            tjs_uint __unused_field00;
-            void*    __unused_field01;
-            void*    __unused_field02;
-            void*    __unused_field03;
-            void*    __unused_field04;
-            void*    __unused_field05;
-            void*    __unused_field06;
-            void*    __unused_field07;
-
-            static auto __dump(const __tTJS*, tjs_uint) noexcept -> void;
-
-        public:
-
-            iTJSConsoleOutput*     ConsoleOutput;
-            tTJSCustomObject*      Global;
-            tTJSScriptCache*       Cache;
-            tTJSVariantArrayStack* VariantArrayStack;
-
-            [[gnu::noinline]]
-            auto Dump(tjs_uint width = 0x50) const noexcept -> bool
-            {
-                static decltype(&__tTJS::__dump) _ptr;
-                if(_ptr == nullptr)
-                {
-                    _ptr = cast_ptr<decltype(_ptr)>(rva::Script::ScriptEngine_tTJS_Dump);
-                }
-                return bool{ _ptr != nullptr ? (_ptr(this, width), true) : false };
-            }
-        };
-
-        [[gnu::noinline]]
-        auto __get_engine() noexcept -> __tTJS*
-        {
-            static __tTJS** _pptr{};
-            if(_pptr == nullptr)
-            {
-                _pptr = cast_ptr<__tTJS**>(rva::Script::ScriptEngine);
-            }
-            return (__tTJS*){ _pptr != nullptr ? *_pptr : nullptr };
-        }
-
-        [[gnu::noinline]]
-        auto get_engine() noexcept -> tTJS*
-        {
-            static tTJS* tjs{};
-
-            __tTJS* const __tjs{ __get_engine() };
-            if(tjs == nullptr)
-            {
-                const auto this_Global{ reinterpret_cast<iTJSDispatch2*>(__tjs->Global) };
-                this_Global->AddRef();
-
-                tjs = new tTJS{ __tjs ? __tjs->Global : nullptr };
-            }
-            else if(__tjs != nullptr && __tjs->Global != nullptr)
-            {
-                iTJSDispatch2* const this_Global{ tjs->GetGlobalNoAddRef() };
-                const auto that_Global{ reinterpret_cast<iTJSDispatch2*>(__tjs->Global) };
-                if(this_Global != that_Global)
-                {
-                    if(this_Global != nullptr)
-                    {
-                        this_Global->Release();
-                    }
-                    delete tjs;
-
-                    that_Global->AddRef();
-                    tjs = new tTJS{ __tjs->Global };
-                }
-            }
-            return tjs;
-        }
 
         [[gnu::noinline]]
         auto get_dispatch(bool addref) noexcept -> iTJSDispatch2*
         {
-            iTJSDispatch2* _global{};
-            __tTJS* const  _tjs{ script::__get_engine() };
-
-            if(_tjs != nullptr && _tjs->Global != nullptr)
+            static decltype(&get_dispatch) _ptr{};
+            if(_ptr == nullptr)
             {
-                _global = reinterpret_cast<iTJSDispatch2*>( _tjs->Global);
+                const uint64_t hash{ "scripts::get_dispatch(bool)->[iTJSDispatch2*]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-
-            if(addref)
-            {
-                if(_global == nullptr)
-                {
-                    const auto _call{ cast_ptr<iTJSDispatch2*(*)(void)>(rva::Script::GetScriptDispatch) };
-                    _global = (iTJSDispatch2*){ _call != nullptr ? _call() : nullptr };
-                }
-                else
-                {
-                    _global->AddRef();
-                }
-            }
-
-            return _global;
+            return (iTJSDispatch2*){ _ptr != nullptr ? _ptr(addref) : nullptr };
         }
 
         [[gnu::noinline]]
         auto dump_engine(std::string_view name, bool global) noexcept -> bool
         {
-            union { void* _tjs_engine; __tTJS* _engine; tTJS* engine; };
-            if(global)
+            static bool(*_ptr)(std::string_view, bool){};
+            if(_ptr == nullptr)
             {
-                _engine = __get_engine();
+                const uint64_t hash{ "scripts::dump_engine(std::string_view,bool)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            else
-            {
-                engine = get_engine();
-            }
-
-            if(_tjs_engine == nullptr)
-            {
-                return false;
-            }
-
-            const ttstr base{ system::base_path() };
-            if(base.IsEmpty())
-            {
-                return false;
-            }
-
-            name = xstr::trim(name);
-            if(name.empty())
-            {
-                name = global ? "global.dump.txt" : "plugin.dump.txt";
-            }
-
-            std::filesystem::path outpu_file_path{ base.c_str() };
-            auto&& ref_outpu_file_path{ const_cast<std::string&>(outpu_file_path.native()) };
-            {
-                size_t dirofs{ ref_outpu_file_path.size() };
-                ref_outpu_file_path.reserve(name.size() + dirofs + 6);
-
-                if(ref_outpu_file_path.back() == '\\')
-                {
-                    ref_outpu_file_path[dirofs - 1] = '/';
-                }
-                else if(ref_outpu_file_path.back() != '/')
-                {
-                    ref_outpu_file_path.push_back('/');
-                }
-
-                ref_outpu_file_path.append(name);
-
-                if(name.size() <= 2 && (name == ".." || name == "."))
-                {
-                    ref_outpu_file_path.append(".txt");
-                }
-                else
-                {
-                    for(size_t i{ dirofs + 1 }; i < ref_outpu_file_path.size(); i++)
-                    {
-                        const char ch{ ref_outpu_file_path[i] };
-                        const bool is_not_valid
-                        {
-                            ch == '/' || ch == '\\' || ch == ':' || ch == '*' ||
-                            ch == '?' || ch == '"'  || ch == '<' || ch == '>' || ch == '|'
-                        };
-                        if(is_not_valid)
-                        {
-                            ref_outpu_file_path[i] = '_';
-                        }
-                    }
-                }
-            }
-
-            TJSDumpFileOutput dump_output{ outpu_file_path };
-            if(!dump_output.IsOpen())
-            {
-                return false;
-            }
-
-            bool success{};
-            if(!global)
-            {
-
-                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
-                try
-                {
-                    engine->SetConsoleOutput(&dump_output);
-                    engine->Dump();
-                    success = true;
-                }
-                catch(...)
-                {
-                    success = false;
-                }
-                engine->SetConsoleOutput(output);
-            }
-            else
-            {
-                iTJSConsoleOutput* const output{ _engine->ConsoleOutput };
-                _engine->ConsoleOutput = &dump_output;
-
-                success = _engine->Dump();
-                _engine->ConsoleOutput = output;
-            }
-            return success;
+            return bool{ _ptr != nullptr ? _ptr(name, global) : false };
         }
 
         [[gnu::noinline]]
         auto execute(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            static bool(*_ptr)(const ttstr&, iTJSDispatch2*, tTJSVariant*){};
+            if(_ptr == nullptr)
             {
-                try
-                {
-                    engine->ExecScript(content, result, context);
-                    return true;
-                }
-                catch(...) {}
+                const uint64_t hash{ "scripts::execute(const ttstr&,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(content, context, result) : false };
         }
 
         [[gnu::noinline]]
         auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            static bool(*_ptr)(const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*){};
+            if(_ptr == nullptr)
             {
-                try
-                {
-                    engine->ExecScript(content, result, context, &name, lineofs);
-                    return true;
-                }
-                catch(...) {}
+                const uint64_t hash{ "scripts::execute(const ttstr&,const ttstr&,tjs_int,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(content, name, lineofs, context, result) : false };
         }
 
         [[gnu::noinline]]
         auto execexpr(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            static bool(*_ptr)(const ttstr&, iTJSDispatch2*, tTJSVariant*){};
+            if(_ptr == nullptr)
             {
-                bool success{};
-                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
-                engine->SetConsoleOutput(nullptr); // once set TJS console to null
-                try
-                {
-                    engine->EvalExpression(content, result, context);
-                    success = true;
-                }
-                catch(...)
-                {
-                    success = false;
-                }
-                engine->SetConsoleOutput(output);
-                return success;
+                const uint64_t hash{ "scripts::execexpr(const ttstr&,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(content, context, result) : false };
         }
 
         [[gnu::noinline]]
         auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            static bool(*_ptr)(const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*){};
+            if(_ptr == nullptr)
             {
-                bool success{};
-                iTJSConsoleOutput* const output{ engine->GetConsoleOutput() };
-                engine->SetConsoleOutput(nullptr); // once set TJS console to null
-                try
-                {
-                    engine->EvalExpression(content, result, context, &name, lineofs);
-                    success = true;
-                }
-                catch(...)
-                {
-                    success = false;
-                }
-                engine->SetConsoleOutput(output);
-                return success;
+                const uint64_t hash{ "scripts::execexpr(const ttstr&,const ttstr&,tjs_int,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(content, name, lineofs, context, result) : false };
         }
 
         [[gnu::noinline]]
         auto load(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine == nullptr)
+            static bool(*_ptr)(const ttstr&, iTJSDispatch2*, tTJSVariant*, bool, const tjs_char*){};
+            if(_ptr == nullptr)
             {
-                return false;
+                const uint64_t hash{ "scripts::load(const ttstr&,iTJSDispatch2*,tTJSVariant*,bool,consttjs_char*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-
-            const std::optional<ttstr> place{ storage::get_placed_path(name) };
-            if(!place.has_value() || (*place).IsEmpty())
-            {
-                return false;
-            }
-
-            const std::optional<ttstr> shortname{ storage::extract_name(*place) };
-            if(!shortname.has_value() || shortname->IsEmpty())
-            {
-                return false;
-            }
-
-            tTJSBinaryStream* binary_stream{ stream::create_binary_for_read(*place, modestr) };
-            if(binary_stream != nullptr)
-            {
-                bool is_bytecode{}, success{};
-                try
-                {
-                    is_bytecode = engine->LoadByteCode(binary_stream, result, context, shortname->c_str());
-                    success = true;
-                }
-                catch(...)
-                {
-                    success = false;
-                }
-                delete binary_stream;
-
-                if(!success)
-                {
-                    return false;
-                }
-
-                if(is_bytecode)
-                {
-                    return true;
-                }
-            }
-
-            iTJSTextReadStream* text_stream{ stream::create_text_for_read(*place, modestr) };
-            if(text_stream != nullptr)
-            {
-                bool success{};
-                ttstr buffer{};
-                try
-                {
-                    text_stream->Read(buffer, 0);
-                    success = true;
-                }
-                catch(...)
-                {
-                    success = false;
-                }
-                text_stream->Destruct();
-                text_stream = nullptr;
-
-                if(!success)
-                {
-                    return false;
-                }
-
-                try
-                {
-                    if(isexpression)
-                    {
-                        engine->EvalExpression(buffer, result, context, &(*shortname));
-                    }
-                    else
-                    {
-                        engine->ExecScript(buffer, result, context, &(*shortname));
-                    }
-                    return true;
-                }
-                catch(...){}
-            }
-
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(name, context, result, isexpression, modestr) : false };
         }
 
         [[gnu::noinline]]
         auto loadbytes(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool
         {
-            tTJS* const engine{ get_engine() };
-            if(engine != nullptr)
+            static bool(*_ptr)(const tjs_uint8*, size_t, iTJSDispatch2*, tTJSVariant*, const tjs_char*){};
+            if(_ptr == nullptr)
             {
-                try
-                {
-                    engine->LoadByteCode(content, length, result, context, name);
-                    return true;
-                }
-                catch(...){}
+                const uint64_t hash{ "scripts::loadbytes(const tjs_uint8*,size_t,iTJSDispatch2*,tTJSVariant*,const tjs_char*)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return false;
+            return bool{ _ptr != nullptr ? _ptr(content, length, context, result, name) : false };
         }
 
         auto dump_engine(bool global) noexcept -> bool
@@ -854,42 +626,39 @@ namespace kr2android::tvp
 
         auto execute(const ttstr& content, tTJSVariant* result) noexcept -> bool
         {
-            return script::execute(content, nullptr, result);
+            return scripts::execute(content, nullptr, result);
         }
 
         auto execute(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
         {
-            return script::execute(content, name, lineofs, nullptr, result);
+            return scripts::execute(content, name, lineofs, nullptr, result);
         }
 
         auto execexpr(const ttstr& content, tTJSVariant* result) noexcept -> bool
         {
-            return script::execexpr(content, nullptr, result);
+            return scripts::execexpr(content, nullptr, result);
         }
 
         auto execexpr(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
         {
-            return script::execexpr(content, name, lineofs, nullptr, result);
+            return scripts::execexpr(content, name, lineofs, nullptr, result);
         }
 
         auto load(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
         {
-            script::load(name, nullptr, result, isexpression, modestr);
+            scripts::load(name, nullptr, result, isexpression, modestr);
         }
 
-    }
-
-    namespace scripts
-    {
         [[gnu::noinline]]
-        auto get_text_encoding() noexcept -> const tjs_char*
+        auto get_text_encoding() noexcept -> std::optional<ttstr>
         {
             static decltype(&get_text_encoding) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::GetDefaultReadEncoding);
+                const uint64_t hash{ "scripts::get_text_encoding(void)->[std::optional<ttstr>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return (const tjs_char*){ _ptr ? _ptr() : nullptr };
+            return std::optional<ttstr>{ _ptr != nullptr ?  _ptr() : std::nullopt };
         }
 
         [[gnu::noinline]]
@@ -898,71 +667,188 @@ namespace kr2android::tvp
             static decltype(&set_text_encoding) _ptr{};
             if(_ptr == nullptr)
             {
-                _ptr = cast_ptr<decltype(_ptr)>(rva::SetDefaultReadEncoding);
+                const uint64_t hash{ "scripts::set_text_encoding(const ttstr&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
-            return bool{ _ptr ? (_ptr(name), true) : false };
+            return bool{ _ptr ? _ptr(name) : false };
         }
+    }
+
+    namespace events
+    {
+
+        [[gnu::noinline]]
+        auto post(const event& e) noexcept -> bool
+        {
+            static decltype(&post) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::post(const event&)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(e) : false };
+        }
+
+        [[gnu::noinline]]
+        auto in_queue(const uniref_event e) noexcept -> std::optional<bool>
+        {
+            static decltype(&cancel) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::in_queue(const uniref_event)->[std::optional<bool>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(e) : false };
+        }
+
+        [[gnu::noinline]]
+        auto get_count(const uniref_event e) noexcept -> std::optional<tjs_int>
+        {
+            static decltype(&get_count) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::get_count(const uniref_event)->[std::optional<tjs_int>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return std::optional<tjs_int>{ _ptr != nullptr ? _ptr(e) : std::nullopt };
+        }
+
+        [[gnu::noinline]]
+        auto cancel(const uniref_event e) noexcept-> std::optional<tjs_int>
+        {
+            static decltype(&cancel) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::cancel(const uniref_event)->[std::optional<tjs_int>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return std::optional<tjs_int>{ _ptr != nullptr ? _ptr(e) : false };
+        }
+
+        [[gnu::noinline]]
+        auto cancel_tag(iTJSDispatch2* source, iTJSDispatch2* target, tjs_uint32 tag) noexcept -> std::optional<tjs_int>
+        {
+            static decltype(&cancel_tag) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::cancel_tag(iTJSDispatch2*,iTJSDispatch2*,tjs_uint32)->[std::optional<tjs_int>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return std::optional<tjs_int>{ _ptr != nullptr ? _ptr(source, target, tag) : std::nullopt };
+        }
+
+        [[gnu::noinline]]
+        auto cancel_source(iTJSDispatch2* source) noexcept -> std::optional<tjs_int>
+        {
+            static decltype(&cancel_source) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::cancel_source(iTJSDispatch2*)->[std::optional<tjs_int>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return std::optional<tjs_int>{ _ptr != nullptr ? _ptr(source) : std::nullopt };
+        }
+
+        [[gnu::noinline]]
+        auto create_object(const tjs_char* type, iTJSDispatch2* targthis, iTJSDispatch2* targ) noexcept -> std::optional<iTJSDispatch2*>
+        {
+            static decltype(&create_object) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::create_object(const tjs_char*,iTJSDispatch2*,iTJSDispatch2*)->[std::optional<iTJSDispatch2*>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+        }
+
+        auto add_continuous_hook(const continuous_callback* hook) noexcept -> bool
+        {
+            static decltype(&add_continuous_hook) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::add_continuous_hook(const continuous_callback*)"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(hook) : false };
+        }
+        auto remove_continuous_hook(const continuous_callback* hook) noexcept -> bool
+        {
+            static decltype(&remove_continuous_hook) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::remove_continuous_hook(const continuous_callback*)"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(hook) : false };
+        }
+        auto add_compact_hook(const compact_callback* hook) noexcept -> bool
+        {
+            static decltype(&add_compact_hook) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::add_compact_hook(const compact_callback*)"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(hook) : false };
+        }
+        auto remove_compact_hook(const compact_callback* hook) noexcept -> bool
+        {
+            static decltype(&remove_compact_hook) _ptr{};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::remove_compact_hook(const compact_callback*)"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(hook) : false };
+        }
+
     }
 
     [[gnu::noinline]]
     auto get_random_bits128(void* dest) noexcept -> bool
     {
-        static void(*_ptr)(void*){};
+        static decltype(&get_random_bits128) _ptr{};
         if(_ptr == nullptr)
         {
-            _ptr = cast_ptr<decltype(_ptr)>(rva::GetRandomBits128);
+            const uint64_t hash{ "get_random_bits128(void*)->[bool]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
-        return bool{ _ptr != nullptr ? (_ptr(dest), true) : false };
+        return bool{ _ptr != nullptr ? _ptr(dest) : false };
     }
 
     [[gnu::noinline]]
     auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
     {
-        static bool(*_ptr)(const tjs_char*, tTJSVariant*){};
+        static decltype(&get_command_line) _ptr{};
         if(_ptr == nullptr)
         {
-            _ptr = cast_ptr<decltype(_ptr)>(rva::GetCommandLine);
+            const uint64_t hash{ "get_command_line(const tjs_char*,tTJSVariant*)->[std::optional<bool>]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
-
-        if(_ptr != nullptr)
-        {
-            return _ptr(name, value);
-        }
-
-        return std::nullopt;
+        return bool{ _ptr != nullptr ? _ptr(name, value) : std::nullopt };
     }
 
     [[gnu::noinline]]
     auto set_command_line(const tjs_char* name, const ttstr& value) -> bool
     {
-        static void(*_ptr)(const tjs_char*, const ttstr&){};
-
+        static decltype(&set_command_line) _ptr{};
         if(_ptr == nullptr)
         {
-            _ptr = cast_ptr<decltype(_ptr)>(rva::SetCommandLine);
+            const uint64_t hash{ "set_command_line(const tjs_char*,const ttstr&)->[bool]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
-
-        if(_ptr != nullptr)
-        {
-            return _ptr(name, value), true;
-        }
-
-        return false;
+        return bool{ _ptr != nullptr ? _ptr(name, value) : false };
     }
 
     [[gnu::noinline]]
     auto get_tick_count() noexcept -> std::optional<tjs_uint64>
     {
-        static tjs_uint64(*_ptr)(void){};
+        static decltype(&get_tick_count) _ptr{};
         if(_ptr == nullptr)
         {
-            _ptr = cast_ptr<decltype(_ptr)>(rva::GetTickCount);
+            const uint64_t hash{ "get_tick_count(void)->[std::optional<tjs_uint64>]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
-        if(_ptr != nullptr)
-        {
-            return _ptr();
-        }
-        return std::nullopt;
+        return bool{ _ptr != nullptr ? _ptr() : false };
     }
 }
 
