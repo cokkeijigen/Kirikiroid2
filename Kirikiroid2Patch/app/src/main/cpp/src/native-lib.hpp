@@ -26,7 +26,6 @@
 #define TAG "kr2patch"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, "[kr2patch] " __VA_ARGS__)
 #define logd(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, "[kr2patch] " __VA_ARGS__)
-#define noinline __attribute__((noinline))
 
 namespace kr2patch
 {
