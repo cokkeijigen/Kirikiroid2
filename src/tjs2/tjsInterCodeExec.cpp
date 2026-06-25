@@ -570,7 +570,10 @@ tTJSVariantArrayStack::~tTJSVariantArrayStack()
 	{
 		delete [] Arrays[i].Array;
 	}
-	TJS_free(Arrays), Arrays = NULL;
+	if(Arrays != NULL)
+	{
+		TJS_free(Arrays), Arrays = NULL;
+	}
 	std::lock_guard<std::mutex> lk(TJSVariantArrayStackMutex);
 	TJSVariantArrayStacks.erase(this);
 }
