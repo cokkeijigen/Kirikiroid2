@@ -21,16 +21,6 @@
 
 namespace TJS
 {
-    class tTJS;
-}
-
-namespace kr2android::tvp::script
-{
-    extern auto get_engine() noexcept -> TJS::tTJS*;
-}
-
-namespace TJS
-{
 
 //---------------------------------------------------------------------------
 // TJS version
@@ -105,35 +95,27 @@ private:
 	tjs_uint RefCount; // reference count
 
 public:
-
 	tTJS(tTJSCustomObject* global = nullptr);
 
 protected:
-
-    friend auto kr2android::tvp::script::get_engine() noexcept -> tTJS*;
 	virtual ~tTJS();
 
 public:
-	void Cleanup();
-
-	void AddRef();
-	void Release();
-
+	void  Cleanup();
+	void   AddRef();
+	void  Release();
 	void Shutdown();
 
-private:
-	tTJSPPMap * PPValues;
-
+protected:
+	tTJSPPMap*                        PPValues;
 	std::vector<tTJSScriptBlock*> ScriptBlocks;
-
-	iTJSConsoleOutput *ConsoleOutput;
-
-	tTJSCustomObject * Global;
-
-	tTJSScriptCache * Cache;
+	iTJSConsoleOutput*           ConsoleOutput;
+	tTJSCustomObject*                   Global;
+	tTJSScriptCache*                     Cache;
 	class tTJSVariantArrayStack *VariantArrayStack = nullptr;
 
 public:
+
 	iTJSDispatch2 * GetGlobal();
 	iTJSDispatch2 * GetGlobalNoAddRef() const;
 
