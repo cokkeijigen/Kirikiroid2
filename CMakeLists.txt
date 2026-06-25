@@ -22,10 +22,8 @@ if(oniguruma_SOURCE_DIR)
 endif()
 
 add_library(kr2android OBJECT
-        src/k2atvp.cpp
         src/k2atjs.cpp
-        src/k2atvp_storage.cpp
-        src/k2atvp_graphic.cpp
+        src/k2atvp.cpp
         src/kr2android.cpp
         src/utils/AndroidUtils.cpp
         src/utils/TJSDumpFileOutput.cpp
@@ -91,7 +89,3 @@ target_include_directories(kr2android PUBLIC
         src/utils
         ${ONIGURUMA_INCLUDES}
 )
-
-#target_link_libraries(kr2android PUBLIC
-#        oniguruma
-#)
