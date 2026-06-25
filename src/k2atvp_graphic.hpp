@@ -20,45 +20,7 @@ namespace kr2android::tvp::graphic
         glmPalettized, // palettized 8bit mode
         glmGrayscale   // grayscale 8bit mode
     };
-
-    class NativeBaseBitmap
-    {
-        struct BaseBitmap;
-        struct BaseBitmapVtable
-        {
-            void* __Unused[0x07];
-            const void*(*GetScanLineForRead)(BaseBitmap *self, tjs_uint line);
-        };
-
-        struct BaseBitmap
-        {
-            BaseBitmapVtable* Vtable;
-            int32_t __Unused;
-            tjs_int    Width;
-            tjs_int   Height;
-        };
-
-        void* __Unused[0x0B];
-        BaseBitmap* bitmap;
-
-    public:
-
-        inline auto GetWidth() const noexcept -> tjs_uint
-        {
-            return this->bitmap->Width;
-        };
-
-        inline auto GetHeight() const noexcept -> tjs_uint
-        {
-            return this->bitmap->Height;
-        }
-
-        auto GetScanLine(tjs_uint line) const noexcept -> const void*
-        {
-            return this->bitmap->Vtable->GetScanLineForRead(this->bitmap, line);
-        }
-    };
-
+    struct NativeBaseBitmap;
     using ScanLineCallback     = void*(*)(void* callbackdata, tjs_int y);
     using SizeCallback         = int  (*)(void* callbackdata, tjs_uint w, tjs_uint h, PixelFormat fmt);
     using MetaInfoPushCallback = void (*)(void* callbackdata, const ttstr& name, const ttstr& value);
@@ -240,24 +202,27 @@ namespace kr2android::tvp::graphic
 
     struct HandlerType
     {
-        bool                      IsPlugin;
+        bool             IsPlugin{ false };
         TJS::ttstr               Extension;
         LoadingHandler         LoadHandler;
         HeaderLoadingHandler HeaderHandler;
         SaveHandler            SaveHandler;
         AcceptSaveHandler    AcceptHandler;
         void*                   FormatData;
-        auto operator == (const HandlerType& ref) const noexcept -> bool;
-    };
 
-    struct GraphicType
-    {
-        tTJSHashTable<ttstr, HandlerType> Hash;
-        std::vector<HandlerType>      Handlers;
-
-        auto ReCreateHash() noexcept -> void;
-        auto     Register(const HandlerType& hander) noexcept -> void;
-        auto   Unregister(const HandlerType& hander) noexcept -> void;
+        inline auto operator == (const HandlerType& ref) const noexcept -> bool
+        {
+            return bool
+            {
+                this->FormatData    == ref.FormatData    &&
+                this->IsPlugin      == ref.IsPlugin      &&
+                this->LoadHandler   == ref.LoadHandler   &&
+                this->HeaderHandler == ref.HeaderHandler &&
+                this->SaveHandler   == ref.SaveHandler   &&
+                this->AcceptHandler == ref.AcceptHandler &&
+                this->Extension     == ref.Extension
+            };
+        }
     };
 
 }
