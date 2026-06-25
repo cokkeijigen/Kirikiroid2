@@ -760,6 +760,7 @@ namespace kr2android::tvp
             }
         }
 
+        [[gnu::noinline]]
         auto add_continuous_hook(const continuous_callback* hook) noexcept -> bool
         {
             static decltype(&add_continuous_hook) _ptr{};
@@ -770,6 +771,8 @@ namespace kr2android::tvp
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
         }
+
+        [[gnu::noinline]]
         auto remove_continuous_hook(const continuous_callback* hook) noexcept -> bool
         {
             static decltype(&remove_continuous_hook) _ptr{};
@@ -780,6 +783,8 @@ namespace kr2android::tvp
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
         }
+
+        [[gnu::noinline]]
         auto add_compact_hook(const compact_callback* hook) noexcept -> bool
         {
             static decltype(&add_compact_hook) _ptr{};
@@ -790,6 +795,8 @@ namespace kr2android::tvp
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
         }
+
+        [[gnu::noinline]]
         auto remove_compact_hook(const compact_callback* hook) noexcept -> bool
         {
             static decltype(&remove_compact_hook) _ptr{};
