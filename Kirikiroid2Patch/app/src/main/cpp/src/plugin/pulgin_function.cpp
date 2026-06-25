@@ -104,16 +104,6 @@ namespace TVP
         return k2a::tvp::stream::create_binary_for_write(name, modestr);
     }
 
-    auto GetDefaultReadEncoding() noexcept -> const tjs_char*
-    {
-        return k2a::tvp::scripts::get_text_encoding();
-    }
-
-    auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool
-    {
-        return k2a::tvp::scripts::set_text_encoding(name);
-    }
-
     namespace StorageMedia
     {
         auto RegisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool
@@ -204,92 +194,204 @@ namespace TVP
         }
     }
 
-    namespace Script
+    namespace Scripts
     {
         auto GetScriptEngine() noexcept -> tTJS*
         {
-            return k2a::tvp::script::get_engine();
+            return k2a::tvp::scripts::get_engine();
         }
 
         auto GetScriptDispatch() noexcept -> iTJSDispatch2*
         {
-            return k2a::tvp::script::get_dispatch();
+            return k2a::tvp::scripts::get_dispatch();
         }
 
         auto ExecuteScript(const ttstr& content, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execute(content, result);
+            return k2a::tvp::scripts::execute(content, result);
         }
 
         auto ExecuteScript(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execute(content, context, result);
+            return k2a::tvp::scripts::execute(content, context, result);
         }
 
         auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execute(content, name, lineofs, result);
+            return k2a::tvp::scripts::execute(content, name, lineofs, result);
         }
 
         auto ExecuteScript(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execute(content, name, lineofs, context, result);
+            return k2a::tvp::scripts::execute(content, name, lineofs, context, result);
         }
 
         auto ExecuteExpression(const ttstr& content, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execexpr(content, result);
+            return k2a::tvp::scripts::execexpr(content, result);
         }
 
         auto ExecuteExpression(const ttstr& content, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execexpr(content, context, result);
+            return k2a::tvp::scripts::execexpr(content, context, result);
         }
 
         auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execexpr(content, name, lineofs, result);
+            return k2a::tvp::scripts::execexpr(content, name, lineofs, result);
         }
 
         auto ExecuteExpression(const ttstr& content, const ttstr& name, tjs_int lineofs, iTJSDispatch2* context, tTJSVariant* result) noexcept -> bool
         {
-            return k2a::tvp::script::execexpr(content, name, lineofs, context, result);
+            return k2a::tvp::scripts::execexpr(content, name, lineofs, context, result);
         }
 
         auto ExecuteStorage(const ttstr& name, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
         {
-            return k2a::tvp::script::load(name, result, isexpression, modestr);
+            return k2a::tvp::scripts::load(name, result, isexpression, modestr);
         }
 
         auto ExecuteStorage(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool
         {
-            return k2a::tvp::script::load(name, context, result, isexpression, modestr);
+            return k2a::tvp::scripts::load(name, context, result, isexpression, modestr);
         }
 
         auto ExecuteBytecode(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool
         {
-            return k2a::tvp::script::loadbytes(content, length, context, result, name);
+            return k2a::tvp::scripts::loadbytes(content, length, context, result, name);
         }
 
         auto DumpScriptEngine(std::string_view name, bool global) noexcept -> bool
         {
-            return k2a::tvp::script::dump_engine(name, global);
+            return k2a::tvp::scripts::dump_engine(name, global);
         }
 
         auto DumpScriptEngine(std::string_view name) noexcept -> bool
         {
-            return k2a::tvp::script::dump_engine(name);
+            return k2a::tvp::scripts::dump_engine(name);
         }
 
         auto DumpScriptEngine(bool global) noexcept -> bool
         {
-            return k2a::tvp::script::dump_engine(global);
+            return k2a::tvp::scripts::dump_engine(global);
         }
 
         auto DumpScriptEngine() noexcept -> bool
         {
-            return k2a::tvp::script::dump_engine();
+            return k2a::tvp::scripts::dump_engine();
         }
+
+        auto GetDefaultReadEncoding() noexcept -> std::optional<ttstr>
+        {
+            return k2a::tvp::scripts::get_text_encoding();
+        }
+
+        auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool
+        {
+            return k2a::tvp::scripts::set_text_encoding(name);
+        }
+
+    }
+
+    namespace Events
+    {
+
+        auto PostEvent(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+             tjs_uint32 tag, tjs_uint32 flag, tjs_uint numargs, tTJSVariant* args) noexcept -> bool
+        {
+            const k2a::tvp::event e
+            {
+                .source    = source,
+                .target    = target,
+                .eventname = eventname,
+                .tag       = tag,
+                .flag      = flag,
+                .numargs   = numargs,
+                .args      = args
+            };
+            return k2a::tvp::events::post(e);
+        }
+
+        auto AreEventsInQueue(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+             tjs_uint32 tag) noexcept -> std::optional<bool>
+        {
+            const k2a::tvp::event_base e
+            {
+                .source    = source,
+                .target    = target,
+                .eventname = eventname,
+                .tag       = tag,
+            };
+            return k2a::tvp::events::in_queue(e);
+        }
+
+        auto CountEventsInQueue(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+               tjs_uint32 tag) noexcept -> std::optional<tjs_int>
+        {
+            const k2a::tvp::event_base e
+            {
+                .source    = source,
+                .target    = target,
+                .eventname = eventname,
+                .tag       = tag,
+            };
+            return k2a::tvp::events::get_count(e);
+        }
+
+        auto CancelEvents(iTJSDispatch2* source, iTJSDispatch2* target, const ttstr& eventname,
+             tjs_uint32 tag) noexcept -> std::optional<tjs_int>
+        {
+            const k2a::tvp::event_base e
+            {
+                .source    = source,
+                .target    = target,
+                .eventname = eventname,
+                .tag       = tag,
+            };
+            return k2a::tvp::events::cancel(e);
+        }
+
+        auto CancelEventsByTag(iTJSDispatch2* source, iTJSDispatch2* target, tjs_uint32 tag) noexcept
+              -> std::optional<tjs_int>
+        {
+            return k2a::tvp::events::cancel_tag(source, target, tag);
+        }
+
+        auto CancelSourceEvents(iTJSDispatch2* source) noexcept -> std::optional<tjs_int>
+        {
+            return k2a::tvp::events::cancel_source(source);
+        }
+
+        auto CreateEventObject(const tjs_char* type, iTJSDispatch2* targthis, iTJSDispatch2* targ)
+             noexcept ->  std::optional<iTJSDispatch2*>
+        {
+            return k2a::tvp::events::create_object(type, targthis, targ);
+        }
+
+        auto AddContinuousEventHook(const ContinuousEventCallbackIntf* hook) noexcept -> bool
+        {
+            return k2a::tvp::events::add_continuous_hook(hook);
+        }
+
+        auto RemoveContinuousEventHook(const ContinuousEventCallbackIntf* hook) noexcept -> bool
+        {
+            return k2a::tvp::events::remove_continuous_hook(hook);
+        }
+
+        auto AddCompactEventHook(const CompactEventCallbackIntf* hook) noexcept -> bool
+        {
+            return k2a::tvp::events::add_compact_hook(hook);
+        }
+
+        auto RemoveCompactEventHook(const CompactEventCallbackIntf* hook) noexcept -> bool
+        {
+            return k2a::tvp::events::remove_compact_hook(hook);
+        }
+    }
+
+    auto GetRandomBits128(void* dest) noexcept -> bool
+    {
+        return k2a::tvp::get_random_bits128(dest);
     }
 
     auto GetCommandLine(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
