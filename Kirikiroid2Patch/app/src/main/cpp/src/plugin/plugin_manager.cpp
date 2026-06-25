@@ -15,13 +15,9 @@ namespace kr2patch
 
     template<class T> scoped(T) -> scoped<T>;
 
-    static auto K2A_OnLoad(void* modbase, JavaVM* jvm) -> void
-    {
-    }
-
-    static auto K2A_UnLoad() -> void
-    {
-    }
+    extern "C" auto k2a_query(uint64_t hash) -> void*;
+    extern auto K2A_OnLoad(const k2a::k2aplugin&, JavaVM*) -> void;
+    extern auto K2A_UnLoad() -> void;
 
     static auto to_string(uint64_t hash) noexcept -> std::string
     {
@@ -178,6 +174,7 @@ namespace kr2patch
         return false;
     }
 
+    [[gnu::noinline]]
     auto plugin_manager::_is_load(const std::filesystem::path& path) noexcept -> bool
     {
         const std::optional<uint64_t> hash{ path_hash(path) };
@@ -194,6 +191,7 @@ namespace kr2patch
         return false;
     }
 
+    [[gnu::noinline]]
     auto plugin_manager::_load(const std::filesystem::path& path) noexcept -> bool
     {
         std::error_code error{};
@@ -255,13 +253,18 @@ namespace kr2patch
         if (::dlerror() == nullptr && k2a_onload != nullptr)
         {
             const auto call = reinterpret_cast<decltype(&K2A_OnLoad)>(k2a_onload);
-            call(k2a::get_base().ptr, this->m_jvm);
+            const k2a::k2aplugin k2a{ k2a::get_base().ptr, k2a_query };
+            if(call != nullptr)
+            {
+                call(k2a, this->m_jvm);
+            }
         }
 
         this->m_dl_handles.push_back(plugin_manager::libpair_t{ *hash, handle });
         return true;
     }
 
+    [[gnu::noinline]]
     auto plugin_manager::_unload(const std::filesystem::path& path) noexcept -> bool
     {
         const std::optional<uint64_t> hash{ path_hash(path) };
@@ -288,6 +291,7 @@ namespace kr2patch
         return false;
     }
 
+    [[gnu::noinline]]
     auto plugin_manager::_unload(void* handle) noexcept -> void
     {
         if(handle != nullptr)
@@ -373,6 +377,5 @@ namespace kr2patch
         }
         return this->_is_load(std::filesystem::path{ path });
     }
-
 
 }
