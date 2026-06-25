@@ -27,23 +27,7 @@ namespace TVP
 //    typedef tjs_int(*tTVPXP3ArchiveContentFilter)(const ttstr &filepath, const ttstr &archivename, tjs_uint64 filesize, tTJSVariant *ctx);
 
 
-    //---------------------------------------------------------------------------
-    // Continuous Event related
-    //---------------------------------------------------------------------------
-    /*[*/
-    class tTVPContinuousEventCallbackIntf // callback class for continuous event delivering
-    {
-    public:
-        virtual void TJS_INTF_METHOD OnContinuousCallback(tjs_uint64 tick) = 0;
-    };
-    /*]*/
 
-    //---------------------------------------------------------------------------
-    class tTVPCompactEventCallbackIntf // callback class for compact event delivering
-    {
-    public:
-        virtual void TJS_INTF_METHOD OnCompact(tjs_int level) = 0;
-    };
     /*]*/
     //---------------------------------------------------------------------------
 
