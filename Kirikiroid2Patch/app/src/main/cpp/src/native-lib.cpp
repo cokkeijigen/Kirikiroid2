@@ -14,7 +14,8 @@ namespace kr2patch
         return kr2patch::javavm;
     }
 
-    static noinline auto TVPLoadPlugins() -> void
+    [[gnu::noinline]]
+    static auto TVPLoadPlugins() -> void
     {
 
         ttstr tjsstr_path{ k2a::tvp::sys::base_path() };
@@ -60,7 +61,8 @@ namespace kr2patch
         logd("load %zu plugin.\n", count);
     }
 
-    static noinline auto TVPExecuteStartupScript_Hook() noexcept -> void*
+    [[gnu::noinline]]
+    static auto TVPExecuteStartupScript_Hook() noexcept -> void*
     {
         logd("TVPExecuteStartupScript_Hook called!");
 
@@ -71,7 +73,15 @@ namespace kr2patch
         return hooker::call<TVPExecuteStartupScript_Hook>();
     }
 
-    extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+    [[gnu::noinline]]
+    static auto TVPExitApplication_Hook(int code) noexcept -> void
+    {
+        logd("TVPExitApplication_Hook called!");
+        kr2patch::plugin_manager.unload_all();
+        return hooker::call<TVPExitApplication_Hook>(code);
+    }
+
+    extern "C" JNIEXPORT auto JNICALL JNI_OnLoad(JavaVM* vm, void*) -> jint
     {
         kr2patch::javavm = vm;
 
@@ -87,15 +97,27 @@ namespace kr2patch
         if(kr2android::init())
         {
             logd("kr2android init success!\n");
-            void* const TVPExecuteStartupScript = k2a::cast_ptr(tvprva(0x8E5004, 0));
+
+            void* const TVPExecuteStartupScript{ k2a::cast_ptr(tvprva(0x8E5004, 0)) };
             if(TVPExecuteStartupScript != nullptr)
             {
                 bool success = hooker::add<TVPExecuteStartupScript_Hook>(TVPExecuteStartupScript);
-                logd("Add TVPExecuteStartupScript Hook: %s", success ? "success": "failed");
+                logd("Add TVPExecuteStartupScript(%p) Hook: %s", TVPExecuteStartupScript, success ? "success": "failed");
             }
             else
             {
                 logd("Get TVPExecuteStartupScript Address Failed!");
+            }
+
+            void* const TVPExitApplication{ k2a::cast_ptr(tvprva(0x923A08, 0)) };
+            if(TVPExitApplication != nullptr)
+            {
+                bool success = hooker::add<TVPExitApplication_Hook>(TVPExitApplication);
+                logd("Add TVPExitApplication Hook(%p): %s", TVPExitApplication_Hook, success ? "success": "failed");
+            }
+            else
+            {
+                logd("Get TVPExitApplication Address Failed!");
             }
         }
         else
