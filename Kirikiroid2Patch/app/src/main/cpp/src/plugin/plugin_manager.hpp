@@ -20,10 +20,10 @@ namespace kr2patch
         std::filesystem::path m_plugin_path{};
         JavaVM* m_jvm;
 
+        [[gnu::noinline]] auto _is_load(const std::filesystem::path& path) noexcept -> bool;
         [[gnu::noinline]] auto    _load(const std::filesystem::path& path) noexcept -> bool;
         [[gnu::noinline]] auto  _unload(const std::filesystem::path& path) noexcept -> bool;
         [[gnu::noinline]] auto  _unload(void* handle) noexcept -> void;
-        [[gnu::noinline]] auto _is_load(const std::filesystem::path& path) noexcept -> bool;
 
     public:
         ~plugin_manager() noexcept;
