@@ -125,6 +125,12 @@ namespace kr2android
         val = cast_ptr<T>(rva);
     }
 
+    template<is_pointer T = void*>
+    inline auto cast_ptr(const uintptr_t rva, T& val) noexcept -> void
+    {
+        val = cast_ptr<T>(rva);
+    }
+
 }
 namespace tvp = kr2android::tvp;
 namespace k2a = kr2android;
