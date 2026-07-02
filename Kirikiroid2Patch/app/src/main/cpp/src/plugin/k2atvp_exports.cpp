@@ -234,37 +234,37 @@ namespace kr2android
         tvpaddr
         {
             .hash = "scripts::dump_engine(std::string_view,bool)->[bool]"_hash,
-            .addr = func::request<std::string_view, bool>(k2a::tvp::scripts::dump_engine)
+            .addr = func::of<std::string_view, bool>(k2a::tvp::scripts::dump_engine)
         },
         tvpaddr
         {
             .hash = "scripts::execute(const ttstr&,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash,
-            .addr = func::request<const ttstr&, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execute)
+            .addr = func::of<const ttstr&, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execute)
         },
         tvpaddr
         {
             .hash = "scripts::execute(const ttstr&,const ttstr&,tjs_int,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash,
-            .addr = func::request<const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execute)
+            .addr = func::of<const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execute)
         },
         tvpaddr
         {
             .hash = "scripts::execexpr(const ttstr&,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash,
-            .addr = func::request<const ttstr&, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execexpr)
+            .addr = func::of<const ttstr&, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execexpr)
         },
         tvpaddr
         {
             .hash = "scripts::execexpr(const ttstr&,const ttstr&,tjs_int,iTJSDispatch2*,tTJSVariant*)->[bool]"_hash,
-            .addr = func::request<const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execexpr)
+            .addr = func::of<const ttstr&, const ttstr&, tjs_int, iTJSDispatch2*, tTJSVariant*>(k2a::tvp::scripts::execexpr)
         },
         tvpaddr
         {
             .hash = "scripts::load(const ttstr&,iTJSDispatch2*,tTJSVariant*,bool,consttjs_char*)->[bool]"_hash,
-            .addr = func::request<const ttstr&, iTJSDispatch2*, tTJSVariant*, bool, const tjs_char*>(k2a::tvp::scripts::load)
+            .addr = func::of<const ttstr&, iTJSDispatch2*, tTJSVariant*, bool, const tjs_char*>(k2a::tvp::scripts::load)
         },
         tvpaddr
         {
             .hash = "scripts::loadbytes(const tjs_uint8*,size_t,iTJSDispatch2*,tTJSVariant*,const tjs_char*)->[bool]"_hash,
-            .addr = func::request<const tjs_uint8*, size_t, iTJSDispatch2*, tTJSVariant*, const tjs_char*>(k2a::tvp::scripts::loadbytes)
+            .addr = func::of<const tjs_uint8*, size_t, iTJSDispatch2*, tTJSVariant*, const tjs_char*>(k2a::tvp::scripts::loadbytes)
         },
         tvpaddr
         {
@@ -344,12 +344,12 @@ namespace kr2android
         tvpaddr
         {
             .hash = "sound::pcm::to_16bits(tjs_int16*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int,bool)->[bool]"_hash,
-            .addr = func::request<tjs_int16*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int, bool>(k2a::tvp::sound::pcm::to_16bits)
+            .addr = func::of<tjs_int16*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int, bool>(k2a::tvp::sound::pcm::to_16bits)
         },
         tvpaddr
         {
             .hash = "sound::pcm::to_float(float*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int)->[bool]"_hash,
-            .addr = func::request<float*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int>(k2a::tvp::sound::pcm::to_float)
+            .addr = func::of<float*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int>(k2a::tvp::sound::pcm::to_float)
         },
 
         tvpaddr
