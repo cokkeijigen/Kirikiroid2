@@ -162,6 +162,9 @@ namespace TVP
         extern auto RemoveContinuousEventHook(const ContinuousEventCallbackIntf* hook) noexcept -> bool;
         extern auto       AddCompactEventHook(const CompactEventCallbackIntf*    hook) noexcept -> bool;
         extern auto    RemoveCompactEventHook(const CompactEventCallbackIntf*    hook) noexcept -> bool;
+
+        extern auto SetSystemEventDisabledState(bool state) noexcept -> bool;
+        extern auto GetSystemEventDisabledState() noexcept -> std::optional<bool>;
     }
     using namespace Events;
 
@@ -181,13 +184,6 @@ namespace TVP
                     tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool;
     }
     using namespace Sound;
-
-    // ========== 窗口/应用消息 ==========
-    void ProcessApplicationMessages();
-    void HandleApplicationMessage();
-    void SetSystemEventDisabledState(bool);
-    bool GetSystemEventDisabledState();
-
 
     // ========== 剪贴板 ==========
     bool ClipboardHasFormat(tTVPClipboardFormat);
