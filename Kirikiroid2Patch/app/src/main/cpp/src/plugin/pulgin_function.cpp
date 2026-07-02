@@ -281,6 +281,16 @@ namespace TVP
             return k2a::tvp::scripts::dump_engine();
         }
 
+        auto RegisterGlobalObject(const tjs_char* name,iTJSDispatch2* dsp) noexcept -> bool
+        {
+            return k2a::tvp::scripts::global::register_object(name, dsp);
+        }
+
+        auto RemoveGlobalObject(const tjs_char* name) noexcept -> bool
+        {
+            return k2a::tvp::scripts::global::remove_object(name);
+        }
+
         auto GetDefaultReadEncoding() noexcept -> std::optional<ttstr>
         {
             return k2a::tvp::scripts::get_text_encoding();
@@ -387,6 +397,33 @@ namespace TVP
         {
             return k2a::tvp::events::remove_compact_hook(hook);
         }
+    }
+
+    namespace Sound
+    {
+        auto ConvertPCMTo16bits(tjs_int16* output, const void* input, const tTVPWaveFormat& format,
+             tjs_int count, bool downmix) noexcept -> bool
+        {
+            return k2a::tvp::pcm::to_16bits(output, input, format, count, downmix);
+        }
+
+        auto ConvertPCMTo16bits(tjs_int16* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count, bool downmix) noexcept -> bool
+        {
+            return k2a::tvp::pcm::to_16bits(output, input, channels, bytespersample, bitspersample, isfloat, count, downmix);
+        }
+
+        auto ConvertPCMToFloat(float* output, const void* input, const tTVPWaveFormat& format, tjs_int count) noexcept -> bool
+        {
+            return k2a::tvp::pcm::to_float(output, input, format, count);
+        }
+
+        auto ConvertPCMToFloat(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool
+        {
+            return k2a::tvp::pcm::to_float(output, input, channels, bytespersample, bitspersample, isfloat, count);
+        }
+
     }
 
     auto GetRandomBits128(void* dest) noexcept -> bool
