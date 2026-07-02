@@ -9,6 +9,7 @@
 #include <k2atvp.hpp>
 #include <xstr.hpp>
 #include <tjsDictionary.h>
+#include <k2atvp_sound.hpp>
 
 namespace kr2android::tvp
 {
@@ -895,6 +896,54 @@ namespace kr2android::tvp
             scripts::load(name, nullptr, result, isexpression, modestr);
         }
 
+        namespace global
+        {
+            auto get(bool addref) noexcept -> iTJSDispatch2*
+            {
+                scripts::get_dispatch(addref);
+            }
+
+            auto register_object(const tjs_char* name, iTJSDispatch2* dsp) noexcept -> bool
+            {
+                iTJSDispatch2* const global{ scripts::get_dispatch(false) };
+                if(global == nullptr)
+                {
+                    return false;
+                }
+                try
+                {
+                    tTJSVariant val{ dsp };
+                    const tjs_error error
+                    {
+                        global->PropSet(TJS_MEMBERENSURE, name, NULL, &val, global)
+                    };
+                    return TJS_SUCCEEDED(error);
+                }
+                catch(...) { }
+                return false;
+            }
+
+            auto remove_object(const tjs_char* name) noexcept -> bool
+            {
+                iTJSDispatch2* const global{ scripts::get_dispatch(false) };
+                if(global == nullptr)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    const tjs_error error
+                    {
+                        global->DeleteMember(0, name, NULL, global)
+                    };
+                    return TJS_SUCCEEDED(error);
+                }
+                catch(...) { }
+                return false;
+            }
+        }
+
         [[gnu::noinline]]
         auto get_text_encoding() noexcept -> std::optional<ttstr>
         {
@@ -928,8 +977,8 @@ namespace kr2android::tvp
 
         struct tTVPEvent
         {
-            iTJSDispatch2 *Target;
-            iTJSDispatch2 *Source;
+            iTJSDispatch2* Target;
+            iTJSDispatch2* Source;
             ttstr       EventName;
             tjs_uint32        Tag;
             tjs_uint      NumArgs;
@@ -963,8 +1012,7 @@ namespace kr2android::tvp
             {
                 _ptr = k2a::cast_ptr<decltype(_ptr)>(RVA::Events::PostEvent);
             }
-
-            return bool{ _ptr != nullptr ? (_ptr(e.source, e.target, e.eventname, e.tag, e.flag, e.numargs, e.args), true) : false };
+            return bool{ _ptr != nullptr ? (_ptr(e.source, e.target, *e.eventname, e.tag, e.flag, e.numargs, e.args), true) : false };
         }
 
         [[gnu::noinline]]
@@ -980,9 +1028,9 @@ namespace kr2android::tvp
             {
                 const bool equals
                 {
-                    e->source    == (*i)->Source    &&
-                    e->target    == (*i)->Target    &&
-                    e->eventname == (*i)->EventName &&
+                    e->Source    == (*i)->Source    &&
+                    e->Target    == (*i)->Target    &&
+                    e->EventName == (*i)->EventName &&
                     ((e->tag == 0) ? true : (e->tag == (*i)->Tag))
                 };
 
@@ -1008,9 +1056,9 @@ namespace kr2android::tvp
             {
                 const bool equals
                 {
-                    e->source    == (*i)->Source    &&
-                    e->target    == (*i)->Target    &&
-                    e->eventname == (*i)->EventName &&
+                    e->Source    == (*i)->Source    &&
+                    e->Target    == (*i)->Target    &&
+                    e->EventName == (*i)->EventName &&
                     ((e->tag == 0) ? true : (e->tag == (*i)->Tag))
                 };
 
@@ -1035,10 +1083,10 @@ namespace kr2android::tvp
             {
                 const bool equals
                 {
-                    e->source    == (*i)->Source    &&
-                    e->target    == (*i)->Target    &&
-                    e->eventname == (*i)->EventName &&
-                    ((e->tag == 0) ? true : (e->tag == (*i)->Tag))
+                    e->Source    == (*i)->Source    &&
+                    e->Target    == (*i)->Target    &&
+                    e->EventName == (*i)->EventName &&
+                    ((e->Tag == 0) ? true : (e->Tag == (*i)->Tag))
                 };
 
                 if (equals)
@@ -1230,8 +1278,9 @@ namespace kr2android::tvp
             static void(*begin_continuous_event)(void){};
             if(begin_continuous_event == nullptr)
             {
-                k2a::cast_ptr(begin_continuous_event, RVA::Events::BeginContinuousEvent);
+                k2a::cast_ptr(RVA::Events::BeginContinuousEvent, begin_continuous_event);
             }
+
             if(begin_continuous_event != nullptr)
             {
                 begin_continuous_event();
@@ -1254,6 +1303,58 @@ namespace kr2android::tvp
             return compact_event_vector::remove(hook);
         }
 
+    }
+
+    namespace sound
+    {
+        [[gnu::noinline]]
+        auto pcm::to_16bits(tjs_int16* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count, bool downmix) noexcept -> bool
+        {
+            if(output == nullptr || input == nullptr || count == 0)
+            {
+                return false;
+            }
+
+            if(isfloat)
+            {
+                TVP::Sound::ConvertFloatPCMTo16bits(output, (const float *)input, channels, count, downmix);
+                return true;
+            }
+            else
+            {
+                return TVP::Sound::ConvertIntegerPCMTo16bits(output, input, bytespersample, bitspersample, channels, count, downmix);
+            }
+        }
+
+        [[gnu::noinline]]
+        auto pcm::to_float(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool
+        {
+            if(output == nullptr || input == nullptr || count == 0)
+            {
+                return false;
+            }
+            if(isfloat)
+            {
+                std::memcpy(output, input, sizeof(float)*channels * count);
+                return true;
+            }
+            else
+            {
+                return TVP::Sound::ConvertIntegerPCMToFloat(output, input, bytespersample, bitspersample, channels, count);
+            }
+        }
+
+        auto pcm::to_16bits(tjs_int16* output, const void* input, const wave_format& format, tjs_int count, bool downmix) noexcept -> bool
+        {
+            return pcm::to_16bits(output, input, format.channels, format.bytespersample, format.bitspersample, format.isfloat, count, downmix);
+        }
+
+        auto pcm::to_float(float* output, const void* input, const wave_format& format, tjs_int count) noexcept -> bool
+        {
+            return pcm::to_float(output, input, format.channels, format.bytespersample, format.bytespersample, format.isfloat, count);
+        }
     }
 
     [[gnu::noinline]]
