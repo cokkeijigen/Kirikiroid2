@@ -123,6 +123,9 @@ namespace TVP
         extern auto DumpScriptEngine(bool global) noexcept -> bool;
         extern auto DumpScriptEngine() noexcept -> bool;
 
+        extern auto RegisterGlobalObject(const tjs_char* name,iTJSDispatch2* dsp) noexcept -> bool;
+        extern auto RemoveGlobalObject  (const tjs_char* name) noexcept -> bool;
+
         extern auto GetDefaultReadEncoding() noexcept -> std::optional<ttstr>;
         extern auto SetDefaultReadEncoding(const ttstr& name) noexcept -> bool;
 
@@ -162,17 +165,22 @@ namespace TVP
     }
     using namespace Events;
 
-    // ========== 图形/图像加载 ==========
-    iTVPScanLineProvider * SLPLoadImage(const ttstr &,tjs_int,tjs_uint32,tjs_uint,tjs_uint);
-    void AddTransHandlerProvider(iTVPTransHandlerProvider *);
-    void RemoveTransHandlerProvider(iTVPTransHandlerProvider *);
+    namespace Sound
+    {
+        using tTVPWaveFormat = k2a::tvp::sound::wave_format;
 
-    // ========== 音频/视频 ==========
-    void ConvertPCMTo16bits(tjs_int16 *,const void *,const tTVPWaveFormat &,tjs_int,bool);
-    void ConvertPCMTo16bits(tjs_int16 *,const void *,tjs_int,tjs_int,tjs_int,bool,tjs_int,bool);
-    void ConvertPCMToFloat(float *,const void *,tjs_int,tjs_int,tjs_int,bool,tjs_int);
-    void ConvertPCMToFloat(float *,const void *,const tTVPWaveFormat &,tjs_int);
-    void ReleaseDirectSound();
+        extern auto ConvertPCMTo16bits(tjs_int16* output, const void* input, const tTVPWaveFormat& format,
+                    tjs_int count, bool downmix) noexcept -> bool;
+
+        extern auto ConvertPCMTo16bits(tjs_int16* output, const void* input, tjs_int channels, tjs_int bytespersample,
+                    tjs_int bitspersample, bool isfloat, tjs_int count, bool downmix) noexcept -> bool;
+
+        extern auto ConvertPCMToFloat(float* output, const void* input, const tTVPWaveFormat& format,
+                    tjs_int count) noexcept -> bool;
+        extern auto ConvertPCMToFloat(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
+                    tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool;
+    }
+    using namespace Sound;
 
     // ========== 窗口/应用消息 ==========
     void ProcessApplicationMessages();
@@ -180,10 +188,6 @@ namespace TVP
     void SetSystemEventDisabledState(bool);
     bool GetSystemEventDisabledState();
 
-    // ========== 全局对象/注册 ==========
-    bool RegisterGlobalObject(const tjs_char *,iTJSDispatch2 *);
-    bool RemoveGlobalObject(const tjs_char *);
-    void DoTryBlock(tTVPTryBlockFunction,tTVPCatchBlockFunction,tTVPFinallyBlockFunction,void *);
 
     // ========== 剪贴板 ==========
     bool ClipboardHasFormat(tTVPClipboardFormat);
