@@ -333,6 +333,16 @@ namespace kr2android
         },
         tvpaddr
         {
+            .hash = "events::set_system_disabled_state(bool)->[bool]"_hash,
+            .addr = k2a::tvp::events::set_system_disabled_state
+        },
+        tvpaddr
+        {
+            .hash = "events::get_system_disabled_state(void)->[std::optional<bool>]"_hash,
+            .addr = k2a::tvp::events::get_system_disabled_state
+        },
+        tvpaddr
+        {
             .hash = "sound::pcm::to_16bits(tjs_int16*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int,bool)->[bool]"_hash,
             .addr = func::request<tjs_int16*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int, bool>(k2a::tvp::sound::pcm::to_16bits)
         },
