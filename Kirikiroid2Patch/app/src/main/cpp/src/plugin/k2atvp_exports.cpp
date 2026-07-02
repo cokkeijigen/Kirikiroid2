@@ -313,23 +313,33 @@ namespace kr2android
         },
         tvpaddr
         {
-            .hash = "events::add_continuous_hook(const continuous_callback*)"_hash,
+            .hash = "events::add_continuous_hook(const continuous_callback*)->[bool]"_hash,
             .addr = k2a::tvp::events::add_continuous_hook
         },
         tvpaddr
         {
-            .hash = "events::remove_continuous_hook(const continuous_callback*)"_hash,
+            .hash = "events::remove_continuous_hook(const continuous_callback*)->[bool]"_hash,
             .addr = k2a::tvp::events::remove_continuous_hook
         },
         tvpaddr
         {
-            .hash = "events::add_compact_hook(const compact_callback*)"_hash,
+            .hash = "events::add_compact_hook(const compact_callback*)->[bool]"_hash,
             .addr = k2a::tvp::events::add_compact_hook
         },
         tvpaddr
         {
-            .hash = "events::remove_compact_hook(const compact_callback*)"_hash,
+            .hash = "events::remove_compact_hook(const compact_callback*)->[bool]"_hash,
             .addr = k2a::tvp::events::remove_compact_hook
+        },
+        tvpaddr
+        {
+            .hash = "sound::pcm::to_16bits(tjs_int16*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int,bool)->[bool]"_hash,
+            .addr = func::request<tjs_int16*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int, bool>(k2a::tvp::sound::pcm::to_16bits)
+        },
+        tvpaddr
+        {
+            .hash = "sound::pcm::to_float(float*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int)->[bool]"_hash,
+            .addr = func::request<float*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int>(k2a::tvp::sound::pcm::to_float)
         },
 
         tvpaddr
