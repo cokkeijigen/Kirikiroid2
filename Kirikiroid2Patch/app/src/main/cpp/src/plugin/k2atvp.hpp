@@ -3,6 +3,7 @@
 #include <k2atvp_graphic.hpp>
 #include <k2atvp_storage.hpp>
 #include <variant>
+#define unitype_name(type, name1, name2) union{ type name1; type name2; };
 
 namespace kr2android::tvp
 {
@@ -53,12 +54,13 @@ namespace kr2android::tvp
         #pragma pack(push, 4)
         struct ExtractionFilterInfo
         {
-            const tjs_uint SizeOfSelf{ sizeof(ExtractionFilterInfo) }; // structure size of ExtractionFilterInfo itself
-            const tjs_uint64   Offset; // offset of the buffer data in uncompressed stream position
-            void*              Buffer; // target data buffer
-            const tjs_uint BufferSize; // buffer size in bytes pointed by "Buffer"
-            const tjs_uint32 FileHash; // hash value of the file (since inteface v2)
-            const ttstr&     FileName;
+            // structure size of ExtractionFilterInfo itself
+            unitype_name(const tjs_uint,   SizeOfSelf{ sizeof(ExtractionFilterInfo) }, sizeofself);
+            unitype_name(const tjs_uint64, Offset,     offset    ); // offset of the buffer data in uncompressed stream position
+            unitype_name(void*,            Buffer,     buffer    ); // target data buffer
+            unitype_name(const tjs_uint,   BufferSize, buffersize); // buffer size in bytes pointed by "Buffer"
+            unitype_name(const tjs_uint32, FileHash,   filehash  ); // hash value of the file (since inteface v2)
+            unitype_name(crefttstr,        FileName,   filename  );
         };
         #pragma pack(pop)
 
@@ -118,13 +120,19 @@ namespace kr2android::tvp
         extern auto load(const ttstr& name, iTJSDispatch2* context, tTJSVariant* result, bool isexpression, const tjs_char* modestr) noexcept -> bool;
         extern auto loadbytes(const tjs_uint8* content, size_t length, iTJSDispatch2* context, tTJSVariant* result, const tjs_char* name) noexcept -> bool;
 
+        namespace global
+        {
+            extern auto get(bool addref = false) noexcept -> iTJSDispatch2*;
+            extern auto register_object(const tjs_char* name, iTJSDispatch2* dsp) noexcept -> bool;
+            extern auto remove_object  (const tjs_char* name) noexcept -> bool;
+        }
+
         extern auto get_text_encoding() noexcept -> std::optional<ttstr>;
         extern auto set_text_encoding(const ttstr& name) noexcept -> bool;
     }
 
     namespace events
     {
-
         struct event
         {
             enum flag_t: tjs_uint32
@@ -149,21 +157,21 @@ namespace kr2android::tvp
                 EPT_METHOD_MASK	= 0x00,
             };
 
-            iTJSDispatch2*  source;
-            iTJSDispatch2*  target;
-            const ttstr& eventname;
-            tjs_uint32         tag;
-            tjs_uint32        flag;
-            tjs_uint       numargs;
-            tTJSVariant*      args;
+            unitype_name(iTJSDispatch2*, Source,    source   );
+            unitype_name(iTJSDispatch2*, Target,    target   );
+            unitype_name(crefttstr,      EventName, eventname);
+            unitype_name(tjs_uint32,     Tag,       tag      );
+            unitype_name(tjs_uint32,     Flag,      flag     );
+            unitype_name(tjs_uint,       NumArgs,   numargs  );
+            unitype_name(tTJSVariant*,   Args,      args     );
         };
 
         struct event_base
         {
-            iTJSDispatch2*  source;
-            iTJSDispatch2*  target;
-            const ttstr& eventname;
-            tjs_uint32         tag;
+            unitype_name(iTJSDispatch2*, Source,    source   );
+            unitype_name(iTJSDispatch2*, Target,    target   );
+            unitype_name(crefttstr,      EventName, eventname);
+            unitype_name(tjs_uint32,     Tag,       tag      );
         };
 
         class uniref_event
@@ -226,15 +234,52 @@ namespace kr2android::tvp
         extern auto    remove_compact_hook(const compact_callback*    hook) noexcept -> bool;
     }
 
-    using event      = events::event;
-    using event_base = events::event_base;
-    using compact_callback    = events::CompactCallback;
+    using event               = events::event;
+    using event_base          = events::event_base;
     using continuous_callback = events::ContinuousCallback;
+    using CompactLevel        = events::CompactCallback::Level;
+    using compact_level       = events::CompactCallback::Level;
+    using compact_callback    = events::CompactCallback;
+
+    namespace sound
+    {
+        struct WaveFormat
+        {
+            unitype_name(tjs_uint,   SamplesPerSec,  samplespersec ); // sample granule per sec
+            unitype_name(tjs_uint,   Channels,       channels      );
+            unitype_name(tjs_uint,   BitsPerSample,  bitspersample ); // per one sample
+            unitype_name(tjs_uint,   BytesPerSample, bytespersample); // per one sample
+            unitype_name(tjs_uint64, TotalSamples,   totalsamples  ); // in sample granule; unknown for zero
+            unitype_name(tjs_uint64, TotalTime,      totaltime     ); // in ms; unknown for zero
+            unitype_name(tjs_uint32, SpeakerConfig,  speakerconfig ); // bitwise OR of SPEAKER_* constants
+            unitype_name(bool,       IsFloat,        isfloat       ); // true if the data is IEEE floating point
+            unitype_name(bool,       Seekable,       seekable      );
+        };
+        using wave_format = WaveFormat;
+
+        namespace pcm
+        {
+            extern auto to_16bits(tjs_int16* output, const void* input, const wave_format& format, tjs_int count,
+                        bool downmix) noexcept -> bool;
+            extern auto to_16bits(tjs_int16* output, const void* input, tjs_int channels, tjs_int bytespersample,
+                 tjs_int bitspersample, bool isfloat, tjs_int count, bool downmix) noexcept -> bool;
+
+            extern auto to_float(float* output, const void* input, const wave_format& format, tjs_int count) noexcept -> bool;
+            extern auto to_float(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
+                        tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool;
+        }
+    }
+
+    namespace pcm = sound::pcm;
+    using WaveFormat  = sound::WaveFormat;
+    using wave_format = sound::wave_format;
 
     extern auto get_random_bits128(void* dest) noexcept -> bool;
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
 
-    extern auto   get_tick_count() noexcept -> std::optional<tjs_uint64>;
+    extern auto get_tick_count() noexcept -> std::optional<tjs_uint64>;
 }
+
+#undef unitype_name
