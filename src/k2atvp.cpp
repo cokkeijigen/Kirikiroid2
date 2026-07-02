@@ -808,6 +808,28 @@ namespace kr2android::tvp
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
         }
 
+        auto set_system_disabled_state(bool state) noexcept -> bool
+        {
+            static decltype(&set_system_disabled_state) _ptr;
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::set_system_disabled_state(bool)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return bool{ _ptr != nullptr ? _ptr(state): false };
+        }
+
+        auto get_system_disabled_state() noexcept -> std::optional<bool>
+        {
+            static decltype(&get_system_disabled_state) _ptr;
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "events::get_system_disabled_state(void)->[std::optional<bool>]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            return std::optional<bool>{ _ptr != nullptr ? _ptr() :  std::nullopt };
+        }
+
     }
 
     namespace sound
