@@ -397,6 +397,17 @@ namespace TVP
         {
             return k2a::tvp::events::remove_compact_hook(hook);
         }
+
+        auto SetSystemEventDisabledState(bool state) noexcept -> bool
+        {
+            return k2a::tvp::events::set_system_disabled_state(state);
+        }
+
+        auto GetSystemEventDisabledState() noexcept -> std::optional<bool>
+        {
+            return k2a::tvp::events::get_system_disabled_state();
+        }
+
     }
 
     namespace Sound
