@@ -459,6 +459,31 @@ TJS_EXP_FUNC_DEF(tTJSString, TJSInt32ToHex, (tjs_uint32 num, int zeropad = 8));
 //---------------------------------------------------------------------------
 /*[*/
 typedef tTJSString ttstr;
+
+class crefttstr
+{
+	const ttstr& value;
+
+public:
+
+	inline crefttstr(const ttstr&       str): value{ str }{}
+	inline crefttstr(const crefttstr& other): value{ other.value }{}
+	inline crefttstr(crefttstr&&      other): value{ other.value }{}
+
+	inline auto operator->() const noexcept -> const ttstr* { return &this->value; };
+	inline auto  operator*() const noexcept -> const ttstr& { return this->value; };
+
+	inline auto operator==(const crefttstr& other) const noexcept -> bool
+	{
+		return this->value.operator==(other.value);
+	}
+
+	inline auto operator==(const ttstr& other) const noexcept -> bool
+	{
+		return this->value.operator==(other);
+	}
+};
+
 /*]*/
 //---------------------------------------------------------------------------
 } // namespace TJS
