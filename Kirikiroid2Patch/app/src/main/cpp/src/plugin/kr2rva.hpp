@@ -79,11 +79,13 @@ namespace kr2android::tvp::rva
 
     namespace Events
     {
-        static inline constexpr uintptr_t  PostEvent{ TargetRVA(0x08DC704, 0) };
-        static inline constexpr uintptr_t EventQueue{ TargetRVA(0x1ADFEC0, 0) };
-        static inline constexpr uintptr_t  BeginContinuousEvent{ TargetRVA(0x0906284, 0) };
-        static inline constexpr uintptr_t ContinuousEventVector{ TargetRVA(0x1ADFF48, 0) };
-        static inline constexpr uintptr_t    CompactEventVector{ TargetRVA(0x1ADFF80, 0) };
+        static inline constexpr uintptr_t        PostEvent{ TargetRVA(0x08DC704, 0) };
+        static inline constexpr uintptr_t       EventQueue{ TargetRVA(0x1ADFEC0, 0) };
+        static inline constexpr uintptr_t        BeginContinuousEvent{ TargetRVA(0x0906284, 0) };
+        static inline constexpr uintptr_t       ContinuousEventVector{ TargetRVA(0x1ADFF48, 0) };
+        static inline constexpr uintptr_t          CompactEventVector{ TargetRVA(0x1ADFF80, 0) };
+        static inline constexpr uintptr_t SetSystemEventDisabledState{ TargetRVA(0x905EC8, 0) };
+        static inline constexpr uintptr_t GetSystemEventDisabledState{ TargetRVA(0x905EEC, 0) };
     }
 
     static inline constexpr uintptr_t GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
