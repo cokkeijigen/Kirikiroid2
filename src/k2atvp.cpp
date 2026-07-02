@@ -766,7 +766,7 @@ namespace kr2android::tvp
             static decltype(&add_continuous_hook) _ptr{};
             if(_ptr == nullptr)
             {
-                const uint64_t hash{ "events::add_continuous_hook(const continuous_callback*)"_hash };
+                const uint64_t hash{ "events::add_continuous_hook(const continuous_callback*)->[bool]"_hash };
                 _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
@@ -778,7 +778,7 @@ namespace kr2android::tvp
             static decltype(&remove_continuous_hook) _ptr{};
             if(_ptr == nullptr)
             {
-                const uint64_t hash{ "events::remove_continuous_hook(const continuous_callback*)"_hash };
+                const uint64_t hash{ "events::remove_continuous_hook(const continuous_callback*)->[bool]"_hash };
                 _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
@@ -790,7 +790,7 @@ namespace kr2android::tvp
             static decltype(&add_compact_hook) _ptr{};
             if(_ptr == nullptr)
             {
-                const uint64_t hash{ "events::add_compact_hook(const compact_callback*)"_hash };
+                const uint64_t hash{ "events::add_compact_hook(const compact_callback*)->[bool]"_hash };
                 _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
@@ -802,12 +802,60 @@ namespace kr2android::tvp
             static decltype(&remove_compact_hook) _ptr{};
             if(_ptr == nullptr)
             {
-                const uint64_t hash{ "events::remove_compact_hook(const compact_callback*)"_hash };
+                const uint64_t hash{ "events::remove_compact_hook(const compact_callback*)->[bool]"_hash };
                 _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
             }
             return bool{ _ptr != nullptr ? _ptr(hook) : false };
         }
 
+    }
+
+    namespace sound
+    {
+        [[gnu::noinline]]
+        auto pcm::to_16bits(tjs_int16* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count, bool downmix) noexcept -> bool
+        {
+            static bool(*_ptr)(tjs_int16*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int, bool){};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "sound::pcm::to_16bits(tjs_int16*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int,bool)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+
+            if(_ptr != nullptr)
+            {
+                return _ptr(output, input, channels, bytespersample, bitspersample, isfloat, count, downmix);
+            }
+            return false;
+        }
+
+        [[gnu::noinline]]
+        auto pcm::to_float(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
+             tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool
+        {
+            static bool(*_ptr)(float*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int){};
+            if(_ptr == nullptr)
+            {
+                const uint64_t hash{ "sound::pcm::to_float(float*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int)->[bool]"_hash };
+                _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            }
+            if(_ptr != nullptr)
+            {
+                return _ptr(output, input, channels, bytespersample, bitspersample, isfloat, count);
+            }
+            return false;
+        }
+
+        auto pcm::to_16bits(tjs_int16* output, const void* input, const wave_format& format, tjs_int count, bool downmix) noexcept -> bool
+        {
+            return pcm::to_16bits(output, input, format.channels, format.bytespersample, format.bitspersample, format.isfloat, count, downmix);
+        }
+
+        auto pcm::to_float(float* output, const void* input, const wave_format& format, tjs_int count) noexcept -> bool
+        {
+            return pcm::to_float(output, input, format.channels, format.bytespersample, format.bytespersample, format.isfloat, count);
+        }
     }
 
     [[gnu::noinline]]
