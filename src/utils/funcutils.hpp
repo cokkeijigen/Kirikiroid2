@@ -76,6 +76,42 @@ namespace func
         {
             return func;
         }
+
+        template <class R>
+        [[nodiscard]] constexpr auto operator()(R(*func)(Args...)) const noexcept -> R(*)(Args...)
+        {
+            return func;
+        }
+
+        template <class R>
+        [[nodiscard]] constexpr auto operator()(R(*func)(Args...) noexcept) const noexcept -> R(*)(Args...) noexcept
+        {
+            return func;
+        }
+
+        template <class R, class ClassType>
+        [[nodiscard]] constexpr auto operator()(R(ClassType::*func)(Args...)) const noexcept -> R(ClassType::*)(Args...)
+        {
+            return func;
+        }
+
+        template <class R, class ClassType>
+        [[nodiscard]] constexpr auto operator()(R(ClassType::*func)(Args...) noexcept) const noexcept -> R(ClassType::*)(Args...) noexcept
+        {
+            return func;
+        }
+
+        template <class R, class ClassType>
+        [[nodiscard]] constexpr auto operator()(R(ClassType::*func)(Args...) const) const noexcept -> R(ClassType::*)(Args...) const
+        {
+            return func;
+        }
+
+        template <class R, class ClassType>
+        [[nodiscard]] constexpr auto operator()(R(ClassType::*func)(Args...) const noexcept) const noexcept -> R(ClassType::*)(Args...) const noexcept
+        {
+            return func;
+        }
     };
 
     template <class R>
