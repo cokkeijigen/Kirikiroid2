@@ -60,20 +60,6 @@ namespace TVP
         cbfText = 1
     };
 
-    struct tTVPWaveFormat
-    {
-        tjs_uint SamplesPerSec; // sample granule per sec
-        tjs_uint Channels;
-        tjs_uint BitsPerSample; // per one sample
-        tjs_uint BytesPerSample; // per one sample
-        tjs_uint64 TotalSamples; // in sample granule; unknown for zero
-        tjs_uint64 TotalTime; // in ms; unknown for zero
-        tjs_uint32 SpeakerConfig; // bitwise OR of SPEAKER_* constants
-        bool IsFloat; // true if the data is IEEE floating point
-        bool Seekable;
-    };
-
-
     enum tTVPGraphicPixelFormat
     {
         gpfLuminance,
