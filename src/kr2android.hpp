@@ -57,6 +57,15 @@ namespace kr2android
         }
     }
 
+    namespace symbol
+    {
+        template<size_t size>
+        static inline consteval auto hash(const char(&str)[size]) noexcept -> uint64_t
+        {
+            return symbol_hash::operator""_hash(str, size - 1);
+        }
+    }
+
     class k2aplugin
     {
         void*    m_base{};
