@@ -1303,6 +1303,29 @@ namespace kr2android::tvp
             return compact_event_vector::remove(hook);
         }
 
+        auto set_system_disabled_state(bool state) noexcept -> bool
+        {
+            static void(*_ptr)(bool){};
+            if(_ptr == nullptr)
+            {
+                _ptr = k2a::cast_ptr<decltype(_ptr)>(RVA::Events::SetSystemEventDisabledState);
+            }
+            return bool{ _ptr != nullptr ? (_ptr(state), true): false };
+        }
+
+        auto get_system_disabled_state() noexcept -> std::optional<bool>
+        {
+            static bool(*_ptr)(void ){};
+            if(_ptr == nullptr)
+            {
+                _ptr = k2a::cast_ptr<decltype(_ptr)>(RVA::Events::GetSystemEventDisabledState);
+            }
+            if( _ptr != nullptr)
+            {
+                return _ptr();
+            }
+            return std::nullopt;
+        }
     }
 
     namespace sound
