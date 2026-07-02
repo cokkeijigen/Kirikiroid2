@@ -232,6 +232,9 @@ namespace kr2android::tvp
         extern auto remove_continuous_hook(const continuous_callback* hook) noexcept -> bool;
         extern auto       add_compact_hook(const compact_callback*    hook) noexcept -> bool;
         extern auto    remove_compact_hook(const compact_callback*    hook) noexcept -> bool;
+
+        extern auto set_system_disabled_state(bool state) noexcept -> bool;
+        extern auto get_system_disabled_state() noexcept -> std::optional<bool>;
     }
 
     using event               = events::event;
