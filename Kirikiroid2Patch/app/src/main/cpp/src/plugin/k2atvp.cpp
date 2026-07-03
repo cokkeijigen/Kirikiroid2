@@ -1396,8 +1396,7 @@ namespace kr2android::tvp
         return add_log(line, true);
     }
 
-    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>&
-         vecButtons) noexcept -> std::optional<int>
+    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
     {
         static int(*_ptr)(ttstr&, const ttstr&, const ttstr&, const std::vector<ttstr>&){};
         if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::ShowSimpleInputBox))
@@ -1407,9 +1406,45 @@ namespace kr2android::tvp
         return _ptr(text, caption, prompt, vecButtons);
     }
 
+    auto inputbox(ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+    {
+        return inputbox(text, caption, "", vecButtons);
+    }
+
     [[gnu::noinline]]
-    auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>&
-         vecButtons) noexcept -> std::optional<int>
+    auto inputbox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ inputbox(text, caption, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ inputbox(text, caption, prompt, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
     {
         static int(*_ptr)(const char*, const char*, unsigned int, const char**){};
         if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::ShowSimpleMessageBox))
@@ -1429,6 +1464,22 @@ namespace kr2android::tvp
             btnText.emplace_back(btnTextHold.back().c_str());
         }
         return _ptr(pszText.c_str(), pszTitle.c_str(), btnText.size(), btnText.data());
+    }
+
+    [[gnu::noinline]]
+    auto messagebox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ messagebox(text, caption, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
     }
 
     [[gnu::noinline]]
