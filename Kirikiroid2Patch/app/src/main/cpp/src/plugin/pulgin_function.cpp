@@ -437,6 +437,47 @@ namespace TVP
 
     }
 
+    auto AddLog(const ttstr& line, bool appendtoimportant) -> bool
+    {
+        return k2a::tvp::add_log(line, appendtoimportant);
+    }
+
+    auto AddImportantLog(const ttstr& line) -> bool
+    {
+        return k2a::tvp::add_important_log(line);
+    }
+
+   auto ShowSimpleInputBox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+   {
+        return k2a::tvp::inputbox(text, caption);
+   }
+
+   auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>
+   {
+        return k2a::tvp::inputbox(text, caption, prompt);
+   }
+
+   auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+   {
+        return k2a::tvp::inputbox(text, caption, prompt, vecButtons);
+   }
+
+   auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+   {
+        return k2a::tvp::inputbox(text, caption, vecButtons);
+   }
+
+
+   auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+   {
+        return k2a::tvp::messagebox(text, caption);
+   }
+
+   auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+   {
+        return k2a::tvp::messagebox(text, caption, vecButtons);
+   }
+
     auto GetRandomBits128(void* dest) noexcept -> bool
     {
         return k2a::tvp::get_random_bits128(dest);
