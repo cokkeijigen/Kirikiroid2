@@ -185,21 +185,10 @@ namespace TVP
     }
     using namespace Sound;
 
-    // ========== 剪贴板 ==========
-    bool ClipboardHasFormat(tTVPClipboardFormat);
-    void ClipboardSetText(const ttstr &);
-    bool ClipboardGetText(ttstr &);
-
     // ========== 日志/消息 ==========
     void AddLog(const ttstr &);
     void AddImportantLog(const ttstr &);
-    ttstr FormatMessage(const tjs_char *,const ttstr &);
-    ttstr FormatMessage(const tjs_char *,const ttstr &,const ttstr &);
-    void ThrowExceptionMessage(const tjs_char *);
-    void ThrowExceptionMessage(const tjs_char *,const ttstr &,tjs_int);
-    void ThrowExceptionMessage(const tjs_char *,const ttstr &);
-    void ThrowExceptionMessage(const tjs_char *,const ttstr &,const ttstr &);
-    void CreateMessageMapFile(const ttstr &);
+
     int TVPShowSimpleMessageBox(const ttstr & text, const ttstr & caption, const std::vector<ttstr> &vecButtons);
     int TVPShowSimpleInputBox(ttstr &text, const ttstr &caption, const ttstr &prompt, const std::vector<ttstr> &vecButtons);
 
