@@ -280,11 +280,13 @@ namespace kr2android::tvp
     extern auto           add_log(const ttstr& line, bool appendtoimportant = false) noexcept -> bool;
     extern auto add_important_log(const ttstr& line) noexcept -> bool;
 
-    extern auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt,
-                const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
+    extern auto inputbox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
+    extern auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>;
+    extern auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
+    extern auto inputbox(ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
-    extern auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>&
-                vecButtons) noexcept -> std::optional<int>;
+    extern auto messagebox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
+    extern auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
     extern auto get_random_bits128(void* dest) noexcept -> bool;
 
