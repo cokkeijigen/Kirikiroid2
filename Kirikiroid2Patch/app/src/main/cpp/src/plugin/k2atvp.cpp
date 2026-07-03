@@ -1381,6 +1381,57 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto add_log(const ttstr &line, bool appendtoimportant) noexcept -> bool
+    {
+        static void(*_ptr)(const ttstr&, bool){};
+        if(_ptr == nullptr)
+        {
+            _ptr = k2a::cast_ptr<decltype(_ptr)>(RVA::AddLog);
+        }
+        return bool{ _ptr != nullptr ? (_ptr(line, appendtoimportant), true) : false };
+    }
+
+    auto add_important_log(const ttstr& line) noexcept -> bool
+    {
+        return add_log(line, true);
+    }
+
+    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>&
+         vecButtons) noexcept -> std::optional<int>
+    {
+        static int(*_ptr)(ttstr&, const ttstr&, const ttstr&, const std::vector<ttstr>&){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::ShowSimpleInputBox))
+        {
+           return std::nullopt;
+        }
+        return _ptr(text, caption, prompt, vecButtons);
+    }
+
+    [[gnu::noinline]]
+    auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>&
+         vecButtons) noexcept -> std::optional<int>
+    {
+        static int(*_ptr)(const char*, const char*, unsigned int, const char**){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::ShowSimpleMessageBox))
+        {
+           return std::nullopt;
+        }
+
+        std::string  pszText{    text.AsNarrowStdString() };
+        std::string pszTitle{ caption.AsNarrowStdString() };
+        std::vector<const char*> btnText{};
+        std::vector<std::string> btnTextHold{};
+        btnText.reserve(vecButtons.size());
+        btnTextHold.reserve(vecButtons.size());
+        for (const ttstr &btn : vecButtons)
+        {
+            btnTextHold.emplace_back(btn.AsStdString());
+            btnText.emplace_back(btnTextHold.back().c_str());
+        }
+        return _ptr(pszText.c_str(), pszTitle.c_str(), btnText.size(), btnText.data());
+    }
+
+    [[gnu::noinline]]
     auto get_random_bits128(void* dest) noexcept -> bool
     {
         static void(*_ptr)(void*){};
@@ -1392,8 +1443,9 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
-    auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
+    auto get_command_line(const tjs_char* name, tTJSVariant* value) noexcept -> std::optional<bool>
     {
+
         static bool(*_ptr)(const tjs_char*, tTJSVariant*){};
         if(_ptr == nullptr)
         {
@@ -1409,7 +1461,7 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
-    auto set_command_line(const tjs_char* name, const ttstr& value) -> bool
+    auto set_command_line(const tjs_char* name, const ttstr& value) noexcept -> bool
     {
         static void(*_ptr)(const tjs_char*, const ttstr&){};
 
