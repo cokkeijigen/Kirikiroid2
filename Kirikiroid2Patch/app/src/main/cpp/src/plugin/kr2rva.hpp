@@ -88,10 +88,13 @@ namespace kr2android::tvp::rva
         static inline constexpr uintptr_t GetSystemEventDisabledState{ TargetRVA(0x905EEC, 0) };
     }
 
-    static inline constexpr uintptr_t GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
-    static inline constexpr uintptr_t   GetCommandLine{ TargetRVA(0x090DE30, 0) };
-    static inline constexpr uintptr_t   SetCommandLine{ TargetRVA(0x090FCA0, 0) };
-    static inline constexpr uintptr_t     GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
+    static inline constexpr uintptr_t               AddLog{ TargetRVA(0x0A164B8, 0) };
+    static inline constexpr uintptr_t ShowSimpleMessageBox{ TargetRVA(0x0921F78, 0) };
+    static inline constexpr uintptr_t   ShowSimpleInputBox{ TargetRVA(0x0922700, 0) };
+    static inline constexpr uintptr_t     GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
+    static inline constexpr uintptr_t       GetCommandLine{ TargetRVA(0x090DE30, 0) };
+    static inline constexpr uintptr_t       SetCommandLine{ TargetRVA(0x090FCA0, 0) };
+    static inline constexpr uintptr_t         GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
 }
 
 namespace             TVP::RVA { using namespace kr2android::tvp::rva; };
