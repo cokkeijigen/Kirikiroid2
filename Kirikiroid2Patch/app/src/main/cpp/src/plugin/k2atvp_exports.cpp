@@ -358,13 +358,13 @@ namespace kr2android
         },
         tvpaddr
         {
-            .hash = "inputbox(ttstr&, const ttstr&, const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash,
-            .addr = k2a::tvp::inputbox
+            .hash = "inputbox(ttstr&,const ttstr&,const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash,
+            .addr = func::of<ttstr&, const ttstr&, const ttstr&, const std::vector<ttstr>&>(k2a::tvp::inputbox)
         },
         tvpaddr
         {
-            .hash = "messagebox(const ttstr&, const ttstr&, const std::vector<ttstr>&)->[std::optional<int>]"_hash,
-            .addr = k2a::tvp::messagebox
+            .hash = "messagebox(const ttstr&,const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash,
+            .addr = func::of<const ttstr&, const ttstr&, const std::vector<ttstr>&>(k2a::tvp::messagebox)
         },
 
         tvpaddr
