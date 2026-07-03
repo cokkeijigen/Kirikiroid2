@@ -880,6 +880,99 @@ namespace kr2android::tvp
         }
     }
 
+     [[gnu::noinline]]
+    auto add_log(const ttstr &line, bool appendtoimportant) noexcept -> bool
+    {
+        static decltype(&add_log) _ptr{};
+        if(_ptr == nullptr)
+        {
+            const uint64_t hash{ "add_log(const ttstr&, bool)->[bool]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+        }
+        return bool{ _ptr != nullptr ? _ptr(line, appendtoimportant) : false };
+    }
+
+    auto add_important_log(const ttstr& line) noexcept -> bool
+    {
+        return add_log(line, true);
+    }
+
+    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+    {
+        static std::optional<int>(*_ptr)(ttstr&, const ttstr&, const ttstr&, const std::vector<ttstr>&){};
+        const uint64_t hash{ "inputbox(ttstr&,const ttstr&,const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr(text, caption, prompt, vecButtons);
+    }
+
+    auto inputbox(ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+    {
+        return inputbox(text, caption, "", vecButtons);
+    }
+
+    [[gnu::noinline]]
+    auto inputbox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ inputbox(text, caption, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ inputbox(text, caption, prompt, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
+    {
+        static std::optional<int>(*_ptr)(const ttstr&, const ttstr&, const std::vector<ttstr>&){};
+        const uint64_t hash{ "messagebox(const ttstr&,const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr(text, caption, vecButtons);
+    }
+
+    [[gnu::noinline]]
+    auto messagebox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(2);
+        btn[0] = "Cancel";
+        btn[1] = "OK";
+
+        const std::optional<int> ret{ messagebox(text, caption, btn) };
+        if(ret.has_value())
+        {
+            return *ret == 1;
+        }
+        return std::nullopt;
+    }
+
     [[gnu::noinline]]
     auto get_random_bits128(void* dest) noexcept -> bool
     {
