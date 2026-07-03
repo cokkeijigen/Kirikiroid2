@@ -180,17 +180,22 @@ namespace TVP
 
         extern auto ConvertPCMToFloat(float* output, const void* input, const tTVPWaveFormat& format,
                     tjs_int count) noexcept -> bool;
+
         extern auto ConvertPCMToFloat(float* output, const void* input, tjs_int channels, tjs_int bytespersample,
                     tjs_int bitspersample, bool isfloat, tjs_int count) noexcept -> bool;
     }
     using namespace Sound;
 
-    // ========== 日志/消息 ==========
-    void AddLog(const ttstr &);
-    void AddImportantLog(const ttstr &);
+    extern auto          AddLog(const ttstr& line, bool appendtoimportant = false) -> bool;
+    extern auto AddImportantLog(const ttstr& line) -> bool;
 
-    int TVPShowSimpleMessageBox(const ttstr & text, const ttstr & caption, const std::vector<ttstr> &vecButtons);
-    int TVPShowSimpleInputBox(ttstr &text, const ttstr &caption, const ttstr &prompt, const std::vector<ttstr> &vecButtons);
+    extern auto ShowSimpleInputBox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
+    extern auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>;
+    extern auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
+    extern auto ShowSimpleInputBox(ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
+
+    extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
+    extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
     // ========== 平台/版本 ==========
     ttstr GetPlatformName();
