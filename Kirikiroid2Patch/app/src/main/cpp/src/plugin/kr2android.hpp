@@ -66,6 +66,25 @@ namespace kr2android
         }
     }
 
+    extern auto get_base() noexcept -> uniptr_t;
+    extern auto init(const uniptr_t libbase) noexcept -> bool;
+    extern auto init() noexcept -> bool;
+
+    template<is_pointer T = void*>
+    inline auto cast_ptr(const uintptr_t rva) noexcept -> T
+    {
+        unirawptr_t<T> result{};
+        if(rva != 0)
+        {
+            const uniptr_t base{ get_base() };
+            if(base.ptr != nullptr)
+            {
+                result = base.uintptr + rva;
+            }
+        }
+        return result.raw;
+    }
+
     class k2aplugin
     {
         void*    m_base{};
@@ -85,6 +104,15 @@ namespace kr2android
             }
         }
 
+        inline auto is_vaild() const noexcept -> bool
+        {
+            return bool
+            {
+                static_cast<const void*>(this) != nullptr &&
+                this->m_base != nullptr && this->m_query != nullptr
+            };
+        }
+
         template<is_pointer T = void*>
         inline auto query(uint64_t hash) noexcept -> T
         {
@@ -94,6 +122,19 @@ namespace kr2android
                 result.ptr = this->m_query(hash);
             }
             return result.raw;
+        }
+
+        template<is_pointer T = void*>
+        inline auto query(T& value, uint64_t hash) noexcept -> bool
+        {
+            value = this->query<T>(hash);
+            return uniptr_t{ value }.ptr != nullptr;
+        }
+        template<is_pointer T = void*>
+        inline auto query(uint64_t hash, T& value) noexcept -> bool
+        {
+            value = this->query<T>(hash);
+            return uniptr_t{ value }.ptr != nullptr;
         }
 
         inline auto base() noexcept -> uniptr_t
@@ -107,37 +148,38 @@ namespace kr2android
     };
 
     extern k2aplugin plugin;
-
-    extern auto get_base() noexcept -> uniptr_t;
-    extern auto init(const uniptr_t libbase) noexcept -> bool;
-    extern auto init() noexcept -> bool;
-    extern auto init(const k2aplugin* plugin) noexcept -> bool;
-
-    template<is_pointer T = void*>
-    inline auto cast_ptr(const uintptr_t rva) noexcept -> T
+    inline auto plugin_init(const k2aplugin* k2a) noexcept -> bool
     {
-        unirawptr_t<T> result{};
-        if(rva != 0)
+        if(k2a->is_vaild())
         {
-            const uniptr_t base{ get_base() };
-            if(base.ptr != nullptr)
-            {
-                result = base.uintptr + rva;
-            }
+            plugin = k2a;
+            return true;
         }
-        return result.raw;
+        return false;
+    }
+
+    inline auto plugin_init(const k2aplugin& k2a) noexcept -> bool
+    {
+        if(k2a.is_vaild())
+        {
+            plugin = k2a;
+            return true;
+        }
+        return false;
     }
 
     template<is_pointer T = void*>
-    inline auto cast_ptr(T& val, const uintptr_t rva) noexcept -> void
+    inline auto cast_ptr(T& val, const uintptr_t rva) noexcept -> bool
     {
         val = cast_ptr<T>(rva);
+        return uniptr_t{ val }.ptr != nullptr;
     }
 
     template<is_pointer T = void*>
-    inline auto cast_ptr(const uintptr_t rva, T& val) noexcept -> void
+    inline auto cast_ptr(const uintptr_t rva, T& val) noexcept -> bool
     {
         val = cast_ptr<T>(rva);
+        return uniptr_t{ val }.ptr != nullptr;
     }
 
 }
