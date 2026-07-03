@@ -105,6 +105,19 @@ namespace kr2android
             return result.raw;
         }
 
+        template<is_pointer T = void*>
+        inline auto query(T& value, uint64_t hash) noexcept -> bool
+        {
+            value = this->query<T>(hash);
+            return uniptr_t{ value }.ptr != nullptr;
+        }
+        template<is_pointer T = void*>
+        inline auto query(uint64_t hash, T& value) noexcept -> bool
+        {
+            value = this->query<T>(hash);
+            return uniptr_t{ value }.ptr != nullptr;
+        }
+
         inline auto base() noexcept -> uniptr_t
         {
             if(static_cast<void*>(this) != nullptr)
