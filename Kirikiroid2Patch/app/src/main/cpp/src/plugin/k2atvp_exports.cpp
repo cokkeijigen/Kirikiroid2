@@ -351,6 +351,21 @@ namespace kr2android
             .hash = "sound::pcm::to_float(float*,const void*,tjs_int,tjs_int,tjs_int,bool,tjs_int)->[bool]"_hash,
             .addr = func::of<float*, const void*, tjs_int, tjs_int, tjs_int, bool, tjs_int>(k2a::tvp::sound::pcm::to_float)
         },
+        tvpaddr
+        {
+            .hash = "add_log(const ttstr&, bool)->[bool]"_hash,
+            .addr = k2a::tvp::add_log
+        },
+        tvpaddr
+        {
+            .hash = "inputbox(ttstr&, const ttstr&, const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash,
+            .addr = k2a::tvp::inputbox
+        },
+        tvpaddr
+        {
+            .hash = "messagebox(const ttstr&, const ttstr&, const std::vector<ttstr>&)->[std::optional<int>]"_hash,
+            .addr = k2a::tvp::messagebox
+        },
 
         tvpaddr
         {
