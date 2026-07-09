@@ -299,6 +299,7 @@ namespace kr2android::tvp
     extern auto  get_system_version(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool;
 
     extern auto get_random_bits128(void* dest) noexcept -> bool;
+    extern auto push_environ_noise(const void* buf, const tjs_int bufsize) noexcept -> bool;
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
