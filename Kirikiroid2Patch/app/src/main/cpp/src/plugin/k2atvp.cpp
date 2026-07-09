@@ -1568,6 +1568,17 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto push_environ_noise(const void* buf, const tjs_int bufsize) noexcept -> bool
+    {
+        static void(*_ptr)(const void*, const tjs_int){};
+        if(_ptr == nullptr)
+        {
+            _ptr = k2a::cast_ptr<decltype(_ptr)>(RVA::PushEnvironNoise);
+        }
+        return bool{ _ptr == nullptr ? (_ptr(buf, bufsize), true) : false };
+    }
+
+    [[gnu::noinline]]
     auto get_command_line(const tjs_char* name, tTJSVariant* value) noexcept -> std::optional<bool>
     {
         static bool(*_ptr)(const tjs_char*, tTJSVariant*){};
