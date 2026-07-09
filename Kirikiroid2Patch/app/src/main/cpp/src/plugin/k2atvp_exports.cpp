@@ -353,8 +353,8 @@ namespace kr2android
         },
         tvpaddr
         {
-            .hash = "add_log(const ttstr&, bool)->[bool]"_hash,
-            .addr = k2a::tvp::add_log
+            .hash = "log(const ttstr&,bool)->[bool]"_hash,
+            .addr = k2a::tvp::log
         },
         tvpaddr
         {
@@ -365,6 +365,31 @@ namespace kr2android
         {
             .hash = "messagebox(const ttstr&,const ttstr&,const std::vector<ttstr>&)->[std::optional<int>]"_hash,
             .addr = func::of<const ttstr&, const ttstr&, const std::vector<ttstr>&>(k2a::tvp::messagebox)
+        },
+        tvpaddr
+        {
+            .hash = "get_about_string(void)->[std::optional<ttstr>]"_hash,
+            .addr = k2a::tvp::get_about_string
+        },
+        tvpaddr
+        {
+            .hash = "get_version_string(void)->[std::optional<ttstr>]"_hash,
+            .addr = k2a::tvp::get_version_string
+        },
+        tvpaddr
+        {
+            .hash = "get_version_information(void)->[std::optional<ttstr>]"_hash,
+            .addr = k2a::tvp::get_version_information
+        },
+        tvpaddr
+        {
+            .hash = "get_system_version(tjs_int&,tjs_int&,tjs_int&,tjs_int&)->[bool]"_hash,
+            .addr = k2a::tvp::get_system_version
+        },
+        tvpaddr
+        {
+            .hash = "get_command_line_argument_generation(void)->[std::optional<tjs_int>]"_hash,
+            .addr = k2a::tvp::get_command_line_argument_generation
         },
 
         tvpaddr
