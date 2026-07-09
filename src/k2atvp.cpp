@@ -1029,18 +1029,6 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
-    auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>
-    {
-        static decltype(&get_command_line_argument_generation) _ptr{};
-        const uint64_t hash{ "get_command_line_argument_generation(void)->[std::optional<tjs_int>]"_hash };
-        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
-        {
-            return std::nullopt;
-        }
-        return _ptr();
-    }
-
-    [[gnu::noinline]]
     auto get_random_bits128(void* dest) noexcept -> bool
     {
         static decltype(&get_random_bits128) _ptr{};
@@ -1074,6 +1062,18 @@ namespace kr2android::tvp
             _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
         return bool{ _ptr != nullptr ? _ptr(name, value) : false };
+    }
+
+    [[gnu::noinline]]
+    auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>
+    {
+        static decltype(&get_command_line_argument_generation) _ptr{};
+        const uint64_t hash{ "get_command_line_argument_generation(void)->[std::optional<tjs_int>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
     }
 
     [[gnu::noinline]]
