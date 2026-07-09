@@ -100,6 +100,7 @@ namespace kr2android::tvp::rva
     static inline constexpr uintptr_t GetVersionInformation{ TargetRVA(0x0954294, 0) };
 
     static inline constexpr uintptr_t GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
+    static inline constexpr uintptr_t PushEnvironNoise{ TargetRVA(0x0A28EB8, 0) };
 
     static inline constexpr uintptr_t GetCommandLine{ TargetRVA(0x090DE30, 0) };
     static inline constexpr uintptr_t SetCommandLine{ TargetRVA(0x090FCA0, 0) };
