@@ -886,15 +886,15 @@ namespace kr2android::tvp
         static decltype(&add_log) _ptr{};
         if(_ptr == nullptr)
         {
-            const uint64_t hash{ "add_log(const ttstr&, bool)->[bool]"_hash };
+            const uint64_t hash{ "log(const ttstr&,bool)->[bool]"_hash };
             _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
         return bool{ _ptr != nullptr ? _ptr(line, appendtoimportant) : false };
     }
 
-    auto add_important_log(const ttstr& line) noexcept -> bool
+    auto important_log(const ttstr& line) noexcept -> bool
     {
-        return add_log(line, true);
+        return log(line, true);
     }
 
     auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
@@ -971,6 +971,73 @@ namespace kr2android::tvp
             return *ret == 1;
         }
         return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto get_about_string() noexcept -> std::optional<ttstr>
+    {
+        static decltype(&get_about_string) _ptr{};
+        const uint64_t hash{ "get_about_string(void)->[std::optional<ttstr>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
+    auto get_version_string() noexcept -> std::optional<ttstr>
+    {
+        static decltype(&get_version_string) _ptr{};
+        const uint64_t hash{ "get_version_string(void)->[std::optional<ttstr>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
+    auto get_version_information() noexcept -> std::optional<ttstr>
+    {
+        static decltype(&get_version_information) _ptr{};
+        const uint64_t hash{ "get_version_information(void)->[std::optional<ttstr>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    auto get_tjs_version(tjs_int& major, tjs_int& minor, tjs_int& release) noexcept -> void
+    {
+        major   = TJSVersionMajor;
+        minor   = TJSVersionMinor;
+        release = TJSVersionRelease;
+    }
+
+    [[gnu::noinline]]
+    auto get_system_version(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool
+    {
+        static decltype(&get_system_version) _ptr{};
+        const uint64_t hash{ "get_system_version(tjs_int&,tjs_int&,tjs_int&,tjs_int&)->[bool]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return false;
+        }
+        return _ptr(major, minor, release, build);
+    }
+
+    [[gnu::noinline]]
+    auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>
+    {
+        static decltype(&get_command_line_argument_generation) _ptr{};
+        const uint64_t hash{ "get_command_line_argument_generation(void)->[std::optional<tjs_int>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
     }
 
     [[gnu::noinline]]
