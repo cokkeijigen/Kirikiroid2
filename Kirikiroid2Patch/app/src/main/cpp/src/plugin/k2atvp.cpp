@@ -1606,7 +1606,7 @@ namespace kr2android::tvp
     auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>
     {
         static tjs_int* _ptr{};
-        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetCommandLineArgumentGeneration))
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::CommandLineArgumentGeneration))
         {
             return std::nullopt;
         }
