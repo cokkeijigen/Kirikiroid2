@@ -511,6 +511,11 @@ namespace TVP
         return k2a::tvp::get_random_bits128(dest);
     }
 
+    auto PushEnvironNoise(const void* buf, const tjs_int bufsize) noexcept -> bool
+    {
+        return k2a::tvp::push_environ_noise(buf, bufsize);
+    }
+
     auto GetCommandLine(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>
     {
         return k2a::tvp::get_command_line(name, value);
