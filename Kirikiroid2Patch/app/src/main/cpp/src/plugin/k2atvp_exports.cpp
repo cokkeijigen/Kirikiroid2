@@ -399,6 +399,11 @@ namespace kr2android
         },
         tvpaddr
         {
+            .hash = "push_environ_noise(const void*,tjs_int)->[bool]"_hash,
+            .addr = k2a::tvp::get_random_bits128
+        },
+        tvpaddr
+        {
             .hash = "set_command_line(const tjs_char*,const ttstr&)->[bool]"_hash,
             .addr = k2a::tvp::set_command_line
         },
