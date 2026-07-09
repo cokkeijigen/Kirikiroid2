@@ -209,11 +209,9 @@ namespace TVP
     extern auto SetCommandLine(const tjs_char* name, const ttstr& value) -> bool;
     extern auto GetCommandLineArgumentGeneration() noexcept -> std::optional<tjs_int>;
 
-    // ========== 随机数 ==========
-    void PushEnvironNoise(const void *,tjs_int);
-    extern auto GetRandomBits128(void* dest) noexcept -> bool;
+    extern auto PushEnvironNoise(const void* buf, const tjs_int bufsize) noexcept -> bool;
+    extern auto GetRandomBits128(void* const dest) noexcept -> bool;
 
-    // ========== 时间 ==========
     extern auto GetTickCount() -> std::optional<tjs_uint64>;
 
     // ========== 线程/任务 ==========
