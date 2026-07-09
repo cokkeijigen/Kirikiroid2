@@ -1,6 +1,5 @@
 #include <pulgin_function.hpp>
 
-
 namespace TVP
 {
 
@@ -439,12 +438,12 @@ namespace TVP
 
     auto AddLog(const ttstr& line, bool appendtoimportant) -> bool
     {
-        return k2a::tvp::add_log(line, appendtoimportant);
+        return k2a::tvp::log(line, appendtoimportant);
     }
 
     auto AddImportantLog(const ttstr& line) -> bool
     {
-        return k2a::tvp::add_important_log(line);
+        return k2a::tvp::important_log(line);
     }
 
     auto ShowSimpleInputBox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>
@@ -475,6 +474,36 @@ namespace TVP
     auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
     {
          return k2a::tvp::messagebox(text, caption, vecButtons);
+    }
+
+    auto GetAboutString() noexcept -> std::optional<ttstr>
+    {
+        return k2a::tvp::get_about_string();
+    }
+
+    auto GetVersionString() noexcept -> std::optional<ttstr>
+    {
+        return k2a::tvp::get_version_string();
+    }
+
+    auto GetVersionInformation() noexcept -> std::optional<ttstr>
+    {
+        return k2a::tvp::get_version_information();
+    }
+
+    auto GetTJSVersion(tjs_int& major, tjs_int& minor, tjs_int& release) noexcept -> void
+    {
+        k2a::tvp::get_tjs_version(major, minor, release);
+    }
+
+    auto GetSystemVersion(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool
+    {
+        return k2a::tvp::get_system_version(major, major, release, build);
+    }
+
+    auto GetCommandLineArgumentGeneration() noexcept -> std::optional<tjs_int>
+    {
+        return k2a::tvp::get_command_line_argument_generation();
     }
 
     auto GetRandomBits128(void* dest) noexcept -> bool
