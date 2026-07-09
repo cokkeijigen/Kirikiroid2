@@ -103,7 +103,7 @@ namespace kr2android::tvp::rva
 
     static inline constexpr uintptr_t GetCommandLine{ TargetRVA(0x090DE30, 0) };
     static inline constexpr uintptr_t SetCommandLine{ TargetRVA(0x090FCA0, 0) };
-    static inline constexpr uintptr_t GetCommandLineArgumentGeneration{ TargetRVA(0x1AF1340, 0) };
+    static inline constexpr uintptr_t CommandLineArgumentGeneration{ TargetRVA(0x1AF1340, 0) };
 
     static inline constexpr uintptr_t GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
 
