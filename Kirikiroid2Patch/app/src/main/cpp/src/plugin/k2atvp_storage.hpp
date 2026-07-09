@@ -9,7 +9,7 @@ namespace kr2android::tvp::storage
 {
     struct iStorageLister // callback class for GetListAt
     {
-        virtual auto Add(const ttstr &file) -> void = 0;
+        virtual auto Add(const ttstr& file) -> void = 0;
     };
 
     struct iStorageMedia
@@ -17,12 +17,12 @@ namespace kr2android::tvp::storage
         virtual ~iStorageMedia() {}
         virtual auto TJS_INTF_METHOD                   AddRef() ->  void = 0;
         virtual auto TJS_INTF_METHOD                  Release() ->  void = 0;
-        virtual auto TJS_INTF_METHOD                  GetName(ttstr &name) ->  void = 0;
-        virtual auto TJS_INTF_METHOD      NormalizeDomainName(ttstr &name) ->  void = 0;
-        virtual auto TJS_INTF_METHOD        NormalizePathName(ttstr &name) ->  void = 0;
-        virtual auto TJS_INTF_METHOD     CheckExistentStorage(const ttstr &name) -> bool = 0;
-        virtual auto TJS_INTF_METHOD                     Open(const ttstr & name, tjs_uint32 flags) -> tTJSBinaryStream* = 0;
-        virtual auto TJS_INTF_METHOD                GetListAt(const ttstr &name, iStorageLister* lister) -> void = 0;
+        virtual auto TJS_INTF_METHOD                  GetName(ttstr& name) -> void = 0;
+        virtual auto TJS_INTF_METHOD      NormalizeDomainName(ttstr& name) -> void = 0;
+        virtual auto TJS_INTF_METHOD        NormalizePathName(ttstr& name) -> void = 0;
+        virtual auto TJS_INTF_METHOD     CheckExistentStorage(const ttstr& name) -> bool = 0;
+        virtual auto TJS_INTF_METHOD                     Open(const ttstr& name, tjs_uint32 flags) -> tTJSBinaryStream* = 0;
+        virtual auto TJS_INTF_METHOD                GetListAt(const ttstr& name, iStorageLister* lister) -> void = 0;
         virtual auto TJS_INTF_METHOD GetLocallyAccessibleName(ttstr &name) -> void = 0;
     };
 
