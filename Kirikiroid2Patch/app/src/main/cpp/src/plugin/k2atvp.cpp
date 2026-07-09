@@ -1381,7 +1381,7 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
-    auto add_log(const ttstr &line, bool appendtoimportant) noexcept -> bool
+    auto log(const ttstr &line, bool appendtoimportant) noexcept -> bool
     {
         static void(*_ptr)(const ttstr&, bool){};
         if(_ptr == nullptr)
@@ -1391,9 +1391,9 @@ namespace kr2android::tvp
         return bool{ _ptr != nullptr ? (_ptr(line, appendtoimportant), true) : false };
     }
 
-    auto add_important_log(const ttstr& line) noexcept -> bool
+    auto important_log(const ttstr& line) noexcept -> bool
     {
-        return add_log(line, true);
+        return log(line, true);
     }
 
     auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>
@@ -1483,6 +1483,80 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto get_about_string() noexcept -> std::optional<ttstr>
+    {
+        static ttstr(*_ptr)(void){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetAboutString))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
+    auto get_version_string() noexcept -> std::optional<ttstr>
+    {
+        static ttstr(*_ptr)(void){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetVersionString))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
+    auto get_version_information() noexcept -> std::optional<ttstr>
+    {
+        static ttstr(*_ptr)(void){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetVersionInformation))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    auto get_tjs_version(tjs_int& major, tjs_int& minor, tjs_int& release) noexcept -> void
+    {
+        major   = TJSVersionMajor;
+        minor   = TJSVersionMinor;
+        release = TJSVersionRelease;
+    }
+
+    [[gnu::noinline]]
+    auto get_system_version(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool
+    {
+        tjs_int* _major{};
+        if(k2a::cast_ptr(_major, RVA::VersionMajor))
+        {
+            major = *_major;
+        }
+
+        tjs_int* _minor{};
+        if(k2a::cast_ptr(_minor, RVA::VersionMinor))
+        {
+            minor = *_minor;
+        }
+
+        tjs_int* _release{};
+        if(k2a::cast_ptr(_release, RVA::VersionRelease))
+        {
+            release = *_release;
+        }
+
+        tjs_int* _build{};
+        if(k2a::cast_ptr(_build, RVA::VersionBuild))
+        {
+            build = *_build;
+        }
+
+        return bool
+        {
+            _major   == nullptr || _minor == nullptr ||
+            _release == nullptr || _build == nullptr
+        };
+    }
+
+    [[gnu::noinline]]
     auto get_random_bits128(void* dest) noexcept -> bool
     {
         static void(*_ptr)(void*){};
@@ -1496,7 +1570,6 @@ namespace kr2android::tvp
     [[gnu::noinline]]
     auto get_command_line(const tjs_char* name, tTJSVariant* value) noexcept -> std::optional<bool>
     {
-
         static bool(*_ptr)(const tjs_char*, tTJSVariant*){};
         if(_ptr == nullptr)
         {
@@ -1527,6 +1600,17 @@ namespace kr2android::tvp
         }
 
         return false;
+    }
+
+    [[gnu::noinline]]
+    auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>
+    {
+        static tjs_int* _ptr{};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetCommandLineArgumentGeneration))
+        {
+            return std::nullopt;
+        }
+        return *_ptr;
     }
 
     [[gnu::noinline]]
