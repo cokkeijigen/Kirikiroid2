@@ -34,8 +34,8 @@ namespace TVP
 
     namespace StorageMedia
     {
-        using iTVPStorageLister = k2a::tvp::storage::iStorageLister;
-        using iTVPStorageMedia  = k2a::tvp::storage::iStorageMedia;
+        using iTVPStorageLister = TVP::Storage::iStorageLister;
+        using iTVPStorageMedia  = TVP::Storage::iStorageMedia;
         extern auto   RegisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
         extern auto UnregisterStorageMedia(iTVPStorageMedia* media) noexcept -> bool;
     }
@@ -198,24 +198,16 @@ namespace TVP
     extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
     extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
-    // ========== 平台/版本 ==========
-    ttstr GetPlatformName();
-    ttstr GetOSName();
-    ttstr GetAboutString();
-    ttstr GetVersionInformation();
-    ttstr GetVersionString();
-    void GetSystemVersion(tjs_int &,tjs_int &,tjs_int &,tjs_int &);
-    void GetTJSVersion(tjs_int &,tjs_int &,tjs_int &);
-    tjs_uint32 GetCPUType();
-    tjs_int GetProcessorNum();
-    tjs_int GetThreadNum();
-    bool GetFileVersionOf(const wchar_t *,tjs_int &,tjs_int &,tjs_int &,tjs_int &);
+    extern auto        GetAboutString() noexcept -> std::optional<ttstr>;
+    extern auto      GetVersionString() noexcept -> std::optional<ttstr>;
+    extern auto GetVersionInformation() noexcept -> std::optional<ttstr>;
 
-    // ========== 命令行 ==========
+    extern auto    GetTJSVersion(tjs_int& major, tjs_int& minor, tjs_int& release) noexcept -> void;
+    extern auto GetSystemVersion(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool;
+
     extern auto GetCommandLine(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
     extern auto SetCommandLine(const tjs_char* name, const ttstr& value) -> bool;
-
-    tjs_int GetCommandLineArgumentGeneration();
+    extern auto GetCommandLineArgumentGeneration() noexcept -> std::optional<tjs_int>;
 
     // ========== 随机数 ==========
     void PushEnvironNoise(const void *,tjs_int);
