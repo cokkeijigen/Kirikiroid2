@@ -63,9 +63,9 @@ namespace kr2android::tvp::rva
         static inline constexpr uintptr_t RemoveAutoPath{ TargetRVA(0x08EBA70, 0) };
         static inline constexpr uintptr_t  GetPlacedPath{ TargetRVA(0x08EBC80, 0) };
 
-        static inline constexpr uintptr_t                  SetCurrentDirectory{ TargetRVA(0x08EA6F8, 0) };
-        static inline constexpr uintptr_t                   ClearStorageCaches{ TargetRVA(0x08FD444, 0) };
-        static inline constexpr uintptr_t            IsExistentStorageNoSearch{ TargetRVA(0x08EB4C0, 0) };
+        static inline constexpr uintptr_t        SetCurrentDirectory{ TargetRVA(0x08EA6F8, 0) };
+        static inline constexpr uintptr_t         ClearStorageCaches{ TargetRVA(0x08FD444, 0) };
+        static inline constexpr uintptr_t  IsExistentStorageNoSearch{ TargetRVA(0x08EB4C0, 0) };
         static inline constexpr uintptr_t IsExistentStorageNoSearchNoNormalize{ TargetRVA(0x08EAF88, 0) };
     }
 
@@ -79,22 +79,38 @@ namespace kr2android::tvp::rva
 
     namespace Events
     {
-        static inline constexpr uintptr_t        PostEvent{ TargetRVA(0x08DC704, 0) };
-        static inline constexpr uintptr_t       EventQueue{ TargetRVA(0x1ADFEC0, 0) };
-        static inline constexpr uintptr_t        BeginContinuousEvent{ TargetRVA(0x0906284, 0) };
-        static inline constexpr uintptr_t       ContinuousEventVector{ TargetRVA(0x1ADFF48, 0) };
-        static inline constexpr uintptr_t          CompactEventVector{ TargetRVA(0x1ADFF80, 0) };
+        static inline constexpr uintptr_t  PostEvent{ TargetRVA(0x08DC704, 0) };
+        static inline constexpr uintptr_t EventQueue{ TargetRVA(0x1ADFEC0, 0) };
+
+        static inline constexpr uintptr_t  BeginContinuousEvent{ TargetRVA(0x0906284, 0) };
+        static inline constexpr uintptr_t ContinuousEventVector{ TargetRVA(0x1ADFF48, 0) };
+        static inline constexpr uintptr_t    CompactEventVector{ TargetRVA(0x1ADFF80, 0) };
+
         static inline constexpr uintptr_t SetSystemEventDisabledState{ TargetRVA(0x905EC8, 0) };
         static inline constexpr uintptr_t GetSystemEventDisabledState{ TargetRVA(0x905EEC, 0) };
     }
 
-    static inline constexpr uintptr_t               AddLog{ TargetRVA(0x0A164B8, 0) };
+    static inline constexpr uintptr_t AddLog{ TargetRVA(0x0A164B8, 0) };
+
     static inline constexpr uintptr_t ShowSimpleMessageBox{ TargetRVA(0x0921F78, 0) };
     static inline constexpr uintptr_t   ShowSimpleInputBox{ TargetRVA(0x0922700, 0) };
-    static inline constexpr uintptr_t     GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
-    static inline constexpr uintptr_t       GetCommandLine{ TargetRVA(0x090DE30, 0) };
-    static inline constexpr uintptr_t       SetCommandLine{ TargetRVA(0x090FCA0, 0) };
-    static inline constexpr uintptr_t         GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
+
+    static inline constexpr uintptr_t        GetAboutString{ TargetRVA(0x0953FE8, 0) };
+    static inline constexpr uintptr_t      GetVersionString{ TargetRVA(0x0954730, 0) };
+    static inline constexpr uintptr_t GetVersionInformation{ TargetRVA(0x0954294, 0) };
+
+    static inline constexpr uintptr_t GetRandomBits128{ TargetRVA(0x0A28F38, 0) };
+
+    static inline constexpr uintptr_t GetCommandLine{ TargetRVA(0x090DE30, 0) };
+    static inline constexpr uintptr_t SetCommandLine{ TargetRVA(0x090FCA0, 0) };
+    static inline constexpr uintptr_t GetCommandLineArgumentGeneration{ TargetRVA(0x1AF1340, 0) };
+
+    static inline constexpr uintptr_t GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
+
+    static inline constexpr uintptr_t   VersionMajor{ TargetRVA(0x1AF40F8, 0) };
+    static inline constexpr uintptr_t   VersionMinor{ TargetRVA(0x1AF40FC, 0) };
+    static inline constexpr uintptr_t VersionRelease{ TargetRVA(0x1AF4100, 0) };
+    static inline constexpr uintptr_t   VersionBuild{ TargetRVA(0x1AF4104, 0) };
 }
 
 namespace             TVP::RVA { using namespace kr2android::tvp::rva; };
