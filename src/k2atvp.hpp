@@ -280,8 +280,8 @@ namespace kr2android::tvp
     using WaveFormat  = sound::WaveFormat;
     using wave_format = sound::wave_format;
 
-    extern auto           add_log(const ttstr& line, bool appendtoimportant = false) noexcept -> bool;
-    extern auto add_important_log(const ttstr& line) noexcept -> bool;
+    extern auto           log(const ttstr& line, bool appendtoimportant = false) noexcept -> bool;
+    extern auto important_log(const ttstr& line) noexcept -> bool;
 
     extern auto inputbox(ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
     extern auto inputbox(ttstr& text, const ttstr& caption, const ttstr& prompt) noexcept -> std::optional<bool>;
@@ -291,10 +291,18 @@ namespace kr2android::tvp
     extern auto messagebox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
     extern auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
+    extern auto        get_about_string() noexcept -> std::optional<ttstr>;
+    extern auto      get_version_string() noexcept -> std::optional<ttstr>;
+    extern auto get_version_information() noexcept -> std::optional<ttstr>;
+
+    extern auto     get_tjs_version(tjs_int& major, tjs_int& minor, tjs_int& release) noexcept -> void;
+    extern auto  get_system_version(tjs_int& major, tjs_int& minor, tjs_int& release, tjs_int& build) noexcept -> bool;
+
     extern auto get_random_bits128(void* dest) noexcept -> bool;
 
     extern auto set_command_line(const tjs_char* name, const ttstr& value) -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) -> std::optional<bool>;
+    extern auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>;
 
     extern auto   get_tick_count() noexcept -> std::optional<tjs_uint64>;
 }
