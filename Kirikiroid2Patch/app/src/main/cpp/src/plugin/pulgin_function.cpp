@@ -476,6 +476,11 @@ namespace TVP
          return k2a::tvp::messagebox(text, caption, vecButtons);
     }
 
+    extern auto ThrowExceptionMessage(const ttstr& msg, bool exit) noexcept -> void
+    {
+        k2a::tvp::throw_exception_message(msg, exit);
+    }
+
     auto GetAboutString() noexcept -> std::optional<ttstr>
     {
         return k2a::tvp::get_about_string();
