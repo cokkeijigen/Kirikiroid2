@@ -10,6 +10,7 @@
 #include <xstr.hpp>
 #include <tjsDictionary.h>
 #include <k2atvp_sound.hpp>
+#include <native-lib.hpp>
 
 namespace kr2android::tvp
 {
@@ -1480,6 +1481,20 @@ namespace kr2android::tvp
             return *ret == 1;
         }
         return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto throw_exception_message(const ttstr& msg, bool exit) -> void
+    {
+        std::vector<ttstr> btn{};
+        btn.resize(1);
+        btn[0] =  exit ? "Exit" : "OK";
+        messagebox(msg, "Information", btn);
+        if(exit)
+        {
+            kr2patch::__on_exit();
+            throw;
+        }
     }
 
     [[gnu::noinline]]
