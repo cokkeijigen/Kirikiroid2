@@ -1089,6 +1089,29 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto get_async_key_state(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>
+    {
+        static decltype(&get_async_key_state) _ptr{};
+        const uint64_t hash{ "get_async_key_state(tjs_uint,bool)->[std::optional<bool>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr(keycode, getcurrent);
+    }
+
+    auto get_current_shift_key_state() noexcept -> std::optional<tjs_uint32>
+    {
+        static decltype(&get_current_shift_key_state) _ptr{};
+        const uint64_t hash{ "get_current_shift_key_state(void)->[std::optional<tjs_uint32>]"_hash };
+        if(_ptr == nullptr && !k2a::plugin.query(_ptr, hash))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
     auto get_tick_count() noexcept -> std::optional<tjs_uint64>
     {
         static decltype(&get_tick_count) _ptr{};
