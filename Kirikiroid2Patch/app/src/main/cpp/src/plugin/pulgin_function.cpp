@@ -541,8 +541,13 @@ namespace TVP
         return k2a::tvp::get_current_shift_key_state();
     }
 
-    auto GetTickCount() -> std::optional<tjs_uint64>
+    auto GetTickCount() noexcept -> std::optional<tjs_uint64>
     {
         return k2a::tvp::get_tick_count();
+    }
+
+    auto ExitApplication() noexcept -> void
+    {
+        k2a::tvp::exit();
     }
 }
