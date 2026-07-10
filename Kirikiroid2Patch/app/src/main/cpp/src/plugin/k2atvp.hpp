@@ -310,6 +310,8 @@ namespace kr2android::tvp
     extern auto get_current_shift_key_state() noexcept -> std::optional<tjs_uint32>;
 
     extern auto get_tick_count() noexcept -> std::optional<tjs_uint64>;
+
+    extern auto exit() noexcept -> void;
 }
 
 #undef unitype_name
