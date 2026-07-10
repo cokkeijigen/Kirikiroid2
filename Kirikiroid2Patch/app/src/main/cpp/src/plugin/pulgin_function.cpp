@@ -526,6 +526,16 @@ namespace TVP
         return k2a::tvp::set_command_line(name, value);
     }
 
+    auto GetAsyncKeyState(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>
+    {
+        return k2a::tvp::get_async_key_state(keycode, getcurrent);
+    }
+
+    auto GetCurrentShiftKeyState() noexcept -> std::optional<tjs_uint32>
+    {
+        return k2a::tvp::get_current_shift_key_state();
+    }
+
     auto GetTickCount() -> std::optional<tjs_uint64>
     {
         return k2a::tvp::get_tick_count();
