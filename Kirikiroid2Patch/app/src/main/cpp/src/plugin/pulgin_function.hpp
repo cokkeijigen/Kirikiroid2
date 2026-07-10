@@ -212,19 +212,8 @@ namespace TVP
     extern auto PushEnvironNoise(const void* buf, const tjs_int bufsize) noexcept -> bool;
     extern auto GetRandomBits128(void* const dest) noexcept -> bool;
 
+    extern auto GetAsyncKeyState(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>;
+    extern auto GetCurrentShiftKeyState() noexcept -> std::optional<tjs_uint32>;
+
     extern auto GetTickCount() -> std::optional<tjs_uint64>;
-
-    // ========== 线程/任务 ==========
-    void BeginThreadTask(tjs_int);
-    void EndThreadTask();
-
-    // ========== 输入 ==========
-    bool GetAsyncKeyState(tjs_uint,bool);
-    tjs_uint32 GetCurrentShiftKeyState();
-
-    // ========== 杂项 ==========
-    ttstr GetTemporaryName();
-    void Breathe();
-    bool GetBreathing();
-
 }
