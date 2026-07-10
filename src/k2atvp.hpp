@@ -292,6 +292,8 @@ namespace kr2android::tvp
     extern auto messagebox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
     extern auto messagebox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
+    extern auto throw_exception_message(const ttstr& msg, bool exit = true) -> void;
+
     extern auto        get_about_string() noexcept -> std::optional<ttstr>;
     extern auto      get_version_string() noexcept -> std::optional<ttstr>;
     extern auto get_version_information() noexcept -> std::optional<ttstr>;
