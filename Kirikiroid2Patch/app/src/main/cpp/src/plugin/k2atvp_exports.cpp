@@ -431,6 +431,11 @@ namespace kr2android
             .hash = "get_tick_count(void)->[std::optional<tjs_uint64>]"_hash,
             .addr = k2a::tvp::get_tick_count
         },
+        tvpaddr
+        {
+            .hash = "exit(void)->[void]"_hash,
+            .addr = k2a::tvp::exit
+        },
     };
 
     extern "C"
