@@ -391,7 +391,6 @@ namespace kr2android
             .hash = "get_command_line_argument_generation(void)->[std::optional<tjs_int>]"_hash,
             .addr = k2a::tvp::get_command_line_argument_generation
         },
-
         tvpaddr
         {
             .hash = "get_random_bits128(void*)->[bool]"_hash,
@@ -411,6 +410,16 @@ namespace kr2android
         {
             .hash = "get_command_line(const tjs_char*,tTJSVariant*)->[std::optional<bool>]"_hash,
             .addr = k2a::tvp::get_command_line
+        },
+        tvpaddr
+        {
+            .hash = "get_async_key_state(tjs_uint,bool)->[std::optional<bool>]"_hash,
+            .addr = k2a::tvp::get_async_key_state
+        },
+        tvpaddr
+        {
+            .hash = "get_current_shift_key_state(void)->[std::optional<tjs_uint32>]"_hash,
+            .addr = k2a::tvp::get_current_shift_key_state
         },
         tvpaddr
         {
