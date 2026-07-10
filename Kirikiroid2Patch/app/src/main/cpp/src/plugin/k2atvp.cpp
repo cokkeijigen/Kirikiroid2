@@ -1625,6 +1625,40 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto get_async_key_state(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>
+    {
+        if(keycode >= TVP::VK_PAD_FIRST  && keycode <= TVP::VK_PAD_LAST)
+        {
+            static bool(*GetJoyPadAsyncState)(tjs_uint, bool){};
+            if(GetJoyPadAsyncState == nullptr && !k2a::cast_ptr(GetJoyPadAsyncState, RVA::GetJoyPadAsyncState))
+            {
+                return std::nullopt;
+            }
+            return GetJoyPadAsyncState(keycode, getcurrent);
+        }
+        else
+        {
+            static bool(*GetKeyMouseAsyncState)(tjs_uint, bool){};
+            if(GetKeyMouseAsyncState == nullptr && !k2a::cast_ptr(GetKeyMouseAsyncState, RVA::GetKeyMouseAsyncState))
+            {
+                return std::nullopt;
+            }
+            return GetKeyMouseAsyncState(keycode, getcurrent);
+        }
+    }
+
+    [[gnu::noinline]]
+    auto get_current_shift_key_state() noexcept -> std::optional<tjs_uint32>
+    {
+        static tjs_uint32(*_ptr)(void){};
+        if(_ptr == nullptr && !k2a::cast_ptr(_ptr, RVA::GetCurrentShiftKeyState))
+        {
+            return std::nullopt;
+        }
+        return _ptr();
+    }
+
+    [[gnu::noinline]]
     auto get_tick_count() noexcept -> std::optional<tjs_uint64>
     {
         static tjs_uint64(*_ptr)(void){};
