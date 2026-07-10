@@ -217,5 +217,7 @@ namespace TVP
     extern auto GetAsyncKeyState(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>;
     extern auto GetCurrentShiftKeyState() noexcept -> std::optional<tjs_uint32>;
 
-    extern auto GetTickCount() -> std::optional<tjs_uint64>;
+    extern auto GetTickCount() noexcept -> std::optional<tjs_uint64>;
+
+    extern auto ExitApplication() noexcept -> void;
 }
