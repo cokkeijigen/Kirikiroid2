@@ -1,8 +1,10 @@
 #pragma once
 #include <tjs.h>
+#include <vkdefine.h>
 #include <k2atvp_graphic.hpp>
 #include <k2atvp_storage.hpp>
 #include <variant>
+
 #define unitype_name(type, name1, name2) union{ type name1; type name2; };
 
 namespace kr2android::tvp
@@ -301,6 +303,9 @@ namespace kr2android::tvp
     extern auto set_command_line(const tjs_char* name, const ttstr& value) noexcept -> bool;
     extern auto get_command_line(const tjs_char* name, tTJSVariant* value) noexcept -> std::optional<bool>;
     extern auto get_command_line_argument_generation() noexcept -> std::optional<tjs_int>;
+
+    extern auto get_async_key_state(const tjs_uint keycode, const bool getcurrent) noexcept -> std::optional<bool>;
+    extern auto get_current_shift_key_state() noexcept -> std::optional<tjs_uint32>;
 
     extern auto get_tick_count() noexcept -> std::optional<tjs_uint64>;
 }
