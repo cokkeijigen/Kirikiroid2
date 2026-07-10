@@ -976,14 +976,21 @@ namespace kr2android::tvp
     [[gnu::noinline]]
     auto throw_exception_message(const ttstr& msg, bool exit) -> void
     {
-        static decltype(&throw_exception_message) _ptr{};
-        if(_ptr == nullptr)
+        std::vector<ttstr> btn{};
+        btn.resize(1);
+        btn[0] = exit ? "Exit" : "OK";
+
+        bool __exit = true;
+        auto ret = messagebox(msg, "Information", btn);
+        if(exit && ret.has_value())
         {
-            const uint64_t hash{ "throw_exception_message(const ttstr&, bool)->[void]"_hash };
-            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+            k2a::tvp::exit();
+            __exit = false;
         }
-        if(_ptr != nullptr) _ptr(msg, exit);
-        if(exit) throw;
+        if(!__exit)
+        {
+            throw;
+        }
     }
 
     [[gnu::noinline]]
@@ -1134,6 +1141,19 @@ namespace kr2android::tvp
             _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
         }
         return bool{ _ptr != nullptr ? _ptr() : false };
+    }
+
+    auto exit() noexcept -> void
+    {
+        auto _exit{ k2a::plugin.query<decltype(&k2a::tvp::exit)>("exit(void)->[void]"_hash) };
+        if(_exit != nullptr)
+        {
+            _exit();
+        }
+        else
+        {
+            ::exit(0);
+        }
     }
 }
 
