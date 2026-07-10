@@ -81,6 +81,11 @@ namespace kr2patch
         return hooker::call<TVPExitApplication_Hook>(code);
     }
 
+    auto __on_exit() noexcept -> void
+    {
+        TVPExitApplication_Hook(-1);
+    }
+
     extern "C" JNIEXPORT auto JNICALL JNI_OnLoad(JavaVM* vm, void*) -> jint
     {
         kr2patch::javavm = vm;
