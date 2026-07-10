@@ -368,6 +368,11 @@ namespace kr2android
         },
         tvpaddr
         {
+            .hash = "throw_exception_message(const ttstr&, bool)->[void]"_hash,
+            .addr = k2a::tvp::throw_exception_message
+        },
+        tvpaddr
+        {
             .hash = "get_about_string(void)->[std::optional<ttstr>]"_hash,
             .addr = k2a::tvp::get_about_string
         },
