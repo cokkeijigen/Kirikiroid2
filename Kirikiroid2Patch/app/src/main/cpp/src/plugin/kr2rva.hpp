@@ -108,6 +108,10 @@ namespace kr2android::tvp::rva
 
     static inline constexpr uintptr_t GetTickCount{ TargetRVA(0x0A2A4DC, 0) };
 
+    static inline constexpr uintptr_t   GetKeyMouseAsyncState{ TargetRVA(0x0A9BFE4, 0) };
+    static inline constexpr uintptr_t     GetJoyPadAsyncState{ TargetRVA(0x0A9C024, 0) };
+    static inline constexpr uintptr_t GetCurrentShiftKeyState{ TargetRVA(0x0AA05A4, 0) };
+
     static inline constexpr uintptr_t   VersionMajor{ TargetRVA(0x1AF40F8, 0) };
     static inline constexpr uintptr_t   VersionMinor{ TargetRVA(0x1AF40FC, 0) };
     static inline constexpr uintptr_t VersionRelease{ TargetRVA(0x1AF4100, 0) };
