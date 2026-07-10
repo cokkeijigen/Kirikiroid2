@@ -881,9 +881,9 @@ namespace kr2android::tvp
     }
 
      [[gnu::noinline]]
-    auto add_log(const ttstr &line, bool appendtoimportant) noexcept -> bool
+    auto log(const ttstr &line, bool appendtoimportant) noexcept -> bool
     {
-        static decltype(&add_log) _ptr{};
+        static decltype(&log) _ptr{};
         if(_ptr == nullptr)
         {
             const uint64_t hash{ "log(const ttstr&,bool)->[bool]"_hash };
