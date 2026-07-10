@@ -198,6 +198,8 @@ namespace TVP
     extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption) noexcept -> std::optional<bool>;
     extern auto ShowSimpleMessageBox(const ttstr& text, const ttstr& caption, const std::vector<ttstr>& vecButtons) noexcept -> std::optional<int>;
 
+    extern auto ThrowExceptionMessage(const ttstr& msg, bool exit = true) noexcept -> void;
+
     extern auto        GetAboutString() noexcept -> std::optional<ttstr>;
     extern auto      GetVersionString() noexcept -> std::optional<ttstr>;
     extern auto GetVersionInformation() noexcept -> std::optional<ttstr>;
