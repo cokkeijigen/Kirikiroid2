@@ -1488,11 +1488,16 @@ namespace kr2android::tvp
     {
         std::vector<ttstr> btn{};
         btn.resize(1);
-        btn[0] =  exit ? "Exit" : "OK";
-        messagebox(msg, "Information", btn);
-        if(exit)
+        btn[0] = exit ? "Exit" : "OK";
+
+        bool on_exit = true;
+        auto ret = messagebox(msg, "Information", btn);
+        if(exit && ret.has_value() && ret.value() == 0)
         {
-            kr2patch::__on_exit();
+            on_exit = kr2patch::__on_exit();
+        }
+        if(!on_exit)
+        {
             throw;
         }
     }
@@ -1686,6 +1691,15 @@ namespace kr2android::tvp
             return _ptr();
         }
         return std::nullopt;
+    }
+
+    [[gnu::noinline]]
+    auto exit() noexcept -> void
+    {
+        if(!kr2patch::__on_exit())
+        {
+            ::exit(0);
+        }
     }
 }
 
