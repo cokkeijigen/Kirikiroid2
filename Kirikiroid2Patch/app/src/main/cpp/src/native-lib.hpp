@@ -51,5 +51,5 @@ namespace kr2patch
         }
     };
 
-    auto __on_exit() noexcept -> void;
+    auto __on_exit() noexcept -> bool;
 }
