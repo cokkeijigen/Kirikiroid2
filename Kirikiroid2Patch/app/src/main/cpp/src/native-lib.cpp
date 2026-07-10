@@ -73,17 +73,19 @@ namespace kr2patch
         return hooker::call<TVPExecuteStartupScript_Hook>();
     }
 
-    [[gnu::noinline]]
+    [[gnu::noinline, noreturn]]
     static auto TVPExitApplication_Hook(int code) noexcept -> void
     {
         logd("TVPExitApplication_Hook called!");
         kr2patch::plugin_manager.unload_all();
-        return hooker::call<TVPExitApplication_Hook>(code);
+        hooker::call<TVPExitApplication_Hook>(code);
+        ::exit(code);
     }
 
-    auto __on_exit() noexcept -> void
+    auto __on_exit() noexcept -> bool
     {
-        TVPExitApplication_Hook(-1);
+        TVPExitApplication_Hook(0);
+        return false;
     }
 
     extern "C" JNIEXPORT auto JNICALL JNI_OnLoad(JavaVM* vm, void*) -> jint
