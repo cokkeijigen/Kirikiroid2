@@ -974,6 +974,19 @@ namespace kr2android::tvp
     }
 
     [[gnu::noinline]]
+    auto throw_exception_message(const ttstr& msg, bool exit) -> void
+    {
+        static decltype(&throw_exception_message) _ptr{};
+        if(_ptr == nullptr)
+        {
+            const uint64_t hash{ "throw_exception_message(const ttstr&, bool)->[void]"_hash };
+            _ptr = k2a::plugin.query<decltype(_ptr)>(hash);
+        }
+        if(_ptr != nullptr) _ptr(msg, exit);
+        if(exit) throw;
+    }
+
+    [[gnu::noinline]]
     auto get_about_string() noexcept -> std::optional<ttstr>
     {
         static decltype(&get_about_string) _ptr{};
