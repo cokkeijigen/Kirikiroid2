@@ -50,4 +50,6 @@ namespace kr2patch
             return hooker::add<fun>(reinterpret_cast<void*>(target));
         }
     };
+
+    auto __on_exit() noexcept -> void;
 }
